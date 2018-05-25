@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 
@@ -116,6 +117,13 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleDao, SysRoleEntity> i
 
 		//删除角色与用户关联
 		sysUserRoleService.deleteBatch(roleIds);
+	}
+
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public List<SysRoleEntity> selectAllList(Map<String, Object> params) {
+		List<SysRoleEntity> list=this.selectList(new EntityWrapper<SysRoleEntity>().addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER)));
+		return list;
 	}
 
 

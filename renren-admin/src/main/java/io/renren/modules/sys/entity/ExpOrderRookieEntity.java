@@ -183,8 +183,8 @@ public class ExpOrderRookieEntity implements Serializable {
 	/**
 	 * 获取：创建时间
 	 */
-	@DateTimeFormat(pattern="yyyy-MM-ddHH:mm:ss") 
-    @JsonFormat(pattern="yyyy-MM-ddHH:mm:ss")
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	public Date getCreateDate() {
 		return createDate;
 	}

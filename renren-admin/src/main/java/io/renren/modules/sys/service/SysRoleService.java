@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.sys.entity.SysRoleEntity;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -40,5 +41,7 @@ public interface SysRoleService extends IService<SysRoleEntity> {
 	void update(SysRoleEntity role);
 	
 	void deleteBatch(Long[] roleIds);
+
+	List<SysRoleEntity> selectAllList(Map<String, Object> params);
 
 }

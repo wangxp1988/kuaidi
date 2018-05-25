@@ -132,8 +132,8 @@ public class ExpBalanceAccountEntity implements Serializable {
 	/**
 	 * 获取：寄件时间
 	 */
-	@DateTimeFormat(pattern="yyyy-MM-ddHH:mm:ss") 
-    @JsonFormat(pattern="yyyy-MM-ddHH:mm:ss")
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	public Date getSendTime() {
 		return sendTime;
 	}
