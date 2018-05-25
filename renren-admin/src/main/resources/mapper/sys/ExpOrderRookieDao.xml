@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.ExpOrderRookieDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.ExpOrderRookieEntity" id="expOrderRookieMap">
+        <result property="id" column="id"/>
+        <result property="orderNumber" column="order_number"/>
+        <result property="waybillNumber" column="waybill_number"/>
+        <result property="createDate" column="create_date"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="orderSoruce" column="order_soruce"/>
+        <result property="dotCode" column="dot_code"/>
+        <result property="dotName" column="dot_name"/>
+        <result property="customerCode" column="customer_code"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="destinationDot" column="destination_dot"/>
+        <result property="objectiveAllocation" column="objective_allocation"/>
+        <result property="destinationProvince" column="destination_province"/>
+        <result property="destinationCity" column="destination_city"/>
+        <result property="destinationArea" column="destination_area"/>
+        <result property="address" column="address"/>
+        <result property="deptId" column="dept_id"/>
+        
+    </resultMap>
+     <insert id="saveList" parameterType="io.renren.modules.sys.entity.ExpOrderRookieEntity">
+     INSERT INTO EXP_ORDER_ROOKIE
+		(
+				`order_number`
+				,`waybill_number`
+				,`create_date`
+				,`order_status`
+				,`order_soruce`
+				,`dot_code`
+				,`dot_name`
+				,`customer_code`
+				,`customer_name`
+				,`destination_dot`
+				,`objective_allocation`
+				,`destination_province`
+				,`destination_city`
+				,`destination_area`
+				,`address`
+				,`dept_id`
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+				 #{item.orderNumber}
+				,#{item.waybillNumber}
+				,#{item.createDate}
+				,#{item.orderStatus}
+				,#{item.orderSoruce}
+				,#{item.dotCode}
+				,#{item.dotName}
+				,#{item.customerCode}
+				,#{item.customerName}
+				,#{item.destinationDot}
+				,#{item.objectiveAllocation}
+				,#{item.destinationProvince}
+				,#{item.destinationCity}
+				,#{item.destinationArea}
+				,#{item.address}
+				,#{item.deptId}
+		)
+		</foreach>
+     </insert>
+
+</mapper>

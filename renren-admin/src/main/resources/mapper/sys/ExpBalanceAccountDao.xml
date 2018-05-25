@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.ExpBalanceAccountDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.ExpBalanceAccountEntity" id="expBalanceAccountMap">
+        <result property="id" column="id"/>
+        <result property="waybillNumber" column="waybill_number"/>
+        <result property="sender" column="sender"/>
+        <result property="branch" column="branch"/>
+        <result property="sendTime" column="send_time"/>
+        <result property="sendProvince" column="send_province"/>
+        <result property="recipient" column="recipient"/>
+        <result property="recipientProvince" column="recipient_province"/>
+        <result property="salesman" column="salesman"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="customerPhone" column="customer_phone"/>
+        <result property="actualWeight" column="actual_weight"/>
+    </resultMap>
+<insert id="save" parameterType="io.renren.modules.sys.entity.ExpBalanceAccountEntity">
+		INSERT INTO EXP_BALANCE_ACCOUNT
+		(
+       `waybill_number`, `sender`, `branch`, `send_time`, `send_province`, `recipient`, `recipient_province`, `salesman`, `customer_name`, `customer_phone`, `actual_weight`
+       )
+		VALUES
+		(
+       #{waybillNumber}, #{sender}, #{branch}, #{sendTime}, #{sendProvince}, #{recipient}, #{recipientProvince}, #{salesman}, #{customerName}, #{customerPhone}, #{actualWeight}
+       )
+	</insert>
+
+</mapper>

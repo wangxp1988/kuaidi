@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.ExpDailyScanDao">
+
+		<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.ExpDailyScanEntity" id="expDailyScanMap">
+        <result property="id" column="id"/>
+        <result property="waybillNumber" column="waybill_number"/>
+        <result property="branch" column="branch"/>
+        <result property="person" column="person"/>
+        <result property="createDate" column="create_date"/>
+        <result property="recipient" column="recipient"/>
+        <result property="sender" column="sender"/>
+        <result property="weight" column="weight"/>
+        <result property="weightSourse" column="weight_sourse"/>
+        <result property="dataSourse" column="data_sourse"/>
+        <result property="deviceNumber" column="device_number"/>
+        <result property="deptId" column="dept_id"/>
+    </resultMap>
+
+    <insert id="saveList" parameterType="io.renren.modules.sys.entity.ExpDailyScanEntity">
+       INSERT INTO EXP_DAILY_SCAN
+		(
+       `waybill_number`, `branch`, `person`, `create_date`, `recipient`, `sender`, `weight`, `weight_sourse`, `data_sourse`, `device_number`,`dept_id`
+        )
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+         #{item.waybillNumber}, #{item.branch}, #{item.person}, #{item.createDate}, #{item.recipient}, #{item.sender}, #{item.weight}, #{item.weightSourse}, #{item.dataSourse}, #{item.deviceNumber},#{item.deptId}		
+         )
+       </foreach>
+    </insert>
+
+</mapper>
