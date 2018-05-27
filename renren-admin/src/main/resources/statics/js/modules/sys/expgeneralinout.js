@@ -5,13 +5,15 @@ $(function () {
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
 			{ label: '客户编码', name: 'customerId', index: 'customer_id', width: 80 }, 			
-			{ label: '', name: 'waybillNumber', index: 'waybill_number', width: 80 }, 			
+			{ label: '运单号', name: 'waybillNumber', index: 'waybill_number', width: 80 }, 			
 			{ label: '客户', name: 'consumer', index: 'consumer', width: 80 }, 			
 			{ label: '款项说明', name: 'moneyDetail', index: 'money_detail', width: 80 }, 			
 			{ label: '收入金额', name: 'moneyIn', index: 'money_in', width: 80 }, 			
 			{ label: '支出金额', name: 'moneyOut', index: 'money_out', width: 80 }, 			
 			{ label: '账户', name: 'account', index: 'account', width: 80 }, 			
-			{ label: '备注', name: 'remarks', index: 'remarks', width: 80 }			
+			{ label: '备注', name: 'remarks', index: 'remarks', width: 80 }, 			
+			{ label: '记账日期', name: 'createTime', index: 'create_time', width: 80 }, 			
+			{ label: '部门ID', name: 'deptId', index: 'dept_id', width: 80 }			
         ],
 		viewrecords: true,
         height: 385,
@@ -122,3 +124,24 @@ var vm = new Vue({
 		}
 	}
 });
+
+function imports(){
+	var fd=new FormData();
+	fd.append("file",$("#myfile").get(0).files[0]);
+	 var index = layer.load(1, {
+	   	  shade: [0.8,'#fff'] //0.1透明度的白色背景
+	   	});
+        $.ajax({  
+            type: 'POST',  
+            url: baseURL + "sys/expgeneralinout/import",  
+            data: fd,
+            cache:false,
+            contentType:false,
+            processData:false,
+            success : function(data){  
+            	layer.close(index);
+            	$("#jqGrid").trigger("reloadGrid");
+            	 //$("#result").html("<span style='color:red;'>"+data.msg+"<span>") 
+               }     
+    }); 
+}

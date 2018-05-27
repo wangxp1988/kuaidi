@@ -1,6 +1,9 @@
 package io.renren.modules.sys.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -15,6 +18,9 @@ import io.renren.modules.sys.service.ExpCustomerService;
 
 @Service("expCustomerService")
 public class ExpCustomerServiceImpl extends ServiceImpl<ExpCustomerDao, ExpCustomerEntity> implements ExpCustomerService {
+	
+	@Autowired
+	private ExpCustomerDao expCustomerDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -25,5 +31,11 @@ public class ExpCustomerServiceImpl extends ServiceImpl<ExpCustomerDao, ExpCusto
 
         return new PageUtils(page);
     }
+
+	@Override
+	public void saveList(List<ExpCustomerEntity> tempList) {
+		// TODO Auto-generated method stub
+		expCustomerDao.saveList(tempList);
+	}
 
 }

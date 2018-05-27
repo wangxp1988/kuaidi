@@ -8,6 +8,9 @@ import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+
+import io.renren.common.annotation.DataFilter;
+import io.renren.common.utils.Constant;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
@@ -22,10 +25,11 @@ public class ExpOrderRookieServiceImpl extends ServiceImpl<ExpOrderRookieDao, Ex
 	@Autowired
 	private ExpOrderRookieDao expOrderRookieDao;
     @Override
+    @DataFilter(subDept = true, user = false)
     public PageUtils queryPage(Map<String, Object> params) {
         Page<ExpOrderRookieEntity> page = this.selectPage(
                 new Query<ExpOrderRookieEntity>(params).getPage(),
-                new EntityWrapper<ExpOrderRookieEntity>()
+                new EntityWrapper<ExpOrderRookieEntity>().addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
         );
 
         return new PageUtils(page);

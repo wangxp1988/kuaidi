@@ -1,24 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>日常收支</title>
+    <title>行政区划表</title>
 		<#include "/header.html">
 </head>
 <body>
 <div id="rrapp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
-               <div class="form-group col-sm-2"> 
-                   <input type="file" id="myfile" class="form-control" name="file" placeholder="上传文件"/>
-            </div>
-            <a class="btn btn-primary" onclick="imports()"><i class="fa fa-cloud-upload"></i>&nbsp;上传文件</a>
-			<#if shiro.hasPermission("sys:expgeneralinout:save")>
+			<#if shiro.hasPermission("sys:sysarea:save")>
             <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			</#if>
-			<#if shiro.hasPermission("sys:expgeneralinout:update")>
+			<#if shiro.hasPermission("sys:sysarea:update")>
             <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
 			</#if>
-			<#if shiro.hasPermission("sys:expgeneralinout:delete")>
+			<#if shiro.hasPermission("sys:sysarea:delete")>
             <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 			</#if>
         </div>
@@ -30,63 +26,69 @@
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
 														                    <div class="form-group">
-                        <div class="col-sm-2 control-label">客户编码</div>
+                        <div class="col-sm-2 control-label">上级ID</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expGeneralInOut.customerId" placeholder="客户编码"/>
+                            <input type="text" class="form-control" v-model="sysArea.parentId" placeholder="上级ID"/>
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">运单号</div>
+                        <div class="col-sm-2 control-label">名称</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expGeneralInOut.waybillNumber" placeholder="运单号"/>
+                            <input type="text" class="form-control" v-model="sysArea.name" placeholder="名称"/>
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">客户</div>
+                        <div class="col-sm-2 control-label">邮编</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expGeneralInOut.consumer" placeholder="客户"/>
+                            <input type="text" class="form-control" v-model="sysArea.postCode" placeholder="邮编"/>
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">款项说明</div>
+                        <div class="col-sm-2 control-label">地域编号</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expGeneralInOut.moneyDetail" placeholder="款项说明"/>
+                            <input type="text" class="form-control" v-model="sysArea.areaCode" placeholder="地域编号"/>
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">收入金额</div>
+                        <div class="col-sm-2 control-label">区域等级id</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expGeneralInOut.moneyIn" placeholder="收入金额"/>
+                            <input type="text" class="form-control" v-model="sysArea.lvId" placeholder="区域等级id"/>
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">支出金额</div>
+                        <div class="col-sm-2 control-label">创建人</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expGeneralInOut.moneyOut" placeholder="支出金额"/>
+                            <input type="text" class="form-control" v-model="sysArea.createBy" placeholder="创建人"/>
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">账户</div>
+                        <div class="col-sm-2 control-label">创建时间</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expGeneralInOut.account" placeholder="账户"/>
+                            <input type="text" class="form-control" v-model="sysArea.createTime" placeholder="创建时间"/>
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">备注</div>
+                        <div class="col-sm-2 control-label">最后更新人</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expGeneralInOut.remarks" placeholder="备注"/>
+                            <input type="text" class="form-control" v-model="sysArea.updateBy" placeholder="最后更新人"/>
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">记账日期</div>
+                        <div class="col-sm-2 control-label">最后更新时间</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expGeneralInOut.createTime" placeholder="记账日期"/>
+                            <input type="text" class="form-control" v-model="sysArea.updateTime" placeholder="最后更新时间"/>
                         </div>
                     </div>
 											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">部门ID</div>
+                        <div class="col-sm-2 control-label">版本号</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expGeneralInOut.deptId" placeholder="部门ID"/>
+                            <input type="text" class="form-control" v-model="sysArea.version" placeholder="版本号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">是否有效；1：有效，2无效</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="sysArea.valid" placeholder="是否有效；1：有效，2无效"/>
                         </div>
                     </div>
 							            <div class="form-group">
@@ -98,6 +100,6 @@
     </div>
 </div>
 
-<script src="${request.contextPath}/statics/js/modules/sys/expgeneralinout.js?_${.now?long}"></script>
+<script src="${request.contextPath}/statics/js/modules/sys/sysarea.js?_${.now?long}"></script>
 </body>
 </html>

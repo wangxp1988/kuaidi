@@ -2,22 +2,22 @@ package io.renren.modules.sys.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
-import io.renren.modules.sys.entity.ExpBalanceAccountEntity;
+import io.renren.modules.sys.entity.SysAreaEntity;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * 每日对账表
+ * 行政区划表
  *
  * @author chenshun
  * @email sunlightcs@gmail.com
- * @date 2018-05-25 09:29:17
+ * @date 2018-05-26 21:56:55
  */
-public interface ExpBalanceAccountService extends IService<ExpBalanceAccountEntity> {
+public interface SysAreaService extends IService<SysAreaEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
 
-	void saveList(List<ExpBalanceAccountEntity> tempList);
+	List<SysAreaEntity> selectProvinceList(Long parentId);
 }
 

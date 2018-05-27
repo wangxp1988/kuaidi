@@ -74,7 +74,28 @@ public class ExpBalanceAccountEntity implements Serializable {
 	 * 部门ID
 	 */
 	private Long deptId;
+	
 
+	public ExpBalanceAccountEntity() {
+		super();
+	}
+	public ExpBalanceAccountEntity(String waybillNumber, String sender, String branch, Date sendTime,
+			String sendProvince, String recipient, String recipientProvince, String salesman, String customerName,
+			String customerPhone, BigDecimal actualWeight, Long deptId) {
+		super();
+		this.waybillNumber = waybillNumber;
+		this.sender = sender;
+		this.branch = branch;
+		this.sendTime = sendTime;
+		this.sendProvince = sendProvince;
+		this.recipient = recipient;
+		this.recipientProvince = recipientProvince;
+		this.salesman = salesman;
+		this.customerName = customerName;
+		this.customerPhone = customerPhone;
+		this.actualWeight = actualWeight;
+		this.deptId = deptId;
+	}
 	/**
 	 * 设置：ID 
 	 */

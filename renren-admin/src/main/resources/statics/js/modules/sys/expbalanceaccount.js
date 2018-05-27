@@ -8,12 +8,12 @@ $(function () {
 			{ label: '寄件人', name: 'sender', index: 'sender', width: 80 }, 			
 			{ label: '网点', name: 'branch', index: 'branch', width: 80 }, 			
 			{ label: '寄件时间', name: 'sendTime', index: 'send_time', width: 80 }, 			
-			{ label: '', name: 'sendProvince', index: 'send_province', width: 80 }, 			
-			{ label: '收件人', name: 'recipient', index: 'recipient', width: 80 }, 			
+			{ label: '寄件省份', name: 'sendProvince', index: 'send_province', width: 80 }, 			
+			/*{ label: '收件人', name: 'recipient', index: 'recipient', width: 80 }, 	*/		
 			{ label: '收件省份', name: 'recipientProvince', index: 'recipient_province', width: 80 }, 			
 			{ label: '揽件业务员', name: 'salesman', index: 'salesman', width: 80 }, 			
-			{ label: '月结客户名称', name: 'customerName', index: 'customer_name', width: 80 }, 			
-			{ label: '月结客户手机', name: 'customerPhone', index: 'customer_phone', width: 80 }, 			
+			/*{ label: '月结客户名称', name: 'customerName', index: 'customer_name', width: 80 }, 			
+			{ label: '月结客户手机', name: 'customerPhone', index: 'customer_phone', width: 80 }, 	*/		
 			{ label: '实际重量', name: 'actualWeight', index: 'actual_weight', width: 80 }			
         ],
 		viewrecords: true,
@@ -21,7 +21,7 @@ $(function () {
         rowNum: 10,
 		rowList : [10,30,50],
         rownumbers: true, 
-        rownumWidth: 25, 
+        rownumWidth: 100, 
         autowidth:true,
         multiselect: true,
         pager: "#jqGridPager",
@@ -125,3 +125,24 @@ var vm = new Vue({
 		}
 	}
 });
+
+function imports(){
+	var fd=new FormData();
+	fd.append("file",$("#myfile").get(0).files[0]);
+	 var index = layer.load(1, {
+	   	  shade: [0.8,'#fff'] //0.1透明度的白色背景
+	   	});
+        $.ajax({  
+            type: 'POST',  
+            url: baseURL + "sys/expbalanceaccount/import",  
+            data: fd,
+            cache:false,
+            contentType:false,
+            processData:false,
+            success : function(data){  
+            	layer.close(index);
+            	 $("#result").html("<span style='color:red;'>"+data.msg+"<span>") 
+            	 $("#jqGrid").jqGrid('setGridParam',{}).trigger("reloadGrid");
+               }     
+    }); 
+}

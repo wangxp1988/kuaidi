@@ -8,6 +8,10 @@
 <div id="rrapp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
+         <div class="form-group col-sm-2"> 
+                   <input type="file" id="myfile" class="form-control" name="file" placeholder="上传文件"/>
+            </div>
+            <a class="btn btn-primary" onclick="imports()"><i class="fa fa-cloud-upload"></i>&nbsp;上传文件</a>
 			<#if shiro.hasPermission("sys:expbalanceaccount:save")>
             <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			</#if>

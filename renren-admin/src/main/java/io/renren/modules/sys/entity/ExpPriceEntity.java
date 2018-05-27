@@ -1,11 +1,14 @@
 package io.renren.modules.sys.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
+
+import org.springframework.data.annotation.Transient;
 
 /**
  * 价格表
@@ -36,9 +39,14 @@ public class ExpPriceEntity implements Serializable {
 	 */
 	private String provinceName;
 	/**
+	 * 省份编码和名称的组合使用-来划分
+	 */
+	@TableField(exist = false)
+	private String provinceNumAndName;
+	/**
 	 * 重量
 	 */
-	private Float weight;
+	private BigDecimal weight;
 	/**
 	 * 快递费用
 	 */
@@ -48,6 +56,30 @@ public class ExpPriceEntity implements Serializable {
 	 */
 	private Long deptId;
 
+	
+	/**
+	 * 
+	 */
+	public ExpPriceEntity() {
+		super();
+	}
+	/**
+	 * @param priceName
+	 * @param province
+	 * @param provinceName
+	 * @param weight
+	 * @param money
+	 * @param deptId
+	 */
+	public ExpPriceEntity(String priceName, String provinceName, BigDecimal weight, BigDecimal money,
+			Long deptId) {
+		super();
+		this.priceName = priceName;
+		this.provinceName = provinceName;
+		this.weight = weight;
+		this.money = money;
+		this.deptId = deptId;
+	}
 	/**
 	 * 设置：价格ID
 	 */
@@ -99,13 +131,13 @@ public class ExpPriceEntity implements Serializable {
 	/**
 	 * 设置：重量
 	 */
-	public void setWeight(Float weight) {
+	public void setWeight(BigDecimal weight) {
 		this.weight = weight;
 	}
 	/**
 	 * 获取：重量
 	 */
-	public Float getWeight() {
+	public BigDecimal getWeight() {
 		return weight;
 	}
 	/**
@@ -132,4 +164,14 @@ public class ExpPriceEntity implements Serializable {
 	public Long getDeptId() {
 		return deptId;
 	}
+	public String getProvinceNumAndName() {
+		return provinceNumAndName;
+	}
+	public void setProvinceNumAndName(String provinceNumAndName) {
+		this.provinceNumAndName = provinceNumAndName;
+	}
+	
+	
+	
+	
 }

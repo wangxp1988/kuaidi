@@ -16,16 +16,16 @@ $(function () {
 			{ label: '目的网点', name: 'destinationDot', index: 'destination_dot', width: 80 }, 			
 			{ label: '目的分拨', name: 'objectiveAllocation', index: 'objective_allocation', width: 80 }, 			
 			{ label: '目的省份', name: 'destinationProvince', index: 'destination_province', width: 80 }, 			
-			{ label: '目的市', name: 'destinationCity', index: 'destination_city', width: 80 }, 			
+			/*{ label: '目的市', name: 'destinationCity', index: 'destination_city', width: 80 }, 			
 			{ label: '目的区', name: 'destinationArea', index: 'destination_area', width: 80 }, 			
-			{ label: '收件地址', name: 'address', index: 'address', width: 80 }			
+			{ label: '收件地址', name: 'address', index: 'address', width: 80 }		*/	
         ],
 		viewrecords: true,
         height: 385,
         rowNum: 10,
 		rowList : [10,30,50],
         rownumbers: true, 
-        rownumWidth: 25, 
+        rownumWidth: 100, 
         autowidth:true,
         multiselect: true,
         pager: "#jqGridPager",
@@ -145,7 +145,8 @@ function imports(){
             processData:false,
             success : function(data){  
             	layer.close(index);
-            	 $("#result").html("<span style='color:red;'>"+data.msg+"<span>") 
+            	$("#jqGrid").trigger("reloadGrid");
+            	 //$("#result").html("<span style='color:red;'>"+data.msg+"<span>") 
                }     
     }); 
 }

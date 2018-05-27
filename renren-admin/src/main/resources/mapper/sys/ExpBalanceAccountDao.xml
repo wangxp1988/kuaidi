@@ -17,16 +17,19 @@
         <result property="customerName" column="customer_name"/>
         <result property="customerPhone" column="customer_phone"/>
         <result property="actualWeight" column="actual_weight"/>
+        <result property="deptId" column="dept_id"/>
     </resultMap>
-<insert id="save" parameterType="io.renren.modules.sys.entity.ExpBalanceAccountEntity">
+<insert id="saveList" parameterType="io.renren.modules.sys.entity.ExpBalanceAccountEntity">
 		INSERT INTO EXP_BALANCE_ACCOUNT
 		(
-       `waybill_number`, `sender`, `branch`, `send_time`, `send_province`, `recipient`, `recipient_province`, `salesman`, `customer_name`, `customer_phone`, `actual_weight`
+       `waybill_number`, `sender`, `branch`, `send_time`, `send_province`, `recipient`, `recipient_province`, `salesman`, `customer_name`, `customer_phone`, `actual_weight`,`dept_id`
        )
 		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
 		(
-       #{waybillNumber}, #{sender}, #{branch}, #{sendTime}, #{sendProvince}, #{recipient}, #{recipientProvince}, #{salesman}, #{customerName}, #{customerPhone}, #{actualWeight}
+       #{item.waybillNumber}, #{item.sender}, #{item.branch}, #{item.sendTime}, #{item.sendProvince}, #{item.recipient}, #{item.recipientProvince}, #{item.salesman}, #{item.customerName}, #{item.customerPhone}, #{item.actualWeight},#{item.deptId}
        )
+       </foreach>
 	</insert>
 
 </mapper>

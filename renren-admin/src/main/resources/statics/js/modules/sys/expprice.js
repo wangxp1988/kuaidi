@@ -5,18 +5,16 @@ $(function () {
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
 			{ label: '价格名称', name: 'priceName', index: 'price_name', width: 80 }, 			
-			{ label: '省份编码', name: 'province', index: 'province', width: 80 }, 			
 			{ label: '省份名称', name: 'provinceName', index: 'province_name', width: 80 }, 			
 			{ label: '重量', name: 'weight', index: 'weight', width: 80 }, 			
-			{ label: '快递费用', name: 'money', index: 'money', width: 80 }, 			
-			{ label: '部门ID', name: 'deptId', index: 'dept_id', width: 80 }			
+			{ label: '快递费用', name: 'money', index: 'money', width: 80 }			
         ],
 		viewrecords: true,
         height: 385,
         rowNum: 10,
 		rowList : [10,30,50],
         rownumbers: true, 
-        rownumWidth: 25, 
+        rownumWidth: 100, 
         autowidth:true,
         multiselect: true,
         pager: "#jqGridPager",
@@ -43,7 +41,8 @@ var vm = new Vue({
 	data:{
 		showList: true,
 		title: null,
-		expPrice: {}
+		expPrice: {},
+		provinceList:{}
 	},
 	methods: {
 		query: function () {
@@ -52,7 +51,11 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
+			provinceList:{};
 			vm.expPrice = {};
+			vm.expPrice.provinceName="0000";
+			this.getProvinceList();
+			
 		},
 		update: function (event) {
 			var id = getSelectedRow();
@@ -61,7 +64,7 @@ var vm = new Vue({
 			}
 			vm.showList = false;
             vm.title = "修改";
-            
+            this.getProvinceList();
             vm.getInfo(id)
 		},
 		saveOrUpdate: function (event) {
@@ -111,6 +114,11 @@ var vm = new Vue({
                 vm.expPrice = r.expPrice;
             });
 		},
+		getProvinceList: function(){
+            $.get(baseURL + "sys/sysarea/listAll", function(r){
+                vm.provinceList = r.list;
+            });
+        },
 		reload: function (event) {
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
@@ -120,3 +128,23 @@ var vm = new Vue({
 		}
 	}
 });
+
+function imports(){
+	var fd=new FormData();
+	fd.append("file",$("#myfile").get(0).files[0]);
+	 var index = layer.load(1, {
+	   	  shade: [0.8,'#fff'] //0.1透明度的白色背景
+	   	});
+        $.ajax({  
+            type: 'POST',  
+            url: baseURL + "sys/expprice/import",  
+            data: fd,
+            cache:false,
+            contentType:false,
+            processData:false,
+            success : function(data){  
+            	layer.close(index);
+            	 $("#jqGrid").jqGrid('setGridParam',{}).trigger("reloadGrid");
+               }     
+    }); 
+}

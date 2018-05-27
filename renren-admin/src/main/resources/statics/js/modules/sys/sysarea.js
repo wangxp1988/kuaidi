@@ -1,26 +1,27 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'sys/expdailyscan/list',
+        url: baseURL + 'sys/sysarea/list',
         datatype: "json",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
-			{ label: '运单号', name: 'waybillNumber', index: 'waybill_number', width: 80 }, 			
-			{ label: '扫描网点', name: 'branch', index: 'branch', width: 80 }, 			
-			{ label: '扫描人', name: 'person', index: 'person', width: 80 }, 			
-			{ label: '扫描日期', name: 'createDate', index: 'create_date', width: 80}, 			
-			{ label: '收件人', name: 'recipient', index: 'recipient', width: 80 }, 			
-			{ label: '寄件人', name: 'sender', index: 'sender', width: 80 }, 			
-			{ label: '网点称重', name: 'weight', index: 'weight', width: 80 }, 			
-			{ label: '重量来源', name: 'weightSourse', index: 'weight_sourse', width: 80 }, 			
-			{ label: '数据来源', name: 'dataSourse', index: 'data_sourse', width: 80 }, 			
-			{ label: '设备编号', name: 'deviceNumber', index: 'device_number', width: 80 }			
+			{ label: '上级ID', name: 'parentId', index: 'parent_id', width: 80 }, 			
+			{ label: '名称', name: 'name', index: 'name', width: 80 }, 			
+			{ label: '邮编', name: 'postCode', index: 'post_code', width: 80 }, 			
+			{ label: '地域编号', name: 'areaCode', index: 'area_code', width: 80 }, 			
+			{ label: '区域等级id', name: 'lvId', index: 'lv_id', width: 80 }, 			
+			{ label: '创建人', name: 'createBy', index: 'create_by', width: 80 }, 			
+			{ label: '创建时间', name: 'createTime', index: 'create_time', width: 80 }, 			
+			{ label: '最后更新人', name: 'updateBy', index: 'update_by', width: 80 }, 			
+			{ label: '最后更新时间', name: 'updateTime', index: 'update_time', width: 80 }, 			
+			{ label: '版本号', name: 'version', index: 'version', width: 80 }, 			
+			{ label: '是否有效；1：有效，2无效', name: 'valid', index: 'valid', width: 80 }			
         ],
 		viewrecords: true,
         height: 385,
         rowNum: 10,
 		rowList : [10,30,50],
         rownumbers: true, 
-        rownumWidth: 100, 
+        rownumWidth: 25, 
         autowidth:true,
         multiselect: true,
         pager: "#jqGridPager",
@@ -47,7 +48,7 @@ var vm = new Vue({
 	data:{
 		showList: true,
 		title: null,
-		expDailyScan: {}
+		sysArea: {}
 	},
 	methods: {
 		query: function () {
@@ -56,7 +57,7 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
-			vm.expDailyScan = {};
+			vm.sysArea = {};
 		},
 		update: function (event) {
 			var id = getSelectedRow();
@@ -69,12 +70,12 @@ var vm = new Vue({
             vm.getInfo(id)
 		},
 		saveOrUpdate: function (event) {
-			var url = vm.expDailyScan.id == null ? "sys/expdailyscan/save" : "sys/expdailyscan/update";
+			var url = vm.sysArea.id == null ? "sys/sysarea/save" : "sys/sysarea/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
                 contentType: "application/json",
-			    data: JSON.stringify(vm.expDailyScan),
+			    data: JSON.stringify(vm.sysArea),
 			    success: function(r){
 			    	if(r.code === 0){
 						alert('操作成功', function(index){
@@ -95,7 +96,7 @@ var vm = new Vue({
 			confirm('确定要删除选中的记录？', function(){
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "sys/expdailyscan/delete",
+				    url: baseURL + "sys/sysarea/delete",
                     contentType: "application/json",
 				    data: JSON.stringify(ids),
 				    success: function(r){
@@ -111,8 +112,8 @@ var vm = new Vue({
 			});
 		},
 		getInfo: function(id){
-			$.get(baseURL + "sys/expdailyscan/info/"+id, function(r){
-                vm.expDailyScan = r.expDailyScan;
+			$.get(baseURL + "sys/sysarea/info/"+id, function(r){
+                vm.sysArea = r.sysArea;
             });
 		},
 		reload: function (event) {
@@ -124,23 +125,3 @@ var vm = new Vue({
 		}
 	}
 });
-function imports(){
-	var fd=new FormData();
-	fd.append("file",$("#myfile").get(0).files[0]);
-	 var index = layer.load(1, {
-	   	  shade: [0.8,'#fff'] //0.1透明度的白色背景
-	   	});
-        $.ajax({  
-            type: 'POST',  
-            url: baseURL + "sys/expdailyscan/import",  
-            data: fd,
-            cache:false,
-            contentType:false,
-            processData:false,
-            success : function(data){  
-            	layer.close(index);
-            	 $("#result").html("<span style='color:red;'>"+data.msg+"<span>") 
-            	 $("#jqGrid").jqGrid('setGridParam',{}).trigger("reloadGrid");
-               }     
-    }); 
-}

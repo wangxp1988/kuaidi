@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.sys.entity.ExpGeneralInOutEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface ExpGeneralInOutService extends IService<ExpGeneralInOutEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+	void saveList(List<ExpGeneralInOutEntity> tempList);
 }
 

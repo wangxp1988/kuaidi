@@ -13,6 +13,26 @@
         <result property="money" column="money"/>
         <result property="deptId" column="dept_id"/>
     </resultMap>
+ <insert id="saveList" parameterType="io.renren.modules.sys.entity.ExpPriceEntity">
+     INSERT INTO exp_price
+		(
+				`price_name`
+				,`province_name`
+				,`weight`
+				,`money`
+				,`dept_id`
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+				 #{item.priceName}
+				,#{item.provinceName}
+				,#{item.weight}
+				,#{item.money}
+				,#{item.deptId}
+		)
+		</foreach>
+     </insert>
 
 
 </mapper>

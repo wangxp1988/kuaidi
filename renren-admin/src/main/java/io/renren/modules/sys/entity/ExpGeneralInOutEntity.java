@@ -12,7 +12,7 @@ import java.util.Date;
  * 
  * @author chenshun
  * @email sunlightcs@gmail.com
- * @date 2018-05-25 13:44:46
+ * @date 2018-05-27 00:02:48
  */
 @TableName("exp_general_in_out")
 public class ExpGeneralInOutEntity implements Serializable {
@@ -28,7 +28,7 @@ public class ExpGeneralInOutEntity implements Serializable {
 	 */
 	private String customerId;
 	/**
-	 * 
+	 * 运单号
 	 */
 	private String waybillNumber;
 	/**
@@ -56,10 +56,49 @@ public class ExpGeneralInOutEntity implements Serializable {
 	 */
 	private String remarks;
 	/**
+	 * 记账日期
+	 */
+	private Date createTime;
+	/**
 	 * 部门ID
 	 */
 	private Long deptId;
+	
+	
+	
 
+	/**
+	 * 
+	 */
+	public ExpGeneralInOutEntity() {
+		super();
+	}
+	/**
+	 * @param customerId
+	 * @param waybillNumber
+	 * @param consumer
+	 * @param moneyDetail
+	 * @param moneyIn
+	 * @param moneyOut
+	 * @param account
+	 * @param remarks
+	 * @param createTime
+	 * @param deptId
+	 */
+	public ExpGeneralInOutEntity(String customerId, String waybillNumber, String consumer, String moneyDetail,
+			BigDecimal moneyIn, BigDecimal moneyOut, String account, String remarks, Date createTime, Long deptId) {
+		super();
+		this.customerId = customerId;
+		this.waybillNumber = waybillNumber;
+		this.consumer = consumer;
+		this.moneyDetail = moneyDetail;
+		this.moneyIn = moneyIn;
+		this.moneyOut = moneyOut;
+		this.account = account;
+		this.remarks = remarks;
+		this.createTime = createTime;
+		this.deptId = deptId;
+	}
 	/**
 	 * 设置：ID
 	 */
@@ -85,13 +124,13 @@ public class ExpGeneralInOutEntity implements Serializable {
 		return customerId;
 	}
 	/**
-	 * 设置：
+	 * 设置：运单号
 	 */
 	public void setWaybillNumber(String waybillNumber) {
 		this.waybillNumber = waybillNumber;
 	}
 	/**
-	 * 获取：
+	 * 获取：运单号
 	 */
 	public String getWaybillNumber() {
 		return waybillNumber;
@@ -167,6 +206,18 @@ public class ExpGeneralInOutEntity implements Serializable {
 	 */
 	public String getRemarks() {
 		return remarks;
+	}
+	/**
+	 * 设置：记账日期
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	/**
+	 * 获取：记账日期
+	 */
+	public Date getCreateTime() {
+		return createTime;
 	}
 	/**
 	 * 设置：部门ID

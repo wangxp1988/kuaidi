@@ -7,7 +7,9 @@ $(function () {
 			{ label: '客户编码', name: 'code', index: 'code', width: 80 }, 			
 			{ label: '客户名称', name: 'name', index: 'name', width: 80 }, 			
 			{ label: '客户类型', name: 'type', index: 'type', width: 80 }, 			
-			{ label: '部门ID', name: 'deptId', index: 'dept_id', width: 80 }			
+			{ label: '价格表名称', name: 'priceName', index: 'price_name', width: 80 }, 			
+			{ label: '付款客户ID', name: 'paymentId', index: 'payment_id', width: 80 }, 			
+			{ label: '付款客户名称', name: 'paymentName', index: 'payment_name', width: 80 }		
         ],
 		viewrecords: true,
         height: 385,
@@ -118,3 +120,23 @@ var vm = new Vue({
 		}
 	}
 });
+
+function imports(){
+	var fd=new FormData();
+	fd.append("file",$("#myfile").get(0).files[0]);
+	 var index = layer.load(1, {
+	   	  shade: [0.8,'#fff'] //0.1透明度的白色背景
+	   	});
+        $.ajax({  
+            type: 'POST',  
+            url: baseURL + "sys/expcustomer/import",  
+            data: fd,
+            cache:false,
+            contentType:false,
+            processData:false,
+            success : function(data){  
+            	layer.close(index);
+            	 $("#jqGrid").jqGrid('setGridParam',{}).trigger("reloadGrid");
+               }     
+    }); 
+}

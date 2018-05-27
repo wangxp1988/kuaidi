@@ -14,7 +14,20 @@
         <result property="moneyOut" column="money_out"/>
         <result property="account" column="account"/>
         <result property="remarks" column="remarks"/>
+        <result property="createTime" column="create_time"/>
+        <result property="deptId" column="dept_id"/>
     </resultMap>
-
+<insert id="saveList" parameterType="io.renren.modules.sys.entity.ExpGeneralInOutEntity">
+		INSERT INTO exp_general_in_out
+		(
+       `customer_id`, `waybill_number`, `consumer`, `money_detail`, `money_in`, `money_out`, `account`, `remarks`, `create_time`,`dept_id`
+       )
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+          #{item.customerId}, #{item.waybillNumber}, #{item.consumer}, #{item.moneyDetail}, #{item.moneyIn}, #{item.moneyOut}, #{item.account}, #{item.remarks}, #{item.createTime}, #{item.deptId}
+       )
+       </foreach>
+	</insert>
 
 </mapper>
