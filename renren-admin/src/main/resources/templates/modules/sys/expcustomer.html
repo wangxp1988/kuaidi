@@ -44,33 +44,46 @@
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">客户类型</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expCustomer.type" placeholder="客户类型"/>
+                           <!--  <input type="text" class="form-control" v-model="expCustomer.type" placeholder="客户类型"/> -->
+                            <select class="form-control" v-model="expCustomer.type">
+                                   <option value="0000">请选择客户类型</option>
+						         <option v-for="(item,index) in  customerType"  :value="item.name">{{ item.name }}</option>
+						      </select>
                         </div>
                     </div>
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">价格表名称</div>
+                      
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expCustomer.priceName" placeholder="价格表名称"/>
+                           <!--  <input type="text" class="form-control" v-model="expCustomer.priceName" placeholder="价格表名称"/> -->
+                             <select class="form-control" v-model="expCustomer.priceName">
+                                   <option value="0000">请选择价格表名称</option>
+						         <option v-for="(item,index) in  priceNameList"  :value="item.priceName">{{ item.priceName }}</option>
+						      </select>
                         </div>
                     </div>
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">付款客户ID</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expCustomer.paymentId" placeholder="付款客户ID"/>
+                            <input type="text" id="paymentId" class="form-control" v-model="expCustomer.paymentId" placeholder="选择付款客户后自动添加" readonly="readonly"/>
                         </div>
                     </div>
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">付款客户名称</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expCustomer.paymentName" placeholder="付款客户名称"/>
+                           <!--  <input type="text" class="form-control" v-model="expCustomer.paymentName" placeholder="付款客户名称"/> -->
+                             <select class="form-control" v-model="expCustomer.paymentName"  @change="changeCustomer()" id="selectCustomer">
+                                   <option value="0000" code="0000">请选择付款客户名称</option>
+						         <option v-for="(item,index) in  customerList" :code="item.code"  :value="item.name">{{ item.name }}</option>
+						      </select>
                         </div>
                     </div>
-											                    <div class="form-group">
+                  <!--  <div class="form-group">
                         <div class="col-sm-2 control-label">部门ID</div>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" v-model="expCustomer.deptId" placeholder="部门ID"/>
                         </div>
-                    </div>
+                    </div> -->
 							            <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>

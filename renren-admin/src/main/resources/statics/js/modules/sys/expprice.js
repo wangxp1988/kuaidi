@@ -51,7 +51,7 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
-			provinceList:{};
+			vm.provinceList={};
 			vm.expPrice = {};
 			vm.expPrice.provinceName="0000";
 			this.getProvinceList();

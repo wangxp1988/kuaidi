@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.ExpMoneyInOutDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.ExpMoneyInOutEntity" id="expMoneyInOutMap">
+        <result property="id" column="id"/>
+        <result property="waybillNumber" column="waybill_number"/>
+        <result property="createDate" column="create_date"/>
+        <result property="columnName" column="column_name"/>
+        <result property="money" column="money"/>
+        <result property="deptId" column="dept_id"/>
+    </resultMap>
+
+<insert id="saveList" parameterType="io.renren.modules.sys.entity.ExpMoneyInOutEntity">
+		INSERT INTO exp_money_in_out
+		(
+       `waybill_number`, `create_date`, `column_name`, `money`, `dept_id`
+       )
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+          #{item.waybillNumber}, #{item.createDate}, #{item.columnName}, #{item.money}, #{item.deptId}
+       )
+       </foreach>
+	</insert>
+</mapper>

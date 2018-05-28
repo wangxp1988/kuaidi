@@ -1,26 +1,18 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'sys/expgeneralinout/list',
+        url: baseURL + 'sys/expcustomertype/list',
         datatype: "json",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
-			{ label: '客户编码', name: 'customerId', index: 'customer_id', width: 80 }, 			
-			{ label: '运单号', name: 'waybillNumber', index: 'waybill_number', width: 80 }, 			
-			{ label: '客户', name: 'consumer', index: 'consumer', width: 80 }, 			
-			{ label: '款项说明', name: 'moneyDetail', index: 'money_detail', width: 80 }, 			
-			{ label: '收入金额', name: 'moneyIn', index: 'money_in', width: 80 }, 			
-			{ label: '支出金额', name: 'moneyOut', index: 'money_out', width: 80 }, 			
-			{ label: '账户', name: 'account', index: 'account', width: 80 }, 			
-			{ label: '备注', name: 'remarks', index: 'remarks', width: 80 }, 			
-			{ label: '记账日期', name: 'createTime', index: 'create_time', width: 80 }, 			
-			{ label: '部门ID', name: 'deptId', index: 'dept_id', width: 80 }			
+			{ label: '客户类型', name: 'name', index: 'name', width: 80 }, 			
+			{ label: '备注', name: 'remark', index: 'remark', width: 80 }			
         ],
 		viewrecords: true,
         height: 385,
         rowNum: 10,
 		rowList : [10,30,50],
         rownumbers: true, 
-        rownumWidth: 100, 
+        rownumWidth: 25, 
         autowidth:true,
         multiselect: true,
         pager: "#jqGridPager",
@@ -47,7 +39,7 @@ var vm = new Vue({
 	data:{
 		showList: true,
 		title: null,
-		expGeneralInOut: {}
+		expCustomerType: {}
 	},
 	methods: {
 		query: function () {
@@ -56,7 +48,7 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
-			vm.expGeneralInOut = {};
+			vm.expCustomerType = {};
 		},
 		update: function (event) {
 			var id = getSelectedRow();
@@ -69,12 +61,12 @@ var vm = new Vue({
             vm.getInfo(id)
 		},
 		saveOrUpdate: function (event) {
-			var url = vm.expGeneralInOut.id == null ? "sys/expgeneralinout/save" : "sys/expgeneralinout/update";
+			var url = vm.expCustomerType.id == null ? "sys/expcustomertype/save" : "sys/expcustomertype/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
                 contentType: "application/json",
-			    data: JSON.stringify(vm.expGeneralInOut),
+			    data: JSON.stringify(vm.expCustomerType),
 			    success: function(r){
 			    	if(r.code === 0){
 						alert('操作成功', function(index){
@@ -95,7 +87,7 @@ var vm = new Vue({
 			confirm('确定要删除选中的记录？', function(){
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "sys/expgeneralinout/delete",
+				    url: baseURL + "sys/expcustomertype/delete",
                     contentType: "application/json",
 				    data: JSON.stringify(ids),
 				    success: function(r){
@@ -111,8 +103,8 @@ var vm = new Vue({
 			});
 		},
 		getInfo: function(id){
-			$.get(baseURL + "sys/expgeneralinout/info/"+id, function(r){
-                vm.expGeneralInOut = r.expGeneralInOut;
+			$.get(baseURL + "sys/expcustomertype/info/"+id, function(r){
+                vm.expCustomerType = r.expCustomerType;
             });
 		},
 		reload: function (event) {
@@ -124,24 +116,3 @@ var vm = new Vue({
 		}
 	}
 });
-
-function imports(){
-	var fd=new FormData();
-	fd.append("file",$("#myfile").get(0).files[0]);
-	 var index = layer.load(1, {
-	   	  shade: [0.8,'#fff'] //0.1透明度的白色背景
-	   	});
-        $.ajax({  
-            type: 'POST',  
-            url: baseURL + "sys/expgeneralinout/import",  
-            data: fd,
-            cache:false,
-            contentType:false,
-            processData:false,
-            success : function(data){  
-            	layer.close(index);
-            	$("#jqGrid").trigger("reloadGrid");
-            	 //$("#result").html("<span style='color:red;'>"+data.msg+"<span>") 
-               }     
-    }); 
-}

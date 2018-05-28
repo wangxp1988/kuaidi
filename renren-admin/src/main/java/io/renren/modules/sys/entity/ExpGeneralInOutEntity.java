@@ -2,10 +2,13 @@ package io.renren.modules.sys.entity;
 
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 日常收支
@@ -216,6 +219,8 @@ public class ExpGeneralInOutEntity implements Serializable {
 	/**
 	 * 获取：记账日期
 	 */
+	@DateTimeFormat(pattern="yyyy-MM-dd") 
+    @JsonFormat(pattern="yyyy-MM-dd")
 	public Date getCreateTime() {
 		return createTime;
 	}

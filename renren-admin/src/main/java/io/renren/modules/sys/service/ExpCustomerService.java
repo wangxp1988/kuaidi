@@ -19,5 +19,7 @@ public interface ExpCustomerService extends IService<ExpCustomerEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
 	void saveList(List<ExpCustomerEntity> tempList);
+
+	List<ExpCustomerEntity> listAllCustomer(Map<String, Object> params);
 }
 

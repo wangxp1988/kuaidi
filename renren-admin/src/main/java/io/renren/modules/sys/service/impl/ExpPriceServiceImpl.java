@@ -41,4 +41,13 @@ public class ExpPriceServiceImpl extends ServiceImpl<ExpPriceDao, ExpPriceEntity
 		
 	}
 
+	@Override
+	 @DataFilter(subDept = true, user = false)
+	public List<ExpPriceEntity> listAllName(Map<String, Object> params) {
+		return  this.selectList(new EntityWrapper<ExpPriceEntity>()
+				.groupBy("price_name")
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER)));
+		  
+	}
+
 }

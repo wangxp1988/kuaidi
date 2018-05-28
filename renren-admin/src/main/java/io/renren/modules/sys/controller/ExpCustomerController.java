@@ -60,6 +60,15 @@ public class ExpCustomerController {
 
 
     /**
+     * 付款用户加载列表
+     */
+    @RequestMapping("/listAllCustomer")
+    public R listAllCustomer(@RequestParam Map<String, Object> params){
+        List<ExpCustomerEntity> list = expCustomerService.listAllCustomer(params);
+        return R.ok().put("list", list);
+    }
+
+    /**
      * 信息
      */
     @RequestMapping("/info/{id}")
@@ -76,6 +85,8 @@ public class ExpCustomerController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:expcustomer:save")
     public R save(@RequestBody ExpCustomerEntity expCustomer){
+    	Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
+    	expCustomer.setDeptId(deptId);
         expCustomerService.insert(expCustomer);
 
         return R.ok();
@@ -87,6 +98,8 @@ public class ExpCustomerController {
     @RequestMapping("/update")
     @RequiresPermissions("sys:expcustomer:update")
     public R update(@RequestBody ExpCustomerEntity expCustomer){
+    	Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
+    	expCustomer.setDeptId(deptId);
         ValidatorUtils.validateEntity(expCustomer);
         expCustomerService.updateAllColumnById(expCustomer);//全部更新
         

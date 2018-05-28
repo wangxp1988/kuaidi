@@ -43,7 +43,10 @@ var vm = new Vue({
 	data:{
 		showList: true,
 		title: null,
-		expCustomer: {}
+		expCustomer: {},
+		priceNameList:{},
+		customerList:{},
+		 customerType:{}
 	},
 	methods: {
 		query: function () {
@@ -53,6 +56,14 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			vm.expCustomer = {};
+			vm.expCustomer.priceName="0000";
+			vm.expCustomer.paymentName="0000";
+			vm.expCustomer.type="0000";
+			this.getPriceNameList();
+			this.getCustomerList();
+			this.getCustomerType();
+			$("#paymentId").attr("value","");
+			$("#paymentId").attr("placeholder","选择付款客户后自动添加");
 		},
 		update: function (event) {
 			var id = getSelectedRow();
@@ -61,7 +72,9 @@ var vm = new Vue({
 			}
 			vm.showList = false;
             vm.title = "修改";
-            
+            this.getPriceNameList();
+            this.getCustomerList();
+            this.getCustomerType();
             vm.getInfo(id)
 		},
 		saveOrUpdate: function (event) {
@@ -111,12 +124,33 @@ var vm = new Vue({
                 vm.expCustomer = r.expCustomer;
             });
 		},
+		getPriceNameList: function(){
+            $.get(baseURL + "sys/expprice/listAllName", function(r){
+                vm.priceNameList = r.list;
+            });
+        },
+        getCustomerList: function(){
+            $.get(baseURL + "sys/expcustomer/listAllCustomer", function(r){
+                vm.customerList = r.list;
+            });
+        },
 		reload: function (event) {
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 
                 page:page
             }).trigger("reloadGrid");
+		},
+		changeCustomer:function(){
+			var code=$('#selectCustomer').find("option:selected").attr("code");
+			vm.expCustomer.paymentId=code;
+			$("#paymentId").attr("value",code);
+			$("#paymentId").attr("placeholder",code);
+		},
+		getCustomerType:function(){
+			 $.get(baseURL + "sys/expcustomertype/listAll", function(r){
+	                vm.customerType = r.list;
+	            });
 		}
 	}
 });

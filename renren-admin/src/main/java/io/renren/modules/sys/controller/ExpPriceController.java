@@ -54,6 +54,16 @@ public class ExpPriceController {
         return R.ok().put("page", page);
     }
     
+    /**
+     * 查询对于单位的价格表名称
+     * @param params
+     * @return
+     */
+    @RequestMapping("/listAllName")
+    public R listAllName(@RequestParam Map<String, Object> params){
+        List<ExpPriceEntity> list = expPriceService.listAllName(params);
+        return R.ok().put("list", list);
+    }
 
 
     /**
