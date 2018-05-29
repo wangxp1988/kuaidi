@@ -15,6 +15,7 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
 import io.renren.modules.sys.dao.ExpMoneyInOutDao;
+import io.renren.modules.sys.entity.ExpGeneralInOutEntity;
 import io.renren.modules.sys.entity.ExpMoneyInOutEntity;
 import io.renren.modules.sys.service.ExpMoneyInOutService;
 
@@ -38,6 +39,17 @@ public class ExpMoneyInOutServiceImpl extends ServiceImpl<ExpMoneyInOutDao, ExpM
 	public void saveList(List<ExpMoneyInOutEntity> tempList) {
 		 
 		expMoneyInOutDao.saveList(tempList);
+	}
+
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public int selectByTime(Map<String, Object> params) {
+		int count=expMoneyInOutDao.selectCount(
+				new EntityWrapper<ExpMoneyInOutEntity>()
+				.eq(params.get("createDate")!=null, "create_date", params.get("createDate"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				);
+		return count;
 	}
 
 }

@@ -19,5 +19,9 @@ public interface ExpDailyScanService extends IService<ExpDailyScanEntity> {
     PageUtils queryPage(Map<String, Object> params);
     
 	void saveList(List<ExpDailyScanEntity> tempList);
+
+	int selectByTime(Map<String, Object> params);
+
+	List<Object> selectWaybill(Map<String, Object> params);
 }
 

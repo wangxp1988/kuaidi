@@ -139,7 +139,11 @@ function imports(){
             processData:false,
             success : function(data){  
             	layer.close(index);
-            	 $("#result").html("<span style='color:red;'>"+data.msg+"<span>") 
+            	if(data.code==0){
+            		alert("数据导入成功");
+            	}else{
+            		alert(data.msg)
+            	}
             	 $("#jqGrid").jqGrid('setGridParam',{}).trigger("reloadGrid");
                }     
     }); 

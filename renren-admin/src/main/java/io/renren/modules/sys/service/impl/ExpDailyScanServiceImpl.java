@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 
@@ -38,6 +39,28 @@ public class ExpDailyScanServiceImpl extends ServiceImpl<ExpDailyScanDao, ExpDai
 	public void saveList(List<ExpDailyScanEntity> tempList) {
 		expDailyScanDao.saveList(tempList);
 		
+	}
+
+	@Override
+	 @DataFilter(subDept = true, user = false)
+	public int selectByTime(Map<String, Object> params) {
+		int count=expDailyScanDao.selectCount(
+				new EntityWrapper<ExpDailyScanEntity>()
+				.eq(params.get("createDate")!=null, "create_date", params.get("createDate"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				);
+		return count;
+	}
+
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public List<Object> selectWaybill(Map<String, Object> params) {
+		return  expDailyScanDao.selectObjs(
+				new EntityWrapper<ExpDailyScanEntity>().setSqlSelect("waybill_number")
+				.eq("DATE_FORMAT(create_date,'%Y-%m-%d')", params.get("dates"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				);
+	
 	}
 
 }

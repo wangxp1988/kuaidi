@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import io.renren.modules.sys.service.ExpMoneyInOutService;
 import io.renren.modules.sys.shiro.ShiroUtils;
 import jxl.Sheet;
 import jxl.Workbook;
+import io.renren.common.utils.Constant;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.common.utils.UploadAndExcelUtil;
@@ -106,8 +108,12 @@ public class ExpMoneyInOutController {
     @RequestMapping("import")
   	public R Import(@RequestParam("file") MultipartFile file) throws IOException {
       	String filePath = UploadAndExcelUtil.saveFile(file);
-      	List<ExpMoneyInOutEntity> list=getAllByExcel(filePath);
-      	
+      	List  list=getAllByExcel(filePath);
+      	if(list.get(0).equals(Constant.EXIST)) {
+    		return R.error("文件已经导入，不能重复导入");
+    	}else if(list.get(0).equals(Constant.FILE_ERROR)) {
+    		return R.error("文件或者文件版本错误，支持Excel 97-2003");
+    	}
       	if (null != list) {
       		long startTime=System.currentTimeMillis(); 
   			int g=list.size()/100;
@@ -141,10 +147,11 @@ public class ExpMoneyInOutController {
       }
       
       
-      public static List<ExpMoneyInOutEntity> getAllByExcel(String file) {
+      public List  getAllByExcel(String file) {
       	Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
-  		List<ExpMoneyInOutEntity> list = new ArrayList<ExpMoneyInOutEntity>();
+  		List  list = new ArrayList ();
   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+  		Map<String, Object> params=new HashMap<String, Object>();
   		try {
 
   			Workbook rwb = Workbook.getWorkbook(new File(file));
@@ -170,8 +177,19 @@ public class ExpMoneyInOutController {
   					// 运单号
   					String waybillNumber = rs.getCell(j++, i).getContents();
   					// 时间
-  					Date createDate = sdf.parse(rs.getCell(j++, i).getContents());
-  					
+  					String dateStr  = rs.getCell(j++, i).getContents();
+  					Date createDate =null;
+					if(StringUtils.isNotBlank(dateStr)) {
+						createDate= sdf.parse(dateStr);
+						if(i==1) {
+							params.put("createDate", createDate);
+							 int count=expMoneyInOutService.selectByTime(params);
+							 if(count>0) {
+								 list.add(Constant.EXIST);
+								 return list;
+							 }
+						}	
+					}
   					int temclos=clos-1-j;
   					for(int tem=0;tem<temclos;tem++) {
   						String columnName=colsNames.get(j++).toString().trim();
@@ -193,6 +211,8 @@ public class ExpMoneyInOutController {
   			}
   		} catch (Exception e) {
   			e.printStackTrace();
+			list.add(Constant.FILE_ERROR);
+			return list;
   		}
   		return list;
 

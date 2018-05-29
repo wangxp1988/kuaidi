@@ -133,6 +133,11 @@ function imports(){
             processData:false,
             success : function(data){  
             	layer.close(index);
+            	if(data.code==0){
+            		alert("数据导入成功");
+            	}else{
+            		alert(data.msg)
+            	}
             	$("#jqGrid").trigger("reloadGrid");
                }     
     }); 

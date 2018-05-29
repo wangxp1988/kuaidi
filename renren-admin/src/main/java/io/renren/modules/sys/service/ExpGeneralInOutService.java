@@ -19,5 +19,7 @@ public interface ExpGeneralInOutService extends IService<ExpGeneralInOutEntity> 
     PageUtils queryPage(Map<String, Object> params);
 
 	void saveList(List<ExpGeneralInOutEntity> tempList);
+
+	int selectByTime(Map<String, Object> params);
 }
 

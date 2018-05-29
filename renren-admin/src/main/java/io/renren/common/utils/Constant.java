@@ -27,6 +27,10 @@ public class Constant {
 	public static final int SUPER_ADMIN = 1;
     /** 数据权限过滤 */
 	public static final String SQL_FILTER = "sql_filter";
+	/** 数据已经存在 */
+	public static final String EXIST="exist";
+	/** 文件格式不正确 */
+	public static final String FILE_ERROR="fileError";
 
 
 	/**

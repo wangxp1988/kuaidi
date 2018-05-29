@@ -22,5 +22,8 @@ public interface ExpOrderRookieService extends IService<ExpOrderRookieEntity> {
      * @param tempList
      */
 	void saveList(List<ExpOrderRookieEntity> tempList);
+	int selectByTime(Map<String, Object> params);
+	
+	List<Object> selectWaybill(Map<String, Object> params);
 }
 

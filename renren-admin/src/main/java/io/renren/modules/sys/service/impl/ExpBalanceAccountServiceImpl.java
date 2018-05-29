@@ -3,11 +3,15 @@ package io.renren.modules.sys.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+
+import io.renren.common.annotation.DataFilter;
+import io.renren.common.utils.Constant;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
@@ -20,12 +24,13 @@ import io.renren.modules.sys.service.ExpBalanceAccountService;
 public class ExpBalanceAccountServiceImpl extends ServiceImpl<ExpBalanceAccountDao, ExpBalanceAccountEntity> implements ExpBalanceAccountService {
 
 	@Autowired
-	private ExpBalanceAccountDao expBalanceAccountEntity;
+	private ExpBalanceAccountDao expBalanceAccountDao;
     @Override
+    @DataFilter(subDept = true, user = false)
     public PageUtils queryPage(Map<String, Object> params) {
         Page<ExpBalanceAccountEntity> page = this.selectPage(
                 new Query<ExpBalanceAccountEntity>(params).getPage(),
-                new EntityWrapper<ExpBalanceAccountEntity>()
+                new EntityWrapper<ExpBalanceAccountEntity>().addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
         );
 
         return new PageUtils(page);
@@ -33,8 +38,19 @@ public class ExpBalanceAccountServiceImpl extends ServiceImpl<ExpBalanceAccountD
 
 	@Override
 	public void saveList(List<ExpBalanceAccountEntity> tempList) {
-		expBalanceAccountEntity.saveList(tempList);
+		expBalanceAccountDao.saveList(tempList);
 		
+	}
+
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public int selectByTime(Map<String, Object> params) {
+		int count=expBalanceAccountDao.selectCount(
+				new EntityWrapper<ExpBalanceAccountEntity>()
+				.eq(params.get("sendTime")!=null, "send_time", params.get("sendTime"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				);
+		return count;
 	}
 
 }

@@ -15,6 +15,8 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
 import io.renren.modules.sys.dao.ExpOrderRookieDao;
+import io.renren.modules.sys.entity.ExpDailyScanEntity;
+import io.renren.modules.sys.entity.ExpMoneyInOutEntity;
 import io.renren.modules.sys.entity.ExpOrderRookieEntity;
 import io.renren.modules.sys.service.ExpOrderRookieService;
 
@@ -39,6 +41,28 @@ public class ExpOrderRookieServiceImpl extends ServiceImpl<ExpOrderRookieDao, Ex
 	public void saveList(List<ExpOrderRookieEntity> tempList) {
 		expOrderRookieDao.saveList(tempList);
 		
+	}
+
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public int selectByTime(Map<String, Object> params) {
+		int count=expOrderRookieDao.selectCount(
+				new EntityWrapper<ExpOrderRookieEntity>()
+				.eq(params.get("createDate")!=null, "create_date", params.get("createDate"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				);
+		return count;
+	}
+
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public List<Object> selectWaybill(Map<String, Object> params) {
+		return  expOrderRookieDao.selectObjs(
+				new EntityWrapper<ExpOrderRookieEntity>().setSqlSelect("waybill_number")
+				.eq("DATE_FORMAT(create_date,'%Y-%m-%d')", params.get("dates"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				);
+	
 	}
 
 }

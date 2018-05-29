@@ -8,7 +8,7 @@ $(function () {
 			{ label: '运单号', name: 'waybillNumber', index: 'waybill_number', width: 80 }, 			
 			{ label: '客户', name: 'consumer', index: 'consumer', width: 80 }, 			
 			{ label: '款项说明', name: 'moneyDetail', index: 'money_detail', width: 80 }, 			
-			{ label: '收入金额', name: 'moneyIn', index: 'money_in', width: 80 }, 			
+			{ label: '收入金额', name: 'moneyIn', index: 'money_in', width: 80 }, 			
 			{ label: '支出金额', name: 'moneyOut', index: 'money_out', width: 80 }, 			
 			{ label: '账户', name: 'account', index: 'account', width: 80 }, 			
 			{ label: '备注', name: 'remarks', index: 'remarks', width: 80 }, 			
@@ -140,6 +140,11 @@ function imports(){
             processData:false,
             success : function(data){  
             	layer.close(index);
+            	if(data.code==0){
+            		alert("数据导入成功");
+            	}else{
+            		alert(data.msg)
+            	}
             	$("#jqGrid").trigger("reloadGrid");
             	 //$("#result").html("<span style='color:red;'>"+data.msg+"<span>") 
                }     

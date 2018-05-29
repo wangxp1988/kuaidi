@@ -19,5 +19,7 @@ public interface ExpMoneyInOutService extends IService<ExpMoneyInOutEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
 	void saveList(List<ExpMoneyInOutEntity> tempList);
+
+	int selectByTime(Map<String, Object> params);
 }
 

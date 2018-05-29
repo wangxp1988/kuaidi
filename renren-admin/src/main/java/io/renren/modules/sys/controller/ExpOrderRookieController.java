@@ -6,10 +6,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import io.renren.common.validator.ValidatorUtils;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +28,7 @@ import io.renren.modules.sys.service.ExpOrderRookieService;
 import io.renren.modules.sys.shiro.ShiroUtils;
 import jxl.Sheet;
 import jxl.Workbook;
+import io.renren.common.utils.Constant;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.common.utils.UploadAndExcelUtil;
@@ -104,8 +108,12 @@ public class ExpOrderRookieController {
     @RequestMapping("import")
 	public R Import(@RequestParam("file") MultipartFile file) throws IOException {
     	String filePath = UploadAndExcelUtil.saveFile(file);
-    	List<ExpOrderRookieEntity> list=getAllByExcel(filePath);
-    	
+    	List list=getAllByExcel(filePath);
+    	if(list.get(0).equals(Constant.EXIST)) {
+    		return R.error("文件已经导入，不能重复导入");
+    	}else if(list.get(0).equals(Constant.FILE_ERROR)) {
+    		return R.error("文件或者文件版本错误，支持Excel 97-2003");
+    	}
     	if (null != list) {
     		long startTime=System.currentTimeMillis(); 
 			int g=list.size()/100;
@@ -140,9 +148,10 @@ public class ExpOrderRookieController {
     }
     
     
-    public static List<ExpOrderRookieEntity> getAllByExcel(String file) {
+    public  List getAllByExcel(String file) {
     	Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
-		List<ExpOrderRookieEntity> list = new ArrayList<ExpOrderRookieEntity>();
+		List list = new ArrayList();
+		Map<String, Object> params=new HashMap<String, Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 
@@ -157,7 +166,19 @@ public class ExpOrderRookieController {
 					// 运单号
 					String waybillNumber = rs.getCell(j++, i).getContents();
 					// 创建时间
-					Date createDate = sdf.parse(rs.getCell(j++, i).getContents());
+					String dateStr  = rs.getCell(j++, i).getContents();
+  					Date createDate =null;
+					if(StringUtils.isNotBlank(dateStr)) {
+						createDate= sdf.parse(dateStr);
+						if(i==1) {
+							params.put("createDate", createDate);
+							 int count=expOrderRookieService.selectByTime(params);
+							 if(count>0) {
+								 list.add(Constant.EXIST);
+								 return list;
+							 }
+						}	
+					}
 					// 订单状态
 					String orderStatus = rs.getCell(j++, i).getContents();
 					// 订单来源
@@ -170,6 +191,9 @@ public class ExpOrderRookieController {
 					String customerCode = rs.getCell(j++, i).getContents();
 					// 客户名称
 					String customerName = rs.getCell(j++, i).getContents();
+					if(StringUtils.isNotBlank(customerName)) {
+						customerName=customerName.replace(dotName, "");
+					}
 					// 目的网点
 					String destinationDot = rs.getCell(j++, i).getContents();
 					// 目的分拨
@@ -187,6 +211,8 @@ public class ExpOrderRookieController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			list.add(Constant.FILE_ERROR);
+			return list;
 		}
 		return list;
 

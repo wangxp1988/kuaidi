@@ -40,4 +40,15 @@ public class ExpGeneralInOutServiceImpl extends ServiceImpl<ExpGeneralInOutDao, 
 		
 	}
 
+	@Override
+	 @DataFilter(subDept = true, user = false)
+	public int selectByTime(Map<String, Object> params) {
+		int count=expGeneralInOutDao.selectCount(
+				new EntityWrapper<ExpGeneralInOutEntity>()
+				.eq(params.get("createTime")!=null, "create_time", params.get("createTime"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				);
+		return count;
+	}
+
 }

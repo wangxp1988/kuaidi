@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.sys.entity.ExpBalanceAccountEntity;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -19,5 +20,7 @@ public interface ExpBalanceAccountService extends IService<ExpBalanceAccountEnti
     PageUtils queryPage(Map<String, Object> params);
 
 	void saveList(List<ExpBalanceAccountEntity> tempList);
+
+	int selectByTime(Map<String, Object> params);
 }
 
