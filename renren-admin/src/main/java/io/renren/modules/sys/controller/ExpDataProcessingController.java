@@ -55,9 +55,8 @@ public class ExpDataProcessingController {
         @SuppressWarnings("unused")
 		List<Object> rookieWaybillList=expOrderRookieService.selectWaybill(params);//只查询运单号
         List<Object> list= listCompare(rookieWaybillList,scanWaybillList);//得到菜鸟中没有的运单号
-        
-        //SELECT * from exp_daily_scan s 
-        //INNER JOIN exp_balance_account a ON s.waybill_number=a.waybill_number  where s.waybill_number IN ('90001414501906')
+        //expBalanceAccountService.selectAccount();
+        //SELECT s.waybill_number,s.weight,s.sender,a.send_province,s.branch,a.recipient_province from exp_daily_scan s INNER JOIN exp_balance_account a ON s.waybill_number=a.waybill_number  where s.waybill_number IN ('90001414501906')
         //expBalanceAccountService.select
 		return R.ok();
 	}
