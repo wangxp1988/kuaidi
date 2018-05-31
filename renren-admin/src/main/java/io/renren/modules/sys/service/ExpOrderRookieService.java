@@ -25,5 +25,6 @@ public interface ExpOrderRookieService extends IService<ExpOrderRookieEntity> {
 	int selectByTime(Map<String, Object> params);
 	
 	List<Object> selectWaybill(Map<String, Object> params);
+	List<Object> selectCustomerCode(Map<String, Object> params);
 }
 

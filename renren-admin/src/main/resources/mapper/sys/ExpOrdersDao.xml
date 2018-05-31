@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.ExpOrdersDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.ExpOrdersEntity" id="expOrdersMap">
+        <result property="id" column="id"/>
+        <result property="waybillNumber" column="waybill_number"/>
+        <result property="createDate" column="create_date"/>
+        <result property="customerCode" column="customer_code"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="weight" column="weight"/>
+        <result property="destinationProvince" column="destination_province"/>
+        <result property="dotCode" column="dot_code"/>
+        <result property="dotName" column="dot_name"/>
+        <result property="deptId" column="dept_id"/>
+    </resultMap>
+    <select id="selectNotInRookie" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
+       SELECT
+		s.waybill_number,
+		s.weight,
+		s.sender AS customer_name,
+		a.send_province,
+		s.branch AS dot_name,
+		a.recipient_province AS destination_province,
+	    s.create_date,
+	    s.dept_id
+	FROM
+		exp_daily_scan s
+	INNER JOIN exp_balance_account a ON s.waybill_number = a.waybill_number
+	<where>
+	  <if test="null!=filter and ''!=filter">
+	    ${filter}
+	  </if>
+	  <if test="list!=null">
+	    AND  s.waybill_number IN (
+	    <foreach collection="list" item="item" index="index" separator=",">
+	      #{item}
+	    </foreach>
+	    ) 
+	  </if>
+	</where>
+	</select>
+	
+	<select id="selectInRookie" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
+			SELECT
+			a.waybill_number,
+			s.weight,
+			s.sender  AS customer_name,
+			a.send_province,
+			s.branch AS dot_name,
+			a.recipient_province  AS destination_province,
+			s.create_date,
+		    r.customer_code,
+		    a.dept_id
+		FROM
+			exp_balance_account a
+		INNER JOIN exp_order_rookie r ON a.waybill_number = r.waybill_number
+		INNER JOIN exp_daily_scan s ON a.waybill_number = s.waybill_number
+		 <where>
+		   <if test="null!=filter and ''!=filter">
+		${filter}
+		  </if>
+		  <if test="null!=dates and ''!=dates">
+		   And  DATE_FORMAT(s.create_date,'%Y-%m-%d')=#{dates}
+		  </if>
+		 </where>
+</select>
+<insert id="saveOrdersBatch" parameterType="io.renren.modules.sys.entity.ExpOrdersEntity">
+		INSERT INTO EXP_BALANCE_ACCOUNT
+		(
+       `waybill_number`, `create_date`, `customer_code`, `customer_name`, `weight`, `destination_province`, `dot_code`, `dot_name`, `dept_id`
+       )
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+       #{item.waybillNumber}, #{item.createDate}, #{item.customerCode}, #{item.customerName}, #{item.weight}, #{item.destinationProvince}, #{item.dotCode}, #{item.dotName},#{item.deptId}
+       )
+       </foreach>
+	</insert>
+</mapper>

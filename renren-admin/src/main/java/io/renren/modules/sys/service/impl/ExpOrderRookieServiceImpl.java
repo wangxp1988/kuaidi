@@ -3,8 +3,11 @@ package io.renren.modules.sys.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
@@ -63,6 +66,24 @@ public class ExpOrderRookieServiceImpl extends ServiceImpl<ExpOrderRookieDao, Ex
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
 				);
 	
+	}
+	/**
+	 * 查询菜鸟订单中的用户编码
+	 */
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public List<Object> selectCustomerCode(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		 List<Object> list=expOrderRookieDao.selectObjs(
+				new EntityWrapper<ExpOrderRookieEntity>().setSqlSelect("customer_code")
+				.eq("DATE_FORMAT(create_date,'%Y-%m-%d')", params.get("dates"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				);
+		 Set<Object> set=new HashSet<Object>();
+		 set.addAll(list);
+		 list.clear();
+		 list.addAll(set);
+		return list;
 	}
 
 }

@@ -21,5 +21,9 @@ public interface ExpCustomerService extends IService<ExpCustomerEntity> {
 	void saveList(List<ExpCustomerEntity> tempList);
 
 	List<ExpCustomerEntity> listAllCustomer(Map<String, Object> params);
+
+	List<Object> selectCustomerCode(Map<String, Object> params);
+
+	List<ExpCustomerEntity> selectCustomerInRookie(List<Object> listCode);
 }
 

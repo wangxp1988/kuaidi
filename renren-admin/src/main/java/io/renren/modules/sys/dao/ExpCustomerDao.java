@@ -16,5 +16,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 public interface ExpCustomerDao extends BaseMapper<ExpCustomerEntity> {
 
 	void saveList(List<ExpCustomerEntity> tempList);
+
+	List<ExpCustomerEntity> selectCustomerInRookie(List<Object> listCode);
 	
 }
