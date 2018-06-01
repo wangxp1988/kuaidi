@@ -61,5 +61,14 @@ public class ExpOrdersServiceImpl extends ServiceImpl<ExpOrdersDao, ExpOrdersEnt
 		expOrdersDao.saveOrdersBatch(list);
 	}
 
+	@Override
+	@DataFilter(subDept = true, user = false,tableAlias="o")
+	public List<ExpOrdersEntity> selectMoneyList(Map<String, Object> params) {
+		if(null!=params.get("dates")&&!"".equals(params.get("dates").toString())) {
+			return expOrdersDao.selectMoneyList(params.get("dates").toString(),(String)params.get(Constant.SQL_FILTER));
+	   }
+	   return null;
+	}
+
 
 }

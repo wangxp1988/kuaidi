@@ -44,6 +44,10 @@ public class ExpOrdersEntity implements Serializable {
 	 */
 	private BigDecimal weight;
 	/**
+	 * 快递费
+	 */
+	private BigDecimal money;
+	/**
 	 * 目的省
 	 */
 	private String destinationProvince;
@@ -180,4 +184,21 @@ public class ExpOrdersEntity implements Serializable {
 	public Long getDeptId() {
 		return deptId;
 	}
+	/**
+	 * 获取快递费
+	 * @return
+	 */
+	public BigDecimal getMoney() {
+		return money;
+	}
+	/**
+	 * 设置快递费
+	 * @return
+	 */
+	public void setMoney(BigDecimal money) {
+		this.money = money;
+	}
+	
+	
+	
 }

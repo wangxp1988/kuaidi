@@ -11,24 +11,29 @@
         <result property="customerCode" column="customer_code"/>
         <result property="customerName" column="customer_name"/>
         <result property="weight" column="weight"/>
+        <result property="money" column="money"/>
         <result property="destinationProvince" column="destination_province"/>
         <result property="dotCode" column="dot_code"/>
         <result property="dotName" column="dot_name"/>
         <result property="deptId" column="dept_id"/>
     </resultMap>
     <select id="selectNotInRookie" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
-       SELECT
+    SELECT
 		s.waybill_number,
-		s.weight,
+    `fun_round`(s.weight+(SELECT base_weight FROM exp_base LIMIT 0,1))AS weight,
 		s.sender AS customer_name,
 		a.send_province,
 		s.branch AS dot_name,
 		a.recipient_province AS destination_province,
 	    s.create_date,
-	    s.dept_id
+	    s.dept_id,
+    c.`code` AS customer_code
+   <!--  p.money*`fun_round`(s.weight+(SELECT base_weight FROM exp_base LIMIT 0,1))AS money -->
 	FROM
 		exp_daily_scan s
 	INNER JOIN exp_balance_account a ON s.waybill_number = a.waybill_number
+  INNER JOIN exp_customer c ON c.`name`=s.sender
+  <!-- INNER JOIN exp_price p ON c.price_name=p.price_name AND p.province_name=a.recipient_province AND p.weight=`fun_round`(s.weight+(SELECT base_weight FROM exp_base LIMIT 0,1)) -->
 	<where>
 	  <if test="null!=filter and ''!=filter">
 	    ${filter}
@@ -46,7 +51,7 @@
 	<select id="selectInRookie" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
 			SELECT
 			a.waybill_number,
-			s.weight,
+			`fun_round`(s.weight+(SELECT base_weight FROM exp_base LIMIT 0,1))AS weight,
 			s.sender  AS customer_name,
 			a.send_province,
 			s.branch AS dot_name,
@@ -58,6 +63,7 @@
 			exp_balance_account a
 		INNER JOIN exp_order_rookie r ON a.waybill_number = r.waybill_number
 		INNER JOIN exp_daily_scan s ON a.waybill_number = s.waybill_number
+		<!-- INNER JOIN exp_price p ON c.price_name=p.price_name AND p.province_name=a.send_province AND p.weight=`fun_round`(s.weight+(SELECT base_weight FROM exp_base LIMIT 0,1)) -->
 		 <where>
 		   <if test="null!=filter and ''!=filter">
 		${filter}
@@ -67,8 +73,21 @@
 		  </if>
 		 </where>
 </select>
-<insert id="saveOrdersBatch" parameterType="io.renren.modules.sys.entity.ExpOrdersEntity">
-		INSERT INTO EXP_BALANCE_ACCOUNT
+	<select id="selectMoneyList" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
+		SELECT o.waybill_number,o.customer_code,convert(p.money,decimal),o.create_date,o.customer_name,o.weight from  exp_orders o
+		  INNER JOIN exp_customer c ON c.`code`=o.customer_code
+		  INNER JOIN exp_price p ON p.price_name=c.price_name AND p.weight=o.weight AND p.province_name=o.destination_province
+			  <where>
+				 <if test="null!=filter and ''!=filter">
+					  ${filter}
+				 </if>
+				 <if test="null!=dates and ''!=dates">
+					 And  DATE_FORMAT(o.create_date,'%Y-%m-%d')=#{dates}
+				</if>
+			 </where>
+	</select>
+    <insert id="saveOrdersBatch" parameterType="io.renren.modules.sys.entity.ExpOrdersEntity">
+		INSERT INTO exp_orders
 		(
        `waybill_number`, `create_date`, `customer_code`, `customer_name`, `weight`, `destination_province`, `dot_code`, `dot_name`, `dept_id`
        )

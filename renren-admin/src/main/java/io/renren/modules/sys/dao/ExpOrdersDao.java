@@ -22,5 +22,7 @@ public interface ExpOrdersDao extends BaseMapper<ExpOrdersEntity> {
 	List<ExpOrdersEntity> selectInRookie(@Param("dates")String dates,@Param("filter")String filter);
 
 	void saveOrdersBatch(List<ExpOrdersEntity> list);
+
+	List<ExpOrdersEntity> selectMoneyList(@Param("dates")String dates, @Param("filter")String filter);
 	
 }
