@@ -86,4 +86,18 @@ public class ExpOrderRookieServiceImpl extends ServiceImpl<ExpOrderRookieDao, Ex
 		return list;
 	}
 
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public List<Object> getDateList(Map<String, Object> params) {
+		List<Object> list = expOrderRookieDao.selectObjs(new EntityWrapper<ExpOrderRookieEntity>()
+				.setSqlSelect("DATE_FORMAT(create_date,'%Y-%m-%d')")
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				);
+		 Set<Object> set=new HashSet<Object>();
+		 set.addAll(list);
+		 list.clear();
+		 list.addAll(set);
+		return list;
+	}
+
 }

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>角色管理</title>
+<#include "/header.html">
+</head>
+<body>
+	<div>
+		<div class="grid-btn" id="dateList">
+		<span>点击对应时间执行：</span>
+	   
+		</div>
+		<div id="alert">
+		
+		</div>
+	
+    </div>
+    
+    <script type="text/javascript">
+    $(function(){
+    	load();
+    });
+       function load(){
+    	   var url="sys/dataprocessing/getDateList"
+    	     $.ajax({
+                 type: "POST",
+                 url:  baseURL + url,
+                 contentType: "application/json",
+                 success: function(r){
+                     if(r.code === 0){
+                    	 if(r.list==null){
+                    		 $("#dateList").append('暂时没有可处理数据')  ;
+                    	 }
+                    	 $.each(r.list, function(i, item){
+                    		 $("#dateList").append('<a class="btn btn-default" onclick="dosomething(\''+item+'\',1);" >'+item+'</a>') ;
+                    		 });
+                     }else{
+                         alert(r.msg);
+                     }
+                 }
+             });
+       }
+       
+       
+       function dosomething(dates,num){
+    	   var index = layer.load(1, {
+    		   	  shade: [0.2,'#fff'] //0.1透明度的白色背景
+    		   	});
+    	   var url="sys/dataprocessing/doSomething"
+    	   $.ajax({
+               type: "POST",
+               url:  baseURL + url,
+               data: {'dates':dates,'num':num},
+               success: function(r){
+                   if(r.code === 0){
+                  		 $("#alert").append('<div class="alert alert-success" role="alert"><a href="#" class="alert-link">'+r.msg+'</a></div>')  ;
+                  		 if(num<5){
+                  			dosomething(dates,num+1)
+                  		 }
+                  	    layer.close(index);
+                   }else{
+                	   $("#alert").append('	<div class="alert alert-danger" role="alert"><a href="#" class="alert-link">'+r.msg+'</a></div>')  ;
+                	   return;
+                   }
+               }
+           });
+       }
+    </script>
+    
+</body>
+</html>

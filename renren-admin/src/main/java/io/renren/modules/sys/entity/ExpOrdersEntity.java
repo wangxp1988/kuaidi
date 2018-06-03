@@ -44,6 +44,10 @@ public class ExpOrdersEntity implements Serializable {
 	 */
 	private BigDecimal weight;
 	/**
+	 * y原重量
+	 */
+	private BigDecimal oldWeight;
+	/**
 	 * 快递费
 	 */
 	private BigDecimal money;
@@ -197,6 +201,14 @@ public class ExpOrdersEntity implements Serializable {
 	 */
 	public void setMoney(BigDecimal money) {
 		this.money = money;
+	}
+	
+	
+	public BigDecimal getOldWeight() {
+		return oldWeight;
+	}
+	public void setOldWeight(BigDecimal oldWeight) {
+		this.oldWeight = oldWeight;
 	}
 	
 	
