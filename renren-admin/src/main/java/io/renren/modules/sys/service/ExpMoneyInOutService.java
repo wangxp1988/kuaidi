@@ -21,5 +21,10 @@ public interface ExpMoneyInOutService extends IService<ExpMoneyInOutEntity> {
 	void saveList(List<ExpMoneyInOutEntity> tempList);
 
 	int selectByTime(Map<String, Object> params);
+
+	List<ExpMoneyInOutEntity> selectLikeNIn(Map<String, Object> params);
+	List<ExpMoneyInOutEntity> selectLikeNOut(Map<String, Object> params);
+
+	List<ExpMoneyInOutEntity> selectInNotIsN(Map<String, Object> params);
 }
 

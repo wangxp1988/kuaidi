@@ -25,5 +25,8 @@ public interface ExpOrdersService extends IService<ExpOrdersEntity> {
 	void saveOrdersBatch(List<ExpOrdersEntity> listOne);
 
 	List<ExpOrdersEntity> selectMoneyList(Map<String, Object> params);
+
+	List<ExpOrdersEntity> selectOutOrder(Map<String, Object> params);
+	List<ExpOrdersEntity> selectInOrder(Map<String, Object> params);
 }
 

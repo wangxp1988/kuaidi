@@ -34,34 +34,41 @@ public class Constant {
 	//borrow借 |贷loan|
 	/**收入凭证**/
 	public  static final String IN_SECOND_CODE_BORROW="112201";
-	public  static final String IN_SECOND_NAME_BORROW="应收账款";
+	public  static final String IN_SECOND_NAME_BORROW="应收账款"; 
 	public  static final String IN_SECOND_CODE_LOAN="600101";
 	public  static final String IN_SECOND_NAME_LOAN="主营业务收入-运费";
 	/**收支凭证**/
 	//收入
-	public  static final String IN_IN_OUT_SECOND_CODE_BORROW="";
-	public  static final String IN_IN_OUT_SECOND_NAME_BORROW="";
-	public  static final String IN_IN_OUT_SECOND_CODE_LOAN="";
-	public  static final String IN_IN_OUT_SECOND_NAME_LOAN="";
+	public  static final String IN_IN_OUT_SECOND_CODE_BORROW="112301";
+	public  static final String IN_IN_OUT_SECOND_NAME_BORROW="预付账款";
+	public  static final String IN_IN_OUT_SECOND_CODE_LOAN="600201";
+	public  static final String IN_IN_OUT_SECOND_NAME_LOAN="主营业务收入";
+	//派单
+	public  static final String PAI_IN_OUT_SECOND_CODE_BORROW="112304";
+	public  static final String PAI_IN_OUT_SECOND_NAME_BORROW="预付账款-安能";
+	public  static final String PAI_IN_OUT_SECOND_CODE_LOAN="600204";
+	public  static final String PAI_IN_OUT_SECOND_NAME_LOAN="主营业务收入-派单";
 	//支出
-	public  static final String OUT_IN_OUT_SECOND_CODE_BORROW="";
-	public  static final String OUT_IN_OUT_SECOND_NAME_BORROW="";
-	public  static final String OUT_IN_OUT_SECOND_CODE_LOAN="";
-	public  static final String OUT_IN_OUT_SECOND_NAME_LOAN="";
+	public  static final String OUT_IN_OUT_SECOND_CODE_BORROW="112302";
+	public  static final String OUT_IN_OUT_SECOND_NAME_BORROW="成本";
+	public  static final String OUT_IN_OUT_SECOND_CODE_LOAN="600202";
+	public  static final String OUT_IN_OUT_SECOND_NAME_LOAN="预付账款";
 	//老板
-	public  static final String BOSS_IN_OUT_SECOND_CODE_BORROW="";
-	public  static final String BOSS_IN_OUT_SECOND_NAME_BORROW="";
-	public  static final String BOSS_IN_OUT_SECOND_CODE_LOAN="";
-	public  static final String BOSS_IN_OUT_SECOND_NAME_LOAN="";
+	public  static final String BOSS_IN_OUT_SECOND_CODE_BORROW="112303";
+	public  static final String BOSS_IN_OUT_SECOND_NAME_BORROW="预付账款-安能";
+	public  static final String BOSS_IN_OUT_SECOND_CODE_LOAN="600203";
+	public  static final String BOSS_IN_OUT_SECOND_NAME_LOAN="其他应付款-老板";
 	//面单
-	public  static final String BILL_IN_OUT_SECOND_CODE_BORROW="";
-	public  static final String BILL_IN_OUT_SECOND_NAME_BORROW="";
-	public  static final String BILL_IN_OUT_SECOND_CODE_LOAN="";
-	public  static final String BILL_IN_OUT_SECOND_NAME_LOAN="";
+	public  static final String BILL_IN_OUT_SECOND_CODE_BORROW="112304";
+	public  static final String BILL_IN_OUT_SECOND_NAME_BORROW="主营业务成本--物料款电子面单";
+	public  static final String BILL_IN_OUT_SECOND_CODE_LOAN="600204";
+	public  static final String BILL_IN_OUT_SECOND_NAME_LOAN="预付账款-安能";
 	
 	/**收款凭证**/
-	private  static final String DAY_IN_SECOND_CODE="";
-	private  static final String DAY_IN_OUT_SECOND_NAME="";
+	public  static final String DAY_IN_SECOND_CODE_BORROW="112401";
+	public  static final String DAY_IN_OUT_SECOND_NAME_BORROW="其他货币资金";
+	public  static final String DAY_IN_SECOND_CODE_LOAN="600301";
+	public  static final String DAY_IN_OUT_SECOND_NAME_LOAN="应收账款";
 	
 
 

@@ -74,35 +74,84 @@
 		  </if>
 		 </where>
 </select>
-	<select id="selectMoneyList" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
+		<select id="selectMoneyList" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
+			SELECT
+				o.id,
+				o.waybill_number,
+				o.customer_code,
+				(
+					SELECT
+						p.money
+					FROM
+						exp_price p,exp_customer c where p.price_name =c.price_name  AND c.`code` = o.customer_code 
+					AND p.weight = o.weight
+					AND p.province_name = o.destination_province LIMIT 0,1
+				) * o.weight AS money,
+				o.create_date,
+				o.customer_name,
+				o.weight,
+				o.old_weight,
+				o.destination_province
+			FROM
+				exp_orders o 
+				  <where>
+					 <if test="null!=filter and ''!=filter">
+						  ${filter}
+					 </if>
+					 <if test="null!=dates and ''!=dates">
+						 And  DATE_FORMAT(o.create_date,'%Y-%m-%d')=#{dates}
+					</if>
+				 </where>
+		</select>
+		<select id="selectOutOrder" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
 		SELECT
-			o.id,
-			o.waybill_number,
-			o.customer_code,
-			(
-				SELECT
-					p.money
-				FROM
-					exp_price p,exp_customer c where p.price_name =c.price_name  AND c.`code` = o.customer_code 
-				AND p.weight = o.weight
-				AND p.province_name = o.destination_province LIMIT 0,1
-			) * o.weight AS money,
-			o.create_date,
-			o.customer_name,
+			m.waybill_number,
+			m.create_date,
+			m.money,
+			m.dept_id,
+			o.destination_province,
 			o.weight,
 			o.old_weight,
-			o.destination_province
+			o.customer_code,
+			o.customer_name
 		FROM
-			exp_orders o 
-			  <where>
+			exp_money_in_out m  
+		INNER JOIN exp_orders o ON m.waybill_number = o.waybill_number
+		  <where>
 				 <if test="null!=filter and ''!=filter">
 					  ${filter}
 				 </if>
 				 <if test="null!=dates and ''!=dates">
 					 And  DATE_FORMAT(o.create_date,'%Y-%m-%d')=#{dates}
 				</if>
+				AND m.money > 0 AND m.column_name LIKE '支出%'
 			 </where>
-	</select>
+		</select>
+		<select id="selectInOrder" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
+		SELECT
+			m.waybill_number,
+			m.create_date,
+			m.money,
+			m.dept_id,
+			o.destination_province,
+			o.weight,
+			o.old_weight,
+			o.customer_code,
+			o.customer_name
+		FROM
+			exp_money_in_out m  
+		INNER JOIN exp_orders o ON m.waybill_number = o.waybill_number
+		  <where>
+				 <if test="null!=filter and ''!=filter">
+					  ${filter}
+				 </if>
+				 <if test="null!=dates and ''!=dates">
+					 And  DATE_FORMAT(o.create_date,'%Y-%m-%d')=#{dates}
+				</if>
+				AND m.money > 0 AND m.column_name LIKE '收入%'
+			 </where>
+		</select>
+	
     <insert id="saveOrdersBatch" parameterType="io.renren.modules.sys.entity.ExpOrdersEntity">
 		INSERT INTO exp_orders
 		(

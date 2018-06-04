@@ -52,4 +52,39 @@ public class ExpMoneyInOutServiceImpl extends ServiceImpl<ExpMoneyInOutDao, ExpM
 		return count;
 	}
 
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public List<ExpMoneyInOutEntity> selectLikeNIn(Map<String, Object> params) {
+		return expMoneyInOutDao.selectList(new EntityWrapper<ExpMoneyInOutEntity>()
+				.eq(params.get("createDate")!=null, "create_date", params.get("createDate"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.like("waybill_number", "N")
+				.like("column_name", "收入")
+				.gt("money", 0)
+				);
+		  
+	}
+	@DataFilter(subDept = true, user = false)
+	public List<ExpMoneyInOutEntity> selectLikeNOut(Map<String, Object> params) {
+		return expMoneyInOutDao.selectList(new EntityWrapper<ExpMoneyInOutEntity>()
+				.eq(params.get("createDate")!=null, "create_date", params.get("createDate"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.like("waybill_number", "N")
+				.like("column_name", "支出")
+				.gt("money", 0)
+				);
+		  
+	}
+
+	@Override
+	public List<ExpMoneyInOutEntity> selectInNotIsN(Map<String, Object> params) {
+		return expMoneyInOutDao.selectList(new EntityWrapper<ExpMoneyInOutEntity>()
+				.eq(params.get("createDate")!=null, "create_date", params.get("createDate"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.notLike("waybill_number", "N")
+				.like("column_name", "收入")
+				.gt("money", 0)
+				);
+	}
+
 }

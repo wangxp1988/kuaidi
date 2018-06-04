@@ -192,9 +192,9 @@ public class ExpMoneyInOutController {
 					}
   					int temclos=clos-1-j;
   					for(int tem=0;tem<temclos;tem++) {
-  						String columnName=colsNames.get(j++).toString().trim();
+  						String columnName=colsNames.get(j).toString().trim();
   						if(!columnName.contains("合计")) {
-  	  						String m=rs.getCell(j, i).getContents();
+  	  						String m=rs.getCell(j++, i).getContents();
   	  						BigDecimal money=new BigDecimal(0);
   	  						if(StringUtils.isNoneBlank(m)) {
   	  							money=new BigDecimal(m);
@@ -205,6 +205,8 @@ public class ExpMoneyInOutController {
   	  					
   	  			         ExpMoneyInOutEntity entity=new ExpMoneyInOutEntity(waybillNumber, createDate, columnName, money, deptId);
   	  			         list.add(entity);
+  						}else {
+  							j++;
   						}
   					}
   					}
