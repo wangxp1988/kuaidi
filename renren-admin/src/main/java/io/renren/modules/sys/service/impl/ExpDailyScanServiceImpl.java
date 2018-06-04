@@ -63,4 +63,15 @@ public class ExpDailyScanServiceImpl extends ServiceImpl<ExpDailyScanDao, ExpDai
 	
 	}
 
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public List<Object> getCustomerName(Map<String, Object> params) {
+		return  expDailyScanDao.selectObjs(
+				new EntityWrapper<ExpDailyScanEntity>().setSqlSelect("sender")
+				.eq("DATE_FORMAT(create_date,'%Y-%m-%d')", params.get("dates"))
+				.in("waybill_number", (List<Object>)params.get("list"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				);
+	}
+
 }

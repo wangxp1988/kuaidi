@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.ExpVoucherDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.ExpVoucherEntity" id="expVoucherMap">
+        <result property="id" column="id"/>
+        <result property="voucherRemark" column="voucher_remark"/>
+        <result property="voucherCode" column="voucher_code"/>
+        <result property="twoLevelCoding" column="two_level_coding"/>
+        <result property="twoLevelName" column="two_level_name"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="waybillNumber" column="waybill_number"/>
+        <result property="destinationDot" column="destination_dot"/>
+        <result property="debtorMoney" column="debtor_money"/>
+        <result property="lenderMoney" column="lender_money"/>
+        <result property="debtorWeight" column="debtor_weight"/>
+        <result property="lenderWeight" column="lender_weight"/>
+        <result property="customerCode" column="customer_code"/>
+        <result property="createDate" column="create_date"/>
+        <result property="deptId" column="dept_id"/>
+    </resultMap>
+     <insert id="saveList" parameterType="io.renren.modules.sys.entity.ExpVoucherEntity">
+     INSERT INTO exp_voucher
+		(
+				`voucher_remark`
+				,voucher_code
+				,`two_level_coding`
+				,`two_level_name`
+				,`customer_name`
+				,`waybill_number`
+				,`destination_dot`
+				,`debtor_money`
+				,`lender_money`
+				,`debtor_weight`
+				,`lender_weight`
+				,`customer_code`
+				,`create_date`
+				,`dept_id`
+				 
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+				 #{item.voucherRemark}
+				,#{item.voucherCode}
+				,#{item.twoLevelCoding}
+				,#{item.twoLevelName}
+				,#{item.customerName}
+				,#{item.waybillNumber}
+				,#{item.destinationDot}
+				,#{item.debtorMoney}
+				,#{item.lenderMoney}
+				,#{item.debtorWeight}
+				,#{item.lenderWeight}
+				,#{item.customerCode}
+				,#{item.createDate}
+				,#{item.deptId}
+				 
+		)
+		</foreach>
+     </insert>
+
+</mapper>

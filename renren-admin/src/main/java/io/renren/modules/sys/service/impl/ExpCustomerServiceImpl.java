@@ -77,4 +77,30 @@ public class ExpCustomerServiceImpl extends ServiceImpl<ExpCustomerDao, ExpCusto
 		return expCustomerDao.selectCustomerInRookie(listCode);
 	}
 
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public List<Object> getCustomerName(Map<String, Object> params) {
+		List<Object> list=expCustomerDao.selectObjs(
+				new EntityWrapper<ExpCustomerEntity>().setSqlSelect("name")
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				);
+		 Set<Object> set=new HashSet<Object>();
+		 set.addAll(list);
+		 list.clear();
+		 list.addAll(set);
+		return list;
+	}
+/**
+ * SELECT COUNT(id) FROM exp_customer WHERE `code` IS NULL OR price_name IS NULL OR type IS NULL
+ */
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public int selectNullCount(Map<String, Object> params) {
+		int count=expCustomerDao.selectCount(new EntityWrapper<ExpCustomerEntity>()
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.or("`code` IS NULL").or("`price_name` IS NULL").or("`type` IS NULL")
+				);
+		return count;
+	}
+
 }

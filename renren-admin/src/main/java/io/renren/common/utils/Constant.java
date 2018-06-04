@@ -31,6 +31,38 @@ public class Constant {
 	public static final String EXIST="exist";
 	/** 文件格式不正确 */
 	public static final String FILE_ERROR="fileError";
+	//borrow借 |贷loan|
+	/**收入凭证**/
+	public  static final String IN_SECOND_CODE_BORROW="112201";
+	public  static final String IN_SECOND_NAME_BORROW="应收账款";
+	public  static final String IN_SECOND_CODE_LOAN="600101";
+	public  static final String IN_SECOND_NAME_LOAN="主营业务收入-运费";
+	/**收支凭证**/
+	//收入
+	public  static final String IN_IN_OUT_SECOND_CODE_BORROW="";
+	public  static final String IN_IN_OUT_SECOND_NAME_BORROW="";
+	public  static final String IN_IN_OUT_SECOND_CODE_LOAN="";
+	public  static final String IN_IN_OUT_SECOND_NAME_LOAN="";
+	//支出
+	public  static final String OUT_IN_OUT_SECOND_CODE_BORROW="";
+	public  static final String OUT_IN_OUT_SECOND_NAME_BORROW="";
+	public  static final String OUT_IN_OUT_SECOND_CODE_LOAN="";
+	public  static final String OUT_IN_OUT_SECOND_NAME_LOAN="";
+	//老板
+	public  static final String BOSS_IN_OUT_SECOND_CODE_BORROW="";
+	public  static final String BOSS_IN_OUT_SECOND_NAME_BORROW="";
+	public  static final String BOSS_IN_OUT_SECOND_CODE_LOAN="";
+	public  static final String BOSS_IN_OUT_SECOND_NAME_LOAN="";
+	//面单
+	public  static final String BILL_IN_OUT_SECOND_CODE_BORROW="";
+	public  static final String BILL_IN_OUT_SECOND_NAME_BORROW="";
+	public  static final String BILL_IN_OUT_SECOND_CODE_LOAN="";
+	public  static final String BILL_IN_OUT_SECOND_NAME_LOAN="";
+	
+	/**收款凭证**/
+	private  static final String DAY_IN_SECOND_CODE="";
+	private  static final String DAY_IN_OUT_SECOND_NAME="";
+	
 
 
 	/**

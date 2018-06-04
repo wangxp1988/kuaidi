@@ -1,7 +1,5 @@
 package io.renren.modules.sys.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +32,7 @@ import io.renren.modules.sys.service.ExpPriceService;
  *   5、然后生成相应的凭证
  */
 @RestController
-@RequestMapping("sys/expdailyscan")
+@RequestMapping("sys/dataprocessing")
 public class ExpDataProcessingController {
 	@Autowired
 	private ExpDataProcessingService expDataProcessingService;
@@ -46,8 +44,18 @@ public class ExpDataProcessingController {
      */
     @RequestMapping("/doSomething")
 	public R doSomething(@RequestParam Map<String, Object> params) {
-    	expDataProcessingService.doSomething(params);
-		return R.ok();
+    	R r=expDataProcessingService.doSomething(params);
+		return r;
 	}
+    /**
+     * 获取需要处理的时间按钮
+     * @param params
+     * @return
+     */
+    @RequestMapping("/getDateList")
+   	public R getDateList(@RequestParam Map<String, Object> params) {
+       	List<Object> list=expDataProcessingService.getDateList(params);
+   		return R.ok().put("list", list);
+   	}
    
 }
