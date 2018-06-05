@@ -162,8 +162,8 @@ public class ExpDailyScanEntity implements Serializable {
 	/**
 	 * 获取：扫描日期
 	 */
-	@DateTimeFormat(pattern="yyyy-MM-ddHH:mm:ss") 
-    @JsonFormat(pattern="yyyy-MM-ddHH:mm:ss")
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	public Date getCreateDate() {
 		return createDate;
 	}

@@ -16,6 +16,7 @@
         <result property="destinationProvince" column="destination_province"/>
         <result property="dotCode" column="dot_code"/>
         <result property="dotName" column="dot_name"/>
+        <result property="des" column="des"/>
         <result property="deptId" column="dept_id"/>
     </resultMap>
     <select id="selectNotInRookie" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
@@ -109,6 +110,7 @@
 			m.create_date,
 			m.money,
 			m.dept_id,
+			m.column_name as des,
 			o.destination_province,
 			o.weight,
 			o.old_weight,
@@ -137,7 +139,8 @@
 			o.weight,
 			o.old_weight,
 			o.customer_code,
-			o.customer_name
+			o.customer_name,
+			m.column_name as des
 		FROM
 			exp_money_in_out m  
 		INNER JOIN exp_orders o ON m.waybill_number = o.waybill_number
@@ -151,7 +154,20 @@
 				AND m.money > 0 AND m.column_name LIKE '收入%'
 			 </where>
 		</select>
-	
+	<select id="selectGeneralIn" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
+	SELECT c.`code` as customer_code,c.`name` as customer_name,o.dept_id,o.account as des,money_in AS money,o.create_time as create_date,d.destination_province,d.weight,d.old_weight,d.waybill_number from exp_general_in_out  o
+	INNER JOIN exp_customer c ON c.`code`=o.customer_id   OR c.`name`=o.consumer 
+	LEFT JOIN exp_orders d ON  o.waybill_number=d.waybill_number
+	<where>
+	<if test="null!=filter and ''!=filter">
+					  ${filter}
+				 </if>
+	 <if test="null!=dates and ''!=dates">
+		 And  DATE_FORMAT(o.create_time,'%Y-%m-%d')=#{dates}
+	</if>
+	</where>
+	GROUP BY o.id
+	</select>
     <insert id="saveOrdersBatch" parameterType="io.renren.modules.sys.entity.ExpOrdersEntity">
 		INSERT INTO exp_orders
 		(

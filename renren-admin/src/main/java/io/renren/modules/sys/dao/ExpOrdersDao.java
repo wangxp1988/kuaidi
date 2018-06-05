@@ -28,5 +28,7 @@ public interface ExpOrdersDao extends BaseMapper<ExpOrdersEntity> {
 	List<ExpOrdersEntity> selectOutOrder(@Param("dates")String dates, @Param("filter")String filter);
 
 	List<ExpOrdersEntity> selectInOrder(@Param("dates")String dates, @Param("filter")String filter);
+
+	List<ExpOrdersEntity> selectGeneralIn(@Param("dates")String dates, @Param("filter")String filter);
 	
 }

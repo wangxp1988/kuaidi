@@ -29,6 +29,7 @@ import io.renren.modules.sys.service.ExpBalanceAccountService;
 import io.renren.modules.sys.shiro.ShiroUtils;
 import jxl.Sheet;
 import jxl.Workbook;
+import io.renren.common.utils.CityUtil;
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
@@ -186,11 +187,11 @@ public class ExpBalanceAccountController {
 					}
 					
 					// 寄件省份
-					String sendProvince = rs.getCell(j++, i).getContents();
+					String sendProvince = CityUtil.getCity(rs.getCell(j++, i).getContents());
 					//收件人
 					String recipient = rs.getCell(j++, i).getContents();
 					// 收件省份
-					String recipientProvince = rs.getCell(j++, i).getContents();
+					String recipientProvince = CityUtil.getCity(rs.getCell(j++, i).getContents());
 					//揽件业务员
 					String salesman = rs.getCell(j++, i).getContents();
 					// 客户名称

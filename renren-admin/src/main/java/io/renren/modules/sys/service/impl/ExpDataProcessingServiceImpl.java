@@ -8,12 +8,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.R;
+import io.renren.modules.sys.dao.ExpCustomerDao;
+import io.renren.modules.sys.dao.ExpOrdersDao;
 import io.renren.modules.sys.dao.ExpVoucherDao;
 import io.renren.modules.sys.entity.ExpCustomerEntity;
 import io.renren.modules.sys.entity.ExpMoneyInOutEntity;
@@ -29,7 +34,6 @@ import io.renren.modules.sys.service.ExpVoucherService;
 import io.renren.modules.sys.shiro.ShiroUtils;
 
 @Service("expDataProcessingService")
-@Transactional
 public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 
 	@Autowired
@@ -42,6 +46,10 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
     private ExpOrdersService  expOrdersService;//中转数据
     @Autowired
     private ExpVoucherDao expVoucherDao;//凭证DAO
+	@Autowired
+	private ExpOrdersDao expOrdersDao;
+	@Autowired
+	private ExpCustomerDao expCustomerDao;
     @Autowired
     private ExpVoucherService expVoucherService;
     @Autowired
@@ -49,6 +57,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
     
     private static List<Object> list=new ArrayList<Object>();
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT,rollbackFor=Exception.class)
 	public R doSomething(Map<String, Object> params) {
 		Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
 		System.out.println(params.get("num"));
@@ -64,7 +73,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
     	List<ExpCustomerEntity> listCustomer=expCustomerService.selectCustomerInRookie(listCode);
     	if(null!=listCustomer&&listCustomer.size()>0) {
     		//添加到用户表中
-        	expCustomerService.saveList(listCustomer);
+    		expCustomerDao.saveList(listCustomer);
     	}
     	//检查今日扫描中有的运单号 菜鸟中无的，我要到对账单中 查找到相应的运单号及信息
         List<Object> scanWaybillList=expDailyScanService.selectWaybill(params);//只查询运单号
@@ -90,7 +99,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
         		newCustomer.add(expCustomerEntity);
         	});
     		//添加到用户表中
-        	expCustomerService.saveList(newCustomer);
+        	expCustomerDao.saveList(newCustomer);
     	    }
         return R.ok().put("num", 2).put("msg", "对比客户完成");
         	} catch (Exception e) {
@@ -114,7 +123,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
      	        //处理菜鸟和对账单符合的订单，中转到指定数据库 参数dates
      	        List<ExpOrdersEntity> listTwo=expOrdersService.selectInRookie(params);
      	        listOne.addAll(listTwo);//合并结果，批量存入中转数据库
-     	        expOrdersService.saveOrdersBatch(listOne);//批量保存到数据库,并将重量按照规则转化成整数
+     	       expOrdersDao.saveOrdersBatch(listOne);//批量保存到数据库,并将重量按照规则转化成整数
      	       return R.ok().put("num", 4).put("msg", "中转数据处理完成");
 			} catch (Exception e) {
 				return R.error().put("num", 4).put("msg", "中转数据异常");
@@ -258,9 +267,11 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 	 		        this.batchSave(voucherList);//批量保存凭证
 	 		        return R.ok().put("num", 7).put("msg", "收支表——支出凭证处理完成");
 	        	}catch (Exception e) {
-	        		return R.ok().put("num", 7).put("msg", "收支表——支出凭证处理失败");
+	        		e.printStackTrace();
+	        		return R.error().put("num", 7).put("msg", "收支表——支出凭证处理失败");
 				}
         	}
+        	
         	//收支表中收入
         	if(params.get("num").equals("8")) {
         		try {
@@ -271,7 +282,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
    	 		        	ExpVoucherEntity voucherBorrow=new ExpVoucherEntity();
    	 		        	voucherBorrow.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
    	 		        	voucherBorrow.setTwoLevelCoding(Constant.IN_IN_OUT_SECOND_CODE_BORROW);
-   	 		        	voucherBorrow.setTwoLevelName(Constant.IN_IN_OUT_SECOND_NAME_BORROW);
+   	 		        	voucherBorrow.setTwoLevelName(Constant.IN_IN_OUT_SECOND_NAME_BORROW+"-"+item.getDes());
    	 		        	voucherBorrow.setCustomerName(item.getCustomerName());
    	 		        	voucherBorrow.setWaybillNumber(item.getWaybillNumber());
    	 		        	voucherBorrow.setDestinationDot(item.getDestinationProvince());
@@ -285,7 +296,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
    	 		        	ExpVoucherEntity voucherLoan=new ExpVoucherEntity();
    	 		        	voucherLoan.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
    	 		        	voucherLoan.setTwoLevelCoding(Constant.IN_IN_OUT_SECOND_CODE_LOAN);
-   	 		        	voucherLoan.setTwoLevelName(Constant.IN_IN_OUT_SECOND_NAME_LOAN);
+   	 		        	voucherLoan.setTwoLevelName(Constant.IN_IN_OUT_SECOND_NAME_LOAN+"-"+item.getDes());
    	 		        	voucherLoan.setCustomerName(item.getCustomerName());
    	 		        	voucherLoan.setWaybillNumber(item.getWaybillNumber());
    	 		        	voucherLoan.setDestinationDot(item.getDestinationProvince());
@@ -325,7 +336,59 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
         			 this.batchSave(voucherList);//批量保存凭证
         			 return R.ok().put("num", 8).put("msg", "收支表——收入凭证处理完成");
 				} catch (Exception e) {
-					 return R.ok().put("num",8).put("msg", "收支表——收入凭证处理失败");
+					e.printStackTrace();
+					 return R.error().put("num",8).put("msg", "收支表——收入凭证处理失败");
+				}
+        	}
+        	//收款凭证
+        	if(params.get("num").equals("9")) {
+        		 try {
+        			 List<ExpOrdersEntity> orderList=expOrdersService.selectGeneralIn(params);
+ 	        		List<ExpVoucherEntity> voucherList=new ArrayList<ExpVoucherEntity>();
+ 	        		 orderList.forEach(item->{
+ 	 		        	ExpVoucherEntity voucherBorrow=new ExpVoucherEntity();
+ 	 		        	if(StringUtils.isNoneBlank(item.getWaybillNumber())) {
+ 	 		        		voucherBorrow.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
+ 	 		        	}else {
+ 	 		        		voucherBorrow.setVoucherRemark(Constant.DAY_IN_OUT_SECOND_NAME_BORROW+"-"+item.getDes());//凭证摘要
+ 	 		        	}
+ 	 		        	
+ 	 		        	voucherBorrow.setTwoLevelCoding(Constant.DAY_IN_OUT_SECOND_CODE_BORROW);
+ 	        		    voucherBorrow.setTwoLevelName(Constant.DAY_IN_OUT_SECOND_NAME_BORROW+"-"+item.getDes());
+ 	 		        	voucherBorrow.setCustomerName(item.getCustomerName());
+ 	 		        	voucherBorrow.setWaybillNumber(item.getWaybillNumber());
+ 	 		        	voucherBorrow.setDestinationDot(item.getDestinationProvince());
+ 	 		        	voucherBorrow.setDebtorMoney(item.getMoney());
+ 	 		        	voucherBorrow.setDebtorWeight(item.getWeight());
+ 	 		        	voucherBorrow.setCustomerCode(item.getCustomerCode());
+ 	 		        	voucherBorrow.setCreateDate(item.getCreateDate());//时间
+ 	 		        	voucherBorrow.setVoucherCode(sdf.format(item.getCreateDate()));
+ 	 		        	voucherBorrow.setDeptId(deptId);
+ 	 		        	voucherList.add(voucherBorrow);
+ 	 		        	ExpVoucherEntity voucherLoan=new ExpVoucherEntity();
+ 	 		        	if(StringUtils.isNoneBlank(item.getWaybillNumber())) {
+ 	 		        		voucherLoan.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
+ 	 		        	}else {
+ 	 		        		voucherLoan.setVoucherRemark(Constant.DAY_IN_OUT_SECOND_NAME_LOAN+"-"+item.getDes());//凭证摘要
+ 	 		        	}
+ 	 		        	voucherLoan.setTwoLevelCoding(Constant.DAY_IN_OUT_SECOND_CODE_LOAN);
+ 	 		        	voucherLoan.setTwoLevelName(Constant.DAY_IN_OUT_SECOND_NAME_LOAN);
+ 	 		        	voucherLoan.setCustomerName(item.getCustomerName());
+ 	 		        	voucherLoan.setWaybillNumber(item.getWaybillNumber());
+ 	 		        	voucherLoan.setDestinationDot(item.getDestinationProvince());
+ 	 		        	voucherLoan.setLenderMoney(item.getMoney());
+ 	 		        	voucherLoan.setLenderWeight(item.getOldWeight());
+ 	 		        	voucherLoan.setCustomerCode(item.getCustomerCode());
+ 	 		        	voucherLoan.setCreateDate(item.getCreateDate());//时间
+ 	 		        	voucherLoan.setVoucherCode(sdf.format(item.getCreateDate()));
+ 	 		        	voucherLoan.setDeptId(deptId);
+ 	 		        	voucherList.add(voucherLoan);
+ 	 		        });
+ 	 		        this.batchSave(voucherList);//批量保存凭证
+ 	 		      return R.ok().put("num",9).put("msg", "日常收支——收款凭证处理完成");
+				} catch (Exception e) {
+					 e.printStackTrace();
+					 return R.error().put("num",9).put("msg", "日常收支——收款凭证处理失败");
 				}
         	}
         

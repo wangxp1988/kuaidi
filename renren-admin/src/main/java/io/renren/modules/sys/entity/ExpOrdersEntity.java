@@ -67,6 +67,9 @@ public class ExpOrdersEntity implements Serializable {
 	 * 部门ID
 	 */
 	private Long deptId;
+	
+	
+	private String des;
 
 	/**
 	 * 设置：ID
@@ -209,6 +212,12 @@ public class ExpOrdersEntity implements Serializable {
 	}
 	public void setOldWeight(BigDecimal oldWeight) {
 		this.oldWeight = oldWeight;
+	}
+	public String getDes() {
+		return des;
+	}
+	public void setDes(String des) {
+		this.des = des;
 	}
 	
 	

@@ -28,5 +28,7 @@ public interface ExpOrdersService extends IService<ExpOrdersEntity> {
 
 	List<ExpOrdersEntity> selectOutOrder(Map<String, Object> params);
 	List<ExpOrdersEntity> selectInOrder(Map<String, Object> params);
+
+	List<ExpOrdersEntity> selectGeneralIn(Map<String, Object> params);
 }
 

@@ -106,7 +106,7 @@ public class ExpMoneyInOutEntity implements Serializable {
 	 * 获取：时间
 	 */
 	@DateTimeFormat(pattern="yyyy-MM-dd") 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
 	public Date getCreateDate() {
 		return createDate;
 	}

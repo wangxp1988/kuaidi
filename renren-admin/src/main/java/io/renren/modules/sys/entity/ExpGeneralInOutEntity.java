@@ -220,7 +220,7 @@ public class ExpGeneralInOutEntity implements Serializable {
 	 * 获取：记账日期
 	 */
 	@DateTimeFormat(pattern="yyyy-MM-dd") 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
 	public Date getCreateTime() {
 		return createTime;
 	}

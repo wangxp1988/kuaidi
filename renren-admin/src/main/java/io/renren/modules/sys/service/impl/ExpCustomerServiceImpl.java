@@ -98,8 +98,8 @@ public class ExpCustomerServiceImpl extends ServiceImpl<ExpCustomerDao, ExpCusto
 	public int selectNullCount(Map<String, Object> params) {
 		int count=expCustomerDao.selectCount(new EntityWrapper<ExpCustomerEntity>()
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
-				.and()
-				.or("`code` IS NULL").or("`price_name` IS NULL").or("`type` IS NULL")
+				.and("`code` IS NULL")
+				 .or("`price_name` IS NULL").or("`type` IS NULL")
 				);
 		return count;
 	}

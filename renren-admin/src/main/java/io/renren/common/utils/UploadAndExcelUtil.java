@@ -25,7 +25,7 @@ public class UploadAndExcelUtil {
 			String newFileName = UUID.randomUUID() + originalFilename.substring(originalFilename.lastIndexOf("."));
 			String diskDirPath = null;
 			if (suffix.equalsIgnoreCase("xls") || suffix.equalsIgnoreCase("xlsx")) {
-				diskDirPath = "D:/excle";
+				diskDirPath = "excle";
 			} 
 			File nf = new File(diskDirPath);
 			if (!nf.exists()) {

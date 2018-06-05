@@ -71,17 +71,28 @@ public class ExpOrdersServiceImpl extends ServiceImpl<ExpOrdersDao, ExpOrdersEnt
 	}
 
 	@Override
+	@DataFilter(subDept = true, user = false,tableAlias="o")
 	public List<ExpOrdersEntity> selectOutOrder(Map<String, Object> params) {
 		if(null!=params.get("dates")&&!"".equals(params.get("dates").toString())) {
 			return expOrdersDao.selectOutOrder(params.get("dates").toString(),(String)params.get(Constant.SQL_FILTER));
 	   }
 		return null;
 	}
+	@DataFilter(subDept = true, user = false,tableAlias="o")
 		public List<ExpOrdersEntity> selectInOrder(Map<String, Object> params) {
 			if(null!=params.get("dates")&&!"".equals(params.get("dates").toString())) {
 				return expOrdersDao.selectInOrder(params.get("dates").toString(),(String)params.get(Constant.SQL_FILTER));
 			}
 			return null;
+	}
+	
+	@Override
+	@DataFilter(subDept = true, user = false,tableAlias="o")
+	public List<ExpOrdersEntity> selectGeneralIn(Map<String, Object> params) {
+		if(null!=params.get("dates")&&!"".equals(params.get("dates").toString())) {
+			return expOrdersDao.selectGeneralIn(params.get("dates").toString(),(String)params.get(Constant.SQL_FILTER));
+		}
+		return null;
 	}
 
 
