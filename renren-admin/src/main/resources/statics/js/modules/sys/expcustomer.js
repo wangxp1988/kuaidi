@@ -174,3 +174,7 @@ function imports(){
                }     
     }); 
 }
+
+function exports(){
+	location.href=baseURL + "sys/expcustomer/export"
+}

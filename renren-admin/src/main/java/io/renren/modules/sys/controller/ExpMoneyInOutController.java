@@ -16,6 +16,7 @@ import io.renren.common.validator.ValidatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,8 @@ import io.renren.common.utils.UploadAndExcelUtil;
 @RestController
 @RequestMapping("sys/expmoneyinout")
 public class ExpMoneyInOutController {
+	@Value("${filepath.excleSavePath}")
+	private String diskDirPath;
     @Autowired
     private ExpMoneyInOutService expMoneyInOutService;
 
@@ -107,7 +110,7 @@ public class ExpMoneyInOutController {
 
     @RequestMapping("import")
   	public R Import(@RequestParam("file") MultipartFile file) throws IOException {
-      	String filePath = UploadAndExcelUtil.saveFile(file);
+      	String filePath = UploadAndExcelUtil.saveFile(file,diskDirPath);
       	List  list=getAllByExcel(filePath);
       	if(list.get(0).equals(Constant.EXIST)) {
     		return R.error("文件已经导入，不能重复导入");

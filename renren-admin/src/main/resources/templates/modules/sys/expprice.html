@@ -12,6 +12,7 @@
                  <input type="file" id="myfile" class="form-control" name="file" placeholder="上传文件"/>
             </div>
             <a class="btn btn-primary" onclick="imports()"><i class="fa fa-cloud-upload"></i>&nbsp;上传文件</a>
+            <a class="btn btn-primary" onclick="exports()"><i class="fa fa-cloud-upload"></i>&nbsp;导出</a>
 			<#if shiro.hasPermission("sys:expprice:save")>
             <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			</#if>
@@ -54,7 +55,30 @@
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">重量</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expPrice.weight" placeholder="重量"/>
+                           <!--  <input type="text" class="form-control" v-model="expPrice.weight" placeholder="重量"/> -->
+                             <select class="form-control" v-model="expPrice.weight">
+                                 <option value="0000">选择重量</option>
+						         <option  :value="1">1</option>
+						         <option  :value="2">2</option>
+						         <option  :value="3">3</option>
+						         <option  :value="4">4</option>
+						         <option  :value="5">5</option>
+						         <option  :value="6">6</option>
+						         <option  :value="7">7</option>
+						         <option  :value="8">8</option>
+						         <option  :value="9">9</option>
+						         <option  :value="10">10</option>
+						         <option  :value="11">11</option>
+						         <option  :value="12">12</option>
+						         <option  :value="13">13</option>
+						         <option  :value="14">14</option>
+						         <option  :value="15">15</option>
+						         <option  :value="16">16</option>
+						         <option  :value="16">17</option>
+						         <option  :value="16">18</option>
+						         <option  :value="16">19</option>
+						         <option  :value="16">20</option>
+						      </select>
                         </div>
                     </div>
 											                    <div class="form-group">

@@ -21,5 +21,7 @@ public interface ExpPriceService extends IService<ExpPriceEntity> {
 	void saveList(List<ExpPriceEntity> tempList);
 
 	List<ExpPriceEntity> listAllName(Map<String, Object> params);
+
+	List<ExpPriceEntity> selectAllDept(Map<String, Object> params);
 }
 

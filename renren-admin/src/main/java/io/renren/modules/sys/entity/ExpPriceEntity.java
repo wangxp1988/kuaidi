@@ -63,29 +63,40 @@ public class ExpPriceEntity implements Serializable {
 	public ExpPriceEntity() {
 		super();
 	}
+	  
+	
+	
 	/**
+	 * @param id
 	 * @param priceName
-	 * @param province
 	 * @param provinceName
 	 * @param weight
 	 * @param money
 	 * @param deptId
 	 */
-	public ExpPriceEntity(String priceName, String provinceName, BigDecimal weight, BigDecimal money,
+	public ExpPriceEntity(Long id, String priceName, String provinceName, BigDecimal weight, BigDecimal money,
 			Long deptId) {
 		super();
+		this.id = id;
 		this.priceName = priceName;
 		this.provinceName = provinceName;
 		this.weight = weight;
 		this.money = money;
 		this.deptId = deptId;
 	}
+
+
+
+
+
 	/**
 	 * 设置：价格ID
 	 */
 	public void setId(Long id) {
 		this.id = id;
 	}
+ 
+
 	/**
 	 * 获取：价格ID
 	 */

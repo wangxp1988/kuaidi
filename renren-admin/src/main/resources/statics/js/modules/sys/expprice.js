@@ -54,6 +54,7 @@ var vm = new Vue({
 			vm.provinceList={};
 			vm.expPrice = {};
 			vm.expPrice.provinceName="0000";
+			vm.expPrice.weight="0000";
 			this.getProvinceList();
 			
 		},
@@ -147,4 +148,8 @@ function imports(){
             	 $("#jqGrid").jqGrid('setGridParam',{}).trigger("reloadGrid");
                }     
     }); 
+}
+
+function exports(){
+	location.href=baseURL + "sys/expprice/export"
 }

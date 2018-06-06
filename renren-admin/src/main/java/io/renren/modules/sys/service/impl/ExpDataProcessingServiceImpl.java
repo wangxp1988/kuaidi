@@ -1,5 +1,6 @@
 package io.renren.modules.sys.service.impl;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,15 +16,20 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.R;
+import io.renren.modules.sys.dao.ExpBaseDao;
 import io.renren.modules.sys.dao.ExpCustomerDao;
 import io.renren.modules.sys.dao.ExpOrdersDao;
 import io.renren.modules.sys.dao.ExpVoucherDao;
+import io.renren.modules.sys.entity.ExpBaseEntity;
 import io.renren.modules.sys.entity.ExpCustomerEntity;
 import io.renren.modules.sys.entity.ExpMoneyInOutEntity;
 import io.renren.modules.sys.entity.ExpOrdersEntity;
 import io.renren.modules.sys.entity.ExpVoucherEntity;
+import io.renren.modules.sys.service.ExpBaseService;
 import io.renren.modules.sys.service.ExpCustomerService;
 import io.renren.modules.sys.service.ExpDailyScanService;
 import io.renren.modules.sys.service.ExpDataProcessingService;
@@ -48,6 +54,8 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
     private ExpVoucherDao expVoucherDao;//凭证DAO
 	@Autowired
 	private ExpOrdersDao expOrdersDao;
+	@Autowired
+	private ExpBaseService expBaseService;
 	@Autowired
 	private ExpCustomerDao expCustomerDao;
     @Autowired
@@ -112,13 +120,16 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
         //此处判断用户信息是否完善SELECT COUNT(id) FROM exp_customer WHERE `code` IS NULL OR price_name IS NULL OR type IS NULL
 	        int count=expCustomerService.selectNullCount(params);
 	        if(count>0) {
-	        	return R.error().put("num", 3).put("msg", "用户信息未完善，不能继续处理数据");
+	        	return R.error().put("num", 3).put("msg", "客户信息未完善，请先去客户信息菜单中完善客户信息");
 	        }else {
-	        	return R.ok().put("num", 3).put("msg", "用户信息已经完善");
+	        	return R.ok().put("num", 3).put("msg", "客户信息已经完善");
 	        }
         }
         if(params.get("num").equals("4")) {
         	try {
+        		//查出对应基数
+        		BigDecimal baseWeight=expBaseService.selectBaseWeight(params);
+        		params.put("baseWeight", baseWeight);
         		 List<ExpOrdersEntity> listOne=expOrdersService.selectNotInRookie(params);
      	        //处理菜鸟和对账单符合的订单，中转到指定数据库 参数dates
      	        List<ExpOrdersEntity> listTwo=expOrdersService.selectInRookie(params);

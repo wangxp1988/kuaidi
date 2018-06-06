@@ -2,6 +2,7 @@ package io.renren.modules.sys.dao;
 
 import io.renren.modules.sys.entity.ExpOrdersEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -17,9 +18,9 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  */
 public interface ExpOrdersDao extends BaseMapper<ExpOrdersEntity> {
 
-	List<ExpOrdersEntity> selectNotInRookie(@Param("list")List list, @Param("filter")String filter);
+	List<ExpOrdersEntity> selectNotInRookie(@Param("list")List list, @Param("filter")String filter,@Param("baseWeight")BigDecimal baseWeight);
 
-	List<ExpOrdersEntity> selectInRookie(@Param("dates")String dates,@Param("filter")String filter);
+	List<ExpOrdersEntity> selectInRookie(@Param("dates")String dates,@Param("filter")String filter,@Param("baseWeight")BigDecimal baseWeight);
 
 	void saveOrdersBatch(List<ExpOrdersEntity> list);
 

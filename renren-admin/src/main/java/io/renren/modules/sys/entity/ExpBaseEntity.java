@@ -12,7 +12,7 @@ import java.util.Date;
  * 
  * @author chenshun
  * @email sunlightcs@gmail.com
- * @date 2018-05-31 09:25:48
+ * @date 2018-06-06 09:34:11
  */
 @TableName("exp_base")
 public class ExpBaseEntity implements Serializable {
@@ -27,7 +27,12 @@ public class ExpBaseEntity implements Serializable {
 	 * 重量固定基数
 	 */
 	private BigDecimal baseWeight;
+	/**
+	 * 面单成本
+	 */
+	private BigDecimal baseBill;
 
+	private Long deptId;
 	/**
 	 * 设置：ID
 	 */
@@ -52,4 +57,24 @@ public class ExpBaseEntity implements Serializable {
 	public BigDecimal getBaseWeight() {
 		return baseWeight;
 	}
+	/**
+	 * 设置：面单成本
+	 */
+	public void setBaseBill(BigDecimal baseBill) {
+		this.baseBill = baseBill;
+	}
+	/**
+	 * 获取：面单成本
+	 */
+	public BigDecimal getBaseBill() {
+		return baseBill;
+	}
+	public Long getDeptId() {
+		return deptId;
+	}
+	public void setDeptId(Long deptId) {
+		this.deptId = deptId;
+	}
+	
+	
 }

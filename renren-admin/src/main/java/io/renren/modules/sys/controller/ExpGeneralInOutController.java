@@ -3,6 +3,7 @@ package io.renren.modules.sys.controller;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import io.renren.common.validator.ValidatorUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +47,8 @@ import io.renren.common.utils.UploadAndExcelUtil;
 @RestController
 @RequestMapping("sys/expgeneralinout")
 public class ExpGeneralInOutController {
+	@Value("${filepath.excleSavePath}")
+	private  String diskDirPath;
     @Autowired
     private ExpGeneralInOutService expGeneralInOutService;
 
@@ -107,7 +111,7 @@ public class ExpGeneralInOutController {
 
     @RequestMapping("import")
   	public R Import(@RequestParam("file") MultipartFile file) throws IOException {
-      	String filePath = UploadAndExcelUtil.saveFile(file);
+      	String filePath = UploadAndExcelUtil.saveFile(file,diskDirPath);
       	List list=getAllByExcel(filePath);
       	if(list.get(0).equals(Constant.EXIST)) {
     		return R.error("文件已经导入，不能重复导入");
@@ -153,6 +157,8 @@ public class ExpGeneralInOutController {
   		List list = new ArrayList();
   		Map<String, Object> params=new HashMap<String, Object>();
   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+  		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+  		 
   		try {
 
   			Workbook rwb = Workbook.getWorkbook(new File(file));
@@ -165,7 +171,11 @@ public class ExpGeneralInOutController {
   					String dateStr  = rs.getCell(j++, i).getContents();
   					Date createTime =null;
 					if(StringUtils.isNotBlank(dateStr)) {
-						createTime= sdf.parse(dateStr);
+						try {
+							createTime= sdf.parse(dateStr);
+						} catch (ParseException e) {
+							createTime=sdf.parse(sdf.format(sdf2.parse(dateStr)));
+						}
 						if(i==1) {
 							params.put("createTime", createTime);
 							 int count=expGeneralInOutService.selectByTime(params);

@@ -29,5 +29,7 @@ public interface ExpCustomerService extends IService<ExpCustomerEntity> {
 	List<Object> getCustomerName(Map<String, Object> params);
 
 	int selectNullCount(Map<String, Object> params);
+
+	List<ExpCustomerEntity> selectAllDept(Map<String, Object> params);
 }
 

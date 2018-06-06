@@ -12,6 +12,7 @@
                    <input type="file" id="myfile" class="form-control" name="file" placeholder="上传文件"/>
             </div>
             <a class="btn btn-primary" onclick="imports()"><i class="fa fa-cloud-upload"></i>&nbsp;上传文件</a>
+              <a class="btn btn-primary" onclick="exports()"><i class="fa fa-cloud-upload"></i>&nbsp;导出</a>
 			<#if shiro.hasPermission("sys:expcustomer:save")>
             <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			</#if>

@@ -18,14 +18,18 @@
         <result property="deptId" column="dept_id"/>
     </resultMap>
 <insert id="saveList" parameterType="io.renren.modules.sys.entity.ExpCustomerEntity">
-		INSERT INTO exp_customer
+		 REPLACE INTO exp_customer
 		(
-       `code`, `name`, `type`,`contacts`,`phone`,`address`,`price_name`, `payment_id`, `payment_name`, `dept_id`
+       id,`code`, `name`, `type`,`contacts`,`phone`,`address`,`price_name`, `payment_id`, `payment_name`, `dept_id`
        )
 		VALUES
 		<foreach collection="list" item="item" index="index" separator=",">
 		(
-          #{item.code}, #{item.name}, #{item.type},#{item.contacts}, #{item.phone}, #{item.address}, #{item.priceName}, #{item.paymentId}, #{item.paymentName}, #{item.deptId}
+		<choose>  
+             <when test="item.id!=0 and item.id!=null and item.id!=''">#{item.id}</when>  
+             <when test="item.id==0 or item.id==null or item.id==''">NULL</when>  
+          </choose>
+          ,#{item.code}, #{item.name}, #{item.type},#{item.contacts}, #{item.phone}, #{item.address}, #{item.priceName}, #{item.paymentId}, #{item.paymentName}, #{item.deptId}
        )
        </foreach>
 	</insert>

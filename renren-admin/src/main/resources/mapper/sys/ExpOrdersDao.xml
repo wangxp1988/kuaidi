@@ -22,7 +22,7 @@
     <select id="selectNotInRookie" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
     SELECT
 		s.waybill_number,
-        `fun_round`(s.weight+(SELECT base_weight FROM exp_base LIMIT 0,1))AS weight,
+        `fun_round`(s.weight+(${baseWeight}))AS weight,
         `fun_round`(s.weight) AS old_weight,
 		s.sender AS customer_name,
 		a.send_province,
@@ -52,7 +52,7 @@
 	<select id="selectInRookie" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
 			SELECT
 			a.waybill_number,
-			`fun_round`(s.weight+(SELECT base_weight FROM exp_base LIMIT 0,1))AS weight,
+			`fun_round`(s.weight+(${baseWeight}))AS weight,
 			`fun_round`(s.weight) AS old_weight,
 			s.sender  AS customer_name,
 			a.send_province,

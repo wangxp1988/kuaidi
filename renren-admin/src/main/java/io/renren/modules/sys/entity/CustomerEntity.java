@@ -1,26 +1,20 @@
 package io.renren.modules.sys.entity;
 
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * 客户信息
+ * 客户信息导出
  * 
  * @author chenshun
  * @email sunlightcs@gmail.com
  * @date 2018-05-27 21:00:52
  */
-@TableName("exp_customer")
-public class ExpCustomerEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class CustomerEntity implements Serializable {
 
 	/**
 	 * 客户ID
 	 */
-	@TableId
 	private Long id;
 	/**
 	 * 客户编码
@@ -58,46 +52,9 @@ public class ExpCustomerEntity implements Serializable {
 	 * 付款客户名称
 	 */
 	private String paymentName;
-	/**
-	 * 部门ID
-	 */
-	private Long deptId;
+	
+	private Long baseId;
 
-	
-	
-	/**
-	 * 
-	 */
-	public ExpCustomerEntity() {
-		super();
-	}
-	/**
-	 * @param code
-	 * @param name
-	 * @param type
-	 * @param contacts
-	 * @param phone
-	 * @param address
-	 * @param priceName
-	 * @param paymentId
-	 * @param paymentName
-	 * @param deptId
-	 */
-	public ExpCustomerEntity(Long id,String code, String name, String type, String contacts, String phone, String address,
-			String priceName, String paymentId, String paymentName, Long deptId) {
-		super();
-		this.id=id;
-		this.code = code;
-		this.name = name;
-		this.type = type;
-		this.contacts = contacts;
-		this.phone = phone;
-		this.address = address;
-		this.priceName = priceName;
-		this.paymentId = paymentId;
-		this.paymentName = paymentName;
-		this.deptId = deptId;
-	}
 	/**
 	 * 设置：客户ID
 	 */
@@ -218,16 +175,12 @@ public class ExpCustomerEntity implements Serializable {
 	public String getPaymentName() {
 		return paymentName;
 	}
-	/**
-	 * 设置：部门ID
-	 */
-	public void setDeptId(Long deptId) {
-		this.deptId = deptId;
+	public Long getBaseId() {
+		return baseId;
 	}
-	/**
-	 * 获取：部门ID
-	 */
-	public Long getDeptId() {
-		return deptId;
+	public void setBaseId(Long baseId) {
+		this.baseId = baseId;
 	}
+	
+	
 }

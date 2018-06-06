@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -41,7 +42,7 @@ public class ExpOrdersServiceImpl extends ServiceImpl<ExpOrdersDao, ExpOrdersEnt
 	public List<ExpOrdersEntity> selectNotInRookie(Map<String, Object> params) {
 		List<Object> list =(List) params.get("list");
 		if(null!=list) {
-				return  expOrdersDao.selectNotInRookie(list,(String)params.get(Constant.SQL_FILTER));
+				return  expOrdersDao.selectNotInRookie(list,(String)params.get(Constant.SQL_FILTER),new BigDecimal(params.get("baseWeight").toString()));
 		}
 	  return null;
 	}
@@ -50,7 +51,7 @@ public class ExpOrdersServiceImpl extends ServiceImpl<ExpOrdersDao, ExpOrdersEnt
 	@DataFilter(subDept = true, user = false,tableAlias="a")
 	public List<ExpOrdersEntity> selectInRookie(Map<String, Object> params) {
 		if(null!=params.get("dates")&&!"".equals(params.get("dates").toString())) {
-				return expOrdersDao.selectInRookie(params.get("dates").toString(),(String)params.get(Constant.SQL_FILTER));
+				return expOrdersDao.selectInRookie(params.get("dates").toString(),(String)params.get(Constant.SQL_FILTER),new BigDecimal(params.get("baseWeight").toString()));
 		}
 		return null;
 	}

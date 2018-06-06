@@ -2,19 +2,20 @@ package io.renren.modules.sys.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import io.renren.common.validator.ValidatorUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,12 +23,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.renren.modules.sys.entity.CustomerEntity;
 import io.renren.modules.sys.entity.ExpCustomerEntity;
-import io.renren.modules.sys.entity.ExpGeneralInOutEntity;
 import io.renren.modules.sys.service.ExpCustomerService;
 import io.renren.modules.sys.shiro.ShiroUtils;
 import jxl.Sheet;
 import jxl.Workbook;
+import io.renren.common.utils.ExportExcel;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.common.utils.UploadAndExcelUtil;
@@ -44,6 +46,8 @@ import io.renren.common.utils.UploadAndExcelUtil;
 @RestController
 @RequestMapping("sys/expcustomer")
 public class ExpCustomerController {
+	@Value("${filepath.excleSavePath}")
+	private  String diskDirPath;
     @Autowired
     private ExpCustomerService expCustomerService;
 
@@ -116,11 +120,33 @@ public class ExpCustomerController {
 
         return R.ok();
     }
+    @RequestMapping("export")
+    public void export(HttpServletRequest request,HttpServletResponse response,Map<String, Object> params) {
+    	List<ExpCustomerEntity> list=expCustomerService.selectAllDept(params);
+    	List<CustomerEntity> cl=new ArrayList<CustomerEntity>();
+    	list.forEach(item->{
+    		CustomerEntity ce=new CustomerEntity();
+    		ce.setId(item.getId());
+    		ce.setCode(item.getCode());
+    		ce.setName(item.getName());
+    		ce.setType(item.getType());
+    		ce.setContacts(item.getContacts());
+    		ce.setPhone(item.getPhone());
+    		ce.setAddress(item.getAddress());
+    		ce.setPriceName(item.getPriceName());
+            ce.setPaymentId(item.getPaymentId());
+            ce.setPaymentName(item.getPaymentName());
+            ce.setBaseId(item.getId());
+            cl.add(ce);
+    	});
+    	String[] Title={"内部ID","客户编号","客户名称","客户类型","联系人","联系电话","地址","价格表名称","付款客户ID","付款客户名称","数据库ID(不要编辑)"}; 
+  	  ExportExcel.exportExcel(response,"客户资料信息.xls",Title, cl);  
     
+    }
     
     @RequestMapping("import")
   	public R Import(@RequestParam("file") MultipartFile file) throws IOException {
-      	String filePath = UploadAndExcelUtil.saveFile(file);
+      	String filePath = UploadAndExcelUtil.saveFile(file,diskDirPath);
       	List<ExpCustomerEntity> list=getAllByExcel(filePath);
       	
       	if (null != list) {
@@ -187,7 +213,12 @@ public class ExpCustomerController {
   					String paymentId = rs.getCell(j++, i).getContents();
   					// 付款客户名称
   					String paymentName = rs.getCell(j++, i).getContents();
-  					ExpCustomerEntity entity=new ExpCustomerEntity(code, name, type, contacts, phone, address, priceName, paymentId, paymentName, deptId);
+  					Long id = null;
+   					String isStr=rs.getCell(j++, i).getContents();
+   					if(StringUtils.isNotBlank(isStr)) {
+   						 id= new Long(isStr);
+   					}
+  					ExpCustomerEntity entity=new ExpCustomerEntity(id,code, name, type, contacts, phone, address, priceName, paymentId, paymentName, deptId);
   					list.add(entity);
   			}
   		} catch (Exception e) {

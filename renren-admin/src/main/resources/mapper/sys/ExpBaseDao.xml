@@ -7,6 +7,8 @@
     <resultMap type="io.renren.modules.sys.entity.ExpBaseEntity" id="expBaseMap">
         <result property="id" column="id"/>
         <result property="baseWeight" column="base_weight"/>
+        <result property="baseBill" column="base_bill"/>
+        <result property="deptId" column="dept_id"/>
     </resultMap>
 
 

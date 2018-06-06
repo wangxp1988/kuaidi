@@ -3,6 +3,7 @@ package io.renren.modules.sys.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -48,6 +49,17 @@ public class ExpPriceServiceImpl extends ServiceImpl<ExpPriceDao, ExpPriceEntity
 				.groupBy("price_name")
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER)));
 		  
+	}
+
+	@Override
+	 @DataFilter(subDept = true, user = false)
+	public List<ExpPriceEntity> selectAllDept(Map<String, Object> params) {
+		List<String> columns=new ArrayList<String>();
+    	columns.add("id");
+		return  this.selectList(new EntityWrapper<ExpPriceEntity>()
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.orderDesc(columns)
+				);
 	}
 
 }

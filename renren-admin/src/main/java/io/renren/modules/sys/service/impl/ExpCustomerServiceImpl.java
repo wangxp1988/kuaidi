@@ -21,6 +21,7 @@ import io.renren.common.utils.Query;
 import io.renren.modules.sys.dao.ExpCustomerDao;
 import io.renren.modules.sys.entity.ExpCustomerEntity;
 import io.renren.modules.sys.entity.ExpOrderRookieEntity;
+import io.renren.modules.sys.entity.ExpPriceEntity;
 import io.renren.modules.sys.service.ExpCustomerService;
 
 
@@ -103,5 +104,16 @@ public class ExpCustomerServiceImpl extends ServiceImpl<ExpCustomerDao, ExpCusto
 				);
 		return count;
 	}
+
+@Override
+@DataFilter(subDept = true, user = false)
+public List<ExpCustomerEntity> selectAllDept(Map<String, Object> params) {
+	List<String> columns=new ArrayList<String>();
+	columns.add("id");
+	return this.selectList(new EntityWrapper<ExpCustomerEntity>()
+			.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+			.orderDesc(columns)
+			);
+}
 
 }

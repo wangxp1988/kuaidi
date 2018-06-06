@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.renren.modules.sys.entity.ExpBaseEntity;
 import io.renren.modules.sys.service.ExpBaseService;
+import io.renren.modules.sys.shiro.ShiroUtils;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 
@@ -24,7 +25,7 @@ import io.renren.common.utils.R;
  *
  * @author chenshun
  * @email sunlightcs@gmail.com
- * @date 2018-05-31 09:25:48
+ * @date 2018-06-06 09:34:11
  */
 @RestController
 @RequestMapping("sys/expbase")
@@ -61,8 +62,9 @@ public class ExpBaseController {
     @RequestMapping("/save")
     @RequiresPermissions("sys:expbase:save")
     public R save(@RequestBody ExpBaseEntity expBase){
+    	Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
+    	expBase.setDeptId(deptId);
         expBaseService.insert(expBase);
-
         return R.ok();
     }
 
@@ -72,9 +74,10 @@ public class ExpBaseController {
     @RequestMapping("/update")
     @RequiresPermissions("sys:expbase:update")
     public R update(@RequestBody ExpBaseEntity expBase){
+    	Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
+    	expBase.setDeptId(deptId);
         ValidatorUtils.validateEntity(expBase);
         expBaseService.updateAllColumnById(expBase);//全部更新
-        
         return R.ok();
     }
 

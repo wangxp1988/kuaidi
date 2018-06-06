@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  * 
  * @author chenshun
  * @email sunlightcs@gmail.com
- * @date 2018-05-31 09:25:48
+ * @date 2018-06-06 09:34:11
  */
 public interface ExpBaseDao extends BaseMapper<ExpBaseEntity> {
 	
