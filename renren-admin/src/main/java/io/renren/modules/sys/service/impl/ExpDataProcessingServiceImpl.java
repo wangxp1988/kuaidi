@@ -16,15 +16,12 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 
 import io.renren.common.utils.Constant;
 import io.renren.common.utils.R;
-import io.renren.modules.sys.dao.ExpBaseDao;
 import io.renren.modules.sys.dao.ExpCustomerDao;
 import io.renren.modules.sys.dao.ExpOrdersDao;
 import io.renren.modules.sys.dao.ExpVoucherDao;
-import io.renren.modules.sys.entity.ExpBaseEntity;
 import io.renren.modules.sys.entity.ExpCustomerEntity;
 import io.renren.modules.sys.entity.ExpMoneyInOutEntity;
 import io.renren.modules.sys.entity.ExpOrdersEntity;
@@ -92,8 +89,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 		}
         params.put("list", list);
         if(params.get("num").equals("2")) {
-        	try {
-			
+        try {
         //查找这些数据中有没有新客户产生
         List<Object> listNameNew=expDailyScanService.getCustomerName(params);
         List<Object> listNameOld=expCustomerService.getCustomerName(params);
