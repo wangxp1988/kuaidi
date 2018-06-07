@@ -17,6 +17,7 @@ import io.renren.common.utils.Query;
 
 import io.renren.modules.sys.dao.ExpBalanceAccountDao;
 import io.renren.modules.sys.entity.ExpBalanceAccountEntity;
+import io.renren.modules.sys.entity.ExpDailyScanEntity;
 import io.renren.modules.sys.service.ExpBalanceAccountService;
 
 
@@ -51,6 +52,17 @@ public class ExpBalanceAccountServiceImpl extends ServiceImpl<ExpBalanceAccountD
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
 				);
 		return count;
+	}
+
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public List<Object> getCustomerName(Map<String, Object> params) {
+		return  expBalanceAccountDao.selectObjs(
+				new EntityWrapper<ExpBalanceAccountEntity>().setSqlSelect("sender")
+				.eq("DATE_FORMAT(send_time,'%Y-%m-%d')", params.get("dates"))
+				.in("waybill_number", (List<Object>)params.get("list"))
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				);
 	}
 
 }

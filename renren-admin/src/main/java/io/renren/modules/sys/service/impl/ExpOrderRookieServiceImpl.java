@@ -62,7 +62,8 @@ public class ExpOrderRookieServiceImpl extends ServiceImpl<ExpOrderRookieDao, Ex
 	public List<Object> selectWaybill(Map<String, Object> params) {
 		return  expOrderRookieDao.selectObjs(
 				new EntityWrapper<ExpOrderRookieEntity>().setSqlSelect("waybill_number")
-				.eq("DATE_FORMAT(create_date,'%Y-%m-%d')", params.get("dates"))
+				 //.eq("DATE_FORMAT(create_date,'%Y-%m-%d')", params.get("dates"))
+				.and("TO_DAYS(str_to_date('"+params.get("dates")+"', '%Y-%m-%d')) - TO_DAYS(create_date) BETWEEN 0 AND 7")
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
 				);
 	
@@ -76,9 +77,10 @@ public class ExpOrderRookieServiceImpl extends ServiceImpl<ExpOrderRookieDao, Ex
 		// TODO Auto-generated method stub
 		 List<Object> list=expOrderRookieDao.selectObjs(
 				new EntityWrapper<ExpOrderRookieEntity>().setSqlSelect("customer_code")
-				.eq("DATE_FORMAT(create_date,'%Y-%m-%d')", params.get("dates"))
+				//.eq("DATE_FORMAT(create_date,'%Y-%m-%d')", params.get("dates"))
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
-				);
+				.and("TO_DAYS(str_to_date('"+params.get("dates")+"', '%Y-%m-%d')) - TO_DAYS(create_date) BETWEEN 0 AND 7")
+				 );
 		 Set<Object> set=new HashSet<Object>();
 		 set.addAll(list);
 		 list.clear();

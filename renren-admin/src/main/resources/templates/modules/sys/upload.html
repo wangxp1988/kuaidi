@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>数据导入</title>
+<#include "/header.html">
+</head>
+<body>
+
+	<div class="panel panel-default">
+    <div class="panel-heading">数据导入</div>
+    <div class="grid-btn" style="margin-top: 15px;margin-left: 40px">
+	   <table style="width:100%;">
+	    <tr>
+	    <td>
+	    <div style="margin-top: 30px;margin-bottom: 30px;">
+		    <div class="form-group col-sm-2"> 
+	                   <input type="file" id="cainiao" class="form-control" name="file" placeholder="上传文件"/>
+	            </div>
+	            <a class="btn btn-primary" onclick="imports('cainiao')"><i class="fa fa-cloud-upload"></i>&nbsp;菜鸟订单导入</a>
+          </div>
+          </td>
+	    </tr>
+	    <tr>
+	    <td> 
+	    <div style="margin-top: 30px;margin-bottom: 30px;">
+	    <div class="form-group col-sm-2"> 
+                   <input type="file" id="duizhang" class="form-control" name="file" placeholder="上传文件"/>
+            </div>
+            <a class="btn btn-primary" onclick="imports('duizhang')"><i class="fa fa-cloud-upload"></i>&nbsp;每日对账导入</a>
+          </div>
+          </td>
+	    </tr>
+	    <tr>
+	    <td> 
+	    <div style="margin-top: 30px;margin-bottom: 30px;">
+	    <div class="form-group col-sm-2"> 
+                   <input type="file" id="saomiao" class="form-control" name="file" placeholder="上传文件"/>
+            </div>
+            <a class="btn btn-primary" onclick="imports('saomiao')"><i class="fa fa-cloud-upload"></i>&nbsp;每日扫描导入</a>
+         </div>
+          </td>
+	    </tr>
+	    <tr>
+	    <td> 
+	    <div style="margin-top: 30px;margin-bottom: 30px;">
+	    <div class="form-group col-sm-2"> 
+                   <input type="file" id="wdshouzhi" class="form-control" name="file" placeholder="上传文件"/>
+            </div>
+            <a class="btn btn-primary" onclick="imports('wdshouzhi')"><i class="fa fa-cloud-upload"></i>&nbsp;网点收支导入</a>
+         </div>
+          </td>
+	    </tr>
+	    <tr>
+	    <td> 
+	    <div style="margin-top: 30px;margin-bottom: 30px;">
+	    <div class="form-group col-sm-2"> 
+                   <input type="file" id="rcshouzhi" class="form-control" name="file" placeholder="上传文件"/>
+            </div>
+            <a class="btn btn-primary" onclick="imports('rcshouzhi')"><i class="fa fa-cloud-upload"></i>&nbsp;日常收支导入</a>
+         </div>
+          </td>
+	    </tr>
+	   </table>
+        </div>
+	    <div style="padding: 10px 0 20px 10px;">
+	        <h3>&nbsp;&nbsp;&nbsp;注意事项</h3>
+	        <ul>
+	            <li style="color: red;">软件所有导入数据版本支持Excel 97-2003工作表，并且不得有任何保护或者密码限制。 </li>
+	            <li style="color: red;">程序使用当今较为主流的技术开发，建议使用谷歌浏览器、360浏览器极速模式，或者其他现代化浏览器。</li>
+	            
+	        </ul>
+	    </div>
+    </div>
+    
+    <script type="text/javascript">
+    function imports(type){
+    	var fd=new FormData();
+    	fd.append("file",$("#"+type).get(0).files[0]);
+    	 var index = layer.load(1, {
+    	   	  shade: [0.8,'#fff'] //0.1透明度的白色背景
+    	   	});
+    	 var url;
+    	 if(type=="cainiao"){
+    		 url="sys/exporderrookie/import";
+    	 }else if(type=="duizhang"){
+    		 url="sys/expbalanceaccount/import";
+    	 }else if(type=="saomiao"){
+    		 url="sys/expdailyscan/import";
+    	 }else if(type=="wdshouzhi"){
+    		 url="sys/expmoneyinout/import";
+    	 }else if(type=="rcshouzhi"){
+    		 url="sys/expgeneralinout/import";
+    	 }
+            $.ajax({  
+                type: 'POST',  
+                url: baseURL + url,  
+                data: fd,
+                cache:false,
+                contentType:false,
+                processData:false,
+                success : function(data){  
+                	layer.close(index);
+                	if(data.code==0){
+                		alert("数据导入成功");
+                	}else{
+                		alert(data.msg)
+                	}
+                   }     
+        }); 
+    }
+    </script>
+    
+</body>
+</html>

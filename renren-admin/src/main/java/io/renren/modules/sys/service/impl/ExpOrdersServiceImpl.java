@@ -48,7 +48,7 @@ public class ExpOrdersServiceImpl extends ServiceImpl<ExpOrdersDao, ExpOrdersEnt
 	}
 
 	@Override
-	@DataFilter(subDept = true, user = false,tableAlias="a")
+	@DataFilter(subDept = true, user = false,tableAlias="r")
 	public List<ExpOrdersEntity> selectInRookie(Map<String, Object> params) {
 		if(null!=params.get("dates")&&!"".equals(params.get("dates").toString())) {
 				return expOrdersDao.selectInRookie(params.get("dates").toString(),(String)params.get(Constant.SQL_FILTER),new BigDecimal(params.get("baseWeight").toString()));

@@ -50,7 +50,7 @@
 	</select>
 	
 	<select id="selectInRookie" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
-			SELECT
+			<!-- SELECT
 			a.waybill_number,
 			`fun_round`(s.weight+(${baseWeight}))AS weight,
 			`fun_round`(s.weight) AS old_weight,
@@ -64,8 +64,21 @@
 		FROM
 			exp_balance_account a
 		INNER JOIN exp_order_rookie r ON a.waybill_number = r.waybill_number
-		INNER JOIN exp_daily_scan s ON a.waybill_number = s.waybill_number
-		<!-- INNER JOIN exp_price p ON c.price_name=p.price_name AND p.province_name=a.send_province AND p.weight=`fun_round`(s.weight+(SELECT base_weight FROM exp_base LIMIT 0,1)) -->
+		INNER JOIN exp_daily_scan s ON a.waybill_number = s.waybill_number 
+		INNER JOIN exp_price p ON c.price_name=p.price_name AND p.province_name=a.send_province AND p.weight=`fun_round`(s.weight+(SELECT base_weight FROM exp_base LIMIT 0,1)) -->
+		 SELECT
+			r.waybill_number,
+			`fun_round`(s.weight+(1))AS weight,
+			`fun_round`(s.weight) AS old_weight,
+			r.customer_name  AS customer_name,
+			r.destination_province,
+			 r.dot_name  AS dot_name,
+			r.create_date,
+		  r.customer_code,
+		  r.dept_id
+		FROM
+		exp_order_rookie r
+		INNER JOIN exp_daily_scan s ON r.waybill_number = s.waybill_number
 		 <where>
 		   <if test="null!=filter and ''!=filter">
 		${filter}

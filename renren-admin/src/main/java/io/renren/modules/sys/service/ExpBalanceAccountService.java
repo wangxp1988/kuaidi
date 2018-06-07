@@ -22,5 +22,7 @@ public interface ExpBalanceAccountService extends IService<ExpBalanceAccountEnti
 	void saveList(List<ExpBalanceAccountEntity> tempList);
 
 	int selectByTime(Map<String, Object> params);
+
+	List<Object> getCustomerName(Map<String, Object> params);
 }
 

@@ -32,7 +32,7 @@
                     		 $("#dateList").append('暂时没有可处理数据')  ;
                     	 }
                     	 $.each(r.list, function(i, item){
-                    		 $("#dateList").append('<a class="btn btn-default" onclick="dosomething(\''+item+'\',1);" >'+item+'</a>') ;
+                    		 $("#dateList").append('<a class="btn btn-default" id="'+item+'" onclick="dosomething(\''+item+'\',1);" >'+item+'</a>') ;
                     		 });
                      }else{
                          alert(r.msg);

@@ -22,10 +22,12 @@ import io.renren.common.utils.R;
 import io.renren.modules.sys.dao.ExpCustomerDao;
 import io.renren.modules.sys.dao.ExpOrdersDao;
 import io.renren.modules.sys.dao.ExpVoucherDao;
+import io.renren.modules.sys.entity.ExpBalanceAccountEntity;
 import io.renren.modules.sys.entity.ExpCustomerEntity;
 import io.renren.modules.sys.entity.ExpMoneyInOutEntity;
 import io.renren.modules.sys.entity.ExpOrdersEntity;
 import io.renren.modules.sys.entity.ExpVoucherEntity;
+import io.renren.modules.sys.service.ExpBalanceAccountService;
 import io.renren.modules.sys.service.ExpBaseService;
 import io.renren.modules.sys.service.ExpCustomerService;
 import io.renren.modules.sys.service.ExpDailyScanService;
@@ -49,6 +51,8 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
     private ExpOrdersService  expOrdersService;//中转数据
     @Autowired
     private ExpVoucherDao expVoucherDao;//凭证DAO
+    @Autowired
+    private ExpBalanceAccountService expBalanceAccountService;
 	@Autowired
 	private ExpOrdersDao expOrdersDao;
 	@Autowired
@@ -80,18 +84,22 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
     		//添加到用户表中
     		expCustomerDao.saveList(listCustomer);
     	}
+    	//-------------------点击处理日期七天内新用户添加完成----------------------------------------------------------
+    	
+    	
     	//检查今日扫描中有的运单号 菜鸟中无的，我要到对账单中 查找到相应的运单号及信息
         List<Object> scanWaybillList=expDailyScanService.selectWaybill(params);//只查询运单号
         @SuppressWarnings("unused")
 		List<Object> rookieWaybillList=expOrderRookieService.selectWaybill(params);//只查询运单号
-        list = listCompare(rookieWaybillList,scanWaybillList);//得到菜鸟中没有的运单号
+        list = listCompare(rookieWaybillList,scanWaybillList);
+        //-------------------得到菜鸟中没有的运单号---------------------------------
         return R.ok().put("num", 1).put("msg", "今日扫描与菜鸟对比完成");
 		}
         params.put("list", list);
         if(params.get("num").equals("2")) {
         try {
-        //查找这些数据中有没有新客户产生
-        List<Object> listNameNew=expDailyScanService.getCustomerName(params);
+        //菜鸟中没有的订单要在对账单子对比出来，并获取新用户
+        List<Object> listNameNew=expBalanceAccountService.getCustomerName(params);
         List<Object> listNameOld=expCustomerService.getCustomerName(params);
         List<Object> listName= listCompare(listNameOld,listNameNew);
         List<ExpCustomerEntity> newCustomer=new ArrayList<ExpCustomerEntity>();
@@ -111,7 +119,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 			}
         
         }
-        
+        //--------------此处判断用户信息是否完善---------------------------------------------
         if(params.get("num").equals("3")) {
         //此处判断用户信息是否完善SELECT COUNT(id) FROM exp_customer WHERE `code` IS NULL OR price_name IS NULL OR type IS NULL
 	        int count=expCustomerService.selectNullCount(params);
@@ -121,15 +129,18 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 	        	return R.ok().put("num", 3).put("msg", "客户信息已经完善");
 	        }
         }
+        
         if(params.get("num").equals("4")) {
         	try {
         		//查出对应基数
         		BigDecimal baseWeight=expBaseService.selectBaseWeight(params);
         		params.put("baseWeight", baseWeight);
+        		//通过list（list保存的是菜鸟中没有，扫描有的运单号），然后扫描和对账关联取出对应数据
         		 List<ExpOrdersEntity> listOne=expOrdersService.selectNotInRookie(params);
      	        //处理菜鸟和对账单符合的订单，中转到指定数据库 参数dates
      	        List<ExpOrdersEntity> listTwo=expOrdersService.selectInRookie(params);
-     	        listOne.addAll(listTwo);//合并结果，批量存入中转数据库
+     	        //合并结果，批量存入中转数据库
+     	        listOne.addAll(listTwo);
      	       expOrdersDao.saveOrdersBatch(listOne);//批量保存到数据库,并将重量按照规则转化成整数
      	       return R.ok().put("num", 4).put("msg", "中转数据处理完成");
 			} catch (Exception e) {
