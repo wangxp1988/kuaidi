@@ -43,6 +43,10 @@
        
        
        function dosomething(dates,num){
+    	   if(num==1){
+    		   $("#"+dates).remove()
+    		   $("#alert").html("");
+    	   }
     	   var index = layer.load(1, {
     		   	  shade: [0.2,'#fff'] //0.1透明度的白色背景
     		   	});
@@ -54,7 +58,7 @@
                success: function(r){
                    if(r.code === 0){
                   		 $("#alert").append('<div class="alert alert-success" role="alert"><a href="#" class="alert-link">'+r.msg+'</a></div>')  ;
-                  		 if(num<9){
+                  		 if(num<11){
                   			dosomething(dates,num+1)
                   		 }
                   	    layer.close(index);

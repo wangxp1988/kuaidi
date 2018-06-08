@@ -30,5 +30,7 @@ public interface ExpOrdersService extends IService<ExpOrdersEntity> {
 	List<ExpOrdersEntity> selectInOrder(Map<String, Object> params);
 
 	List<ExpOrdersEntity> selectGeneralIn(Map<String, Object> params);
+
+	List<ExpOrdersEntity> selectScanAndTemp(Map<String, Object> params);
 }
 

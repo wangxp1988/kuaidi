@@ -2,6 +2,7 @@ package io.renren.modules.sys.service;
 
 import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
+import io.renren.modules.sys.entity.ExpPriceEntity;
 import io.renren.modules.sys.entity.ExpVoucherEntity;
 
 import java.util.List;
@@ -19,5 +20,7 @@ public interface ExpVoucherService extends IService<ExpVoucherEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
 	List<Object> getDateList(Map<String, Object> params);
+
+	List<ExpVoucherEntity> selectAllDept(Map<String, Object> params);
 }
 

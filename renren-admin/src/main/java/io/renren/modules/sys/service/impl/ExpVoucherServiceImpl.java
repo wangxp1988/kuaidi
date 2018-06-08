@@ -18,6 +18,7 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
 import io.renren.modules.sys.dao.ExpVoucherDao;
+import io.renren.modules.sys.entity.ExpPriceEntity;
 import io.renren.modules.sys.entity.ExpVoucherEntity;
 import io.renren.modules.sys.service.ExpVoucherService;
 
@@ -48,6 +49,16 @@ public class ExpVoucherServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVoucher
 		 set.addAll(list);
 		 list.clear();
 		 list.addAll(set);
+		return list;
+	}
+
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public List<ExpVoucherEntity> selectAllDept(Map<String, Object> params) {
+		List<ExpVoucherEntity> list =expVoucherDao.selectList(new EntityWrapper<ExpVoucherEntity>()
+						.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+						.and("DATE_FORMAT(create_date,'%Y-%m-%d')='"+params.get("dates")+"'")
+						);
 		return list;
 	}
 

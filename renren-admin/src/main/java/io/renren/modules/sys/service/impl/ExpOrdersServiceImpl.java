@@ -95,6 +95,17 @@ public class ExpOrdersServiceImpl extends ServiceImpl<ExpOrdersDao, ExpOrdersEnt
 		}
 		return null;
 	}
+   /**
+    * 今日扫描和中转表关联
+    */
+	@Override
+	@DataFilter(subDept = true, user = false,tableAlias="s")
+	public List<ExpOrdersEntity> selectScanAndTemp(Map<String, Object> params) {
+		if(null!=params.get("dates")&&!"".equals(params.get("dates").toString())) {
+			return expOrdersDao.selectScanAndTemp(params.get("dates").toString(),(String)params.get(Constant.SQL_FILTER),new BigDecimal(params.get("baseWeight").toString()));
+	     }
+		return null;
+	}
 
 
 }

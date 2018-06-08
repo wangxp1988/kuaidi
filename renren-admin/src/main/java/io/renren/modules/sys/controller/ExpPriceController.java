@@ -32,6 +32,7 @@ import io.renren.modules.sys.service.ExpPriceService;
 import io.renren.modules.sys.shiro.ShiroUtils;
 import jxl.Sheet;
 import jxl.Workbook;
+import io.renren.common.utils.CityUtil;
 import io.renren.common.utils.ExportExcel;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
@@ -207,7 +208,7 @@ public class ExpPriceController {
    					// 价格表名称
    					String priceName = rs.getCell(j++, i).getContents();
    					// 省份名称
-   					String provinceName = rs.getCell(j++, i).getContents();
+   					String provinceName =CityUtil.getCity(rs.getCell(j++, i).getContents()) ;
    					// 重量
    					BigDecimal weight = new BigDecimal(rs.getCell(j++, i).getContents());
    					// 价格

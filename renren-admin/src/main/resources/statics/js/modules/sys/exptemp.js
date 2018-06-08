@@ -1,29 +1,22 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'sys/expvoucher/list',
+        url: baseURL + 'sys/exptemp/list',
         datatype: "json",
         colModel: [			
-			{ label: 'id', name: 'id', index: 'id', width: 50, key: true,hidden:true },
-			{ label: '凭证编码', name: 'voucherCode', index: 'voucher_code', width: 80 }, 			
-			{ label: '凭证摘要', name: 'voucherRemark', index: 'voucher_remark', width: 80 }, 			
-			{ label: '二级编码', name: 'twoLevelCoding', index: 'two_level_coding', width: 80 }, 			
-			{ label: '二级名称', name: 'twoLevelName', index: 'two_level_name', width: 80 }, 			
-			{ label: '客户名称', name: 'customerName', index: 'customer_name', width: 80 }, 			
-			{ label: '运单号', name: 'waybillNumber', index: 'waybill_number', width: 80 }, 			
-			{ label: '目的网点', name: 'destinationDot', index: 'destination_dot', width: 80 }, 			
-			{ label: '借方金额', name: 'debtorMoney', index: 'debtor_money', width: 80 }, 			
-			{ label: '贷方金额', name: 'lenderMoney', index: 'lender_money', width: 80 }, 			
-			{ label: '借方重量', name: 'debtorWeight', index: 'debtor_weight', width: 80 }, 			
-			{ label: '贷方重量', name: 'lenderWeight', index: 'lender_weight', width: 80 }, 			
+			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
+			{ label: '物流编号', name: 'waybillNumber', index: 'waybill_number', width: 80 }, 			
+			{ label: '创建日期', name: 'createDate', index: 'create_date', width: 80 }, 			
 			{ label: '客户编码', name: 'customerCode', index: 'customer_code', width: 80 }, 			
-			{ label: '创建时间', name: 'createDate', index: 'create_date', width: 80 }, 			
+			{ label: '客户名称', name: 'customerName', index: 'customer_name', width: 80 }, 			
+			{ label: '目的省份', name: 'destinationProvince', index: 'destination_province', width: 80 }, 			
+			{ label: '部门ID', name: 'deptId', index: 'dept_id', width: 80 }			
         ],
 		viewrecords: true,
         height: 385,
         rowNum: 10,
 		rowList : [10,30,50],
-        /*rownumbers: true, 
-        rownumWidth: 25, */
+        rownumbers: true, 
+        rownumWidth: 25, 
         autowidth:true,
         multiselect: true,
         pager: "#jqGridPager",
@@ -50,7 +43,7 @@ var vm = new Vue({
 	data:{
 		showList: true,
 		title: null,
-		expVoucher: {}
+		expTemp: {}
 	},
 	methods: {
 		query: function () {
@@ -59,7 +52,7 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
-			vm.expVoucher = {};
+			vm.expTemp = {};
 		},
 		update: function (event) {
 			var id = getSelectedRow();
@@ -72,12 +65,12 @@ var vm = new Vue({
             vm.getInfo(id)
 		},
 		saveOrUpdate: function (event) {
-			var url = vm.expVoucher.id == null ? "sys/expvoucher/save" : "sys/expvoucher/update";
+			var url = vm.expTemp.id == null ? "sys/exptemp/save" : "sys/exptemp/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
                 contentType: "application/json",
-			    data: JSON.stringify(vm.expVoucher),
+			    data: JSON.stringify(vm.expTemp),
 			    success: function(r){
 			    	if(r.code === 0){
 						alert('操作成功', function(index){
@@ -98,7 +91,7 @@ var vm = new Vue({
 			confirm('确定要删除选中的记录？', function(){
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "sys/expvoucher/delete",
+				    url: baseURL + "sys/exptemp/delete",
                     contentType: "application/json",
 				    data: JSON.stringify(ids),
 				    success: function(r){
@@ -114,8 +107,8 @@ var vm = new Vue({
 			});
 		},
 		getInfo: function(id){
-			$.get(baseURL + "sys/expvoucher/info/"+id, function(r){
-                vm.expVoucher = r.expVoucher;
+			$.get(baseURL + "sys/exptemp/info/"+id, function(r){
+                vm.expTemp = r.expTemp;
             });
 		},
 		reload: function (event) {
@@ -127,17 +120,3 @@ var vm = new Vue({
 		}
 	}
 });
-
-function exports(){
-	var index = layer.load(1, {
-	   	  shade: [0.2,'#fff'] //0.1透明度的白色背景
-	   	});
-	var dates=$("#dates").val();
-	if(null==dates||dates==""){
-		 layer.close(index);
-		alert("请选择日期");
-		return;
-	}
-	location.href=baseURL + "sys/expvoucher/export?dates="+dates;
-	
-}

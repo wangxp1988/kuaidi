@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.sys.dao.ExpTempDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.sys.entity.ExpTempEntity" id="expTempMap">
+        <result property="id" column="id"/>
+        <result property="waybillNumber" column="waybill_number"/>
+        <result property="createDate" column="create_date"/>
+        <result property="customerCode" column="customer_code"/>
+        <result property="customerName" column="customer_name"/>
+        <result property="destinationProvince" column="destination_province"/>
+        <result property="deptId" column="dept_id"/>
+    </resultMap>
+	<select id="selectFromRookieByDate" resultType="io.renren.modules.sys.entity.ExpTempEntity">
+		SELECT
+			waybill_number,
+			create_date,
+			customer_code,
+			customer_name,
+			destination_province,
+			dept_id
+		FROM
+			exp_order_rookie
+		 <where>
+		   <if test="null!=filter and ''!=filter">
+		${filter}
+		  </if>
+		  <if test="null!=dates and ''!=dates">
+		   And  DATE_FORMAT(create_date,'%Y-%m-%d')=#{dates}
+		  </if>
+		 </where>
+    </select>
+    
+    
+    <select id="selectFromBalanceAccount" resultType="io.renren.modules.sys.entity.ExpTempEntity">
+		    SELECT
+			a.waybill_number,
+			a.send_time AS creat_date,
+			c.`code` AS customer_code,
+			c.`name` AS customer_name,
+			a.recipient_province AS destination_province,
+			a.dept_id
+		FROM
+			exp_balance_account a
+		INNER JOIN exp_customer c ON a.sender = c.`name`
+		<where>
+		   <if test="null!=filter and ''!=filter">
+		${filter}
+		  </if>
+		  and a.waybill_number in
+		   <foreach collection="list" index="index" item="item" separator="," open="(" close=")">  
+	        #{item}  
+	      </foreach> 
+		 </where>
+    </select>
+    
+    
+    <insert id="saveList" parameterType="io.renren.modules.sys.entity.ExpTempEntity">
+		INSERT INTO exp_temp
+		(
+       `waybill_number`, `create_date`, `customer_code`, `customer_name`, `destination_province`, `dept_id`
+       )
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+       #{item.waybillNumber}, #{item.createDate}, #{item.customerCode}, #{item.customerName}, #{item.destinationProvince},#{item.deptId}
+       )
+       </foreach>
+	</insert>
+
+</mapper>
