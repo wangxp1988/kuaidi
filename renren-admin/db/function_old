@@ -5,16 +5,12 @@ CREATE
     RETURNS DECIMAL(10,0)
     BEGIN
   DECLARE index1 INT;#小数点的位置
-  DECLARE number1 INT;#小数点后一位的值
-  DECLARE number2 INT;#小数点后一位的值
+  DECLARE number INT;#小数点后一位的值
   SET index1=(SELECT LOCATE('.', ss)); #获取小数点的位置
   SET @num=ss;
   IF index1>0 THEN#如果有小数点
-    SET number1=(SELECT SUBSTRING(ss,index1+1,1));#取小数点后一位的值
-    SET number2=(SELECT SUBSTRING(ss,index1+2,1));#取小数点后一位的值
-    IF number1>0 THEN #如果大于0    
-      SET @num=(SELECT CEILING(ss)); #向上取整
-    ELSEIF number1=0 AND number2>0 THEN
+    SET index1=(SELECT SUBSTRING(ss,index1+1,1));#取小数点后一位的值
+    IF index1>0 THEN #如果大于0    
       SET @num=(SELECT CEILING(ss)); #向上取整
     ELSE
       SET @num=(SELECT FLOOR(ss));#向下取整

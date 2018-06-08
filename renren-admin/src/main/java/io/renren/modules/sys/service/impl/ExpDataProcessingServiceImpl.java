@@ -160,8 +160,10 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 /******************将对账中的比对出来的信息保存到中转表中****************************************************/
         if(params.get("num").equals("5")) {
         	try {
-        		List<ExpTempEntity> listBalanceAccount=expTempService.selectFromBalanceAccount(params);
-        		expTempService.saveList(listBalanceAccount);
+        		if(null!=list&&list.size()>0) {
+        			List<ExpTempEntity> listBalanceAccount=expTempService.selectFromBalanceAccount(params);
+            		expTempService.saveList(listBalanceAccount);
+        		}
         		return R.ok().put("num", 5).put("msg", "对账比对后中转成功");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -462,9 +464,9 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 	}
 	 private List<Object> listCompare(List<Object> rookieWaybillList, List<Object> scanWaybillList) {
 	    	long startTime=System.currentTimeMillis(); 
-	    	if(null==scanWaybillList&&scanWaybillList.size()<1) {
+	    	if(null==scanWaybillList||scanWaybillList.size()<1) {
 	    		return null;
-	    	}else if(null==rookieWaybillList&&rookieWaybillList.size()<1){
+	    	}else if(null==rookieWaybillList||rookieWaybillList.size()<1){
 	    		return scanWaybillList;
 	    	}
 	        Map<Object,Integer> map = new HashMap<Object,Integer>(rookieWaybillList.size());
