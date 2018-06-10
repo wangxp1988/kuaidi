@@ -2,7 +2,11 @@ package io.renren.modules.sys.dao;
 
 import io.renren.modules.sys.entity.ExpVoucherEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -16,5 +20,26 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 public interface ExpVoucherDao extends BaseMapper<ExpVoucherEntity> {
 
 	void saveList(List<ExpVoucherEntity> tempList);
+	/**
+	 * 毛利条数
+	 * @param startDates
+	 * @param endDates
+	 * @param filter
+	 * @return
+	 */
+	int selectCountMy(@Param("startDates")String startDates,@Param("endDates")String endDates,@Param("filter")String filter);
+	/**
+	 * 毛利明细
+	 * @param baseBil
+	 * @param currPage
+	 * @param limit
+	 * @param startDates
+	 * @param endDates
+	 * @param filter
+	 * @return
+	 */
+	List<ExpVoucherEntity> selectPageMy(@Param("baseBil")BigDecimal baseBil,@Param("currPage")int currPage,@Param("limit")int limit,@Param("startDates")String startDates,@Param("endDates")String endDates,@Param("filter")String filter);
 	
+	//Map<String, Object> SelectGrossProfitSum(@Param("baseBil")BigDecimal baseBil,@Param("filter")String filter,@Param("customer")String customer,@Param("weight")int weight,@Param("province")String province );
+	Map<String, Object> SelectGrossProfitSum(Map<String,Object> map );
 }

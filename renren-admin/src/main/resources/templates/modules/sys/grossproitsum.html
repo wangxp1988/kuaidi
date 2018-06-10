@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>角色管理</title>
+<#include "/header.html">
+</head>
+<body>
+	<div>
+		 <div class="grid-btn">
+             <!-- <div class="form-group col-sm-2">
+				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="start_dates" placeholder="选择开始日期">
+			</div>
+             <div class="form-group col-sm-2">
+				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="end_dates" placeholder="选择结束日期">
+			</div> -->
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control"  id="customer" placeholder="客户或客户编码">
+			</div>
+			<div class="form-group col-sm-2">
+				 <select class="form-control" id="province">
+				 </select>
+			</div>
+			<div class="form-group col-sm-2">
+				 <select class="form-control" id="weight">
+				    
+				 </select>
+			</div>
+			<#if shiro.hasPermission("sys:grossprofit:list")>
+            <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;按条件汇总</a>
+			</#if>
+        </div>
+		   <div class="panel panel-default">
+			  <!-- Default panel contents -->
+			  <div class="panel-heading">毛利汇总信息</div>
+			 <table class="table">
+		        <thead>
+		          <tr>
+		            <th>收入金额</th>
+		            <th>成本金额</th>
+		            <th>面单金额</th>
+		            <th>运单数</th>
+		            <th>毛利金额</th>
+		          </tr>
+		        </thead>
+		        <tbody>
+		          <tr id="sumtb">
+		          </tr>
+		        </tbody>
+		      </table>
+			</div>
+    </div>
+    
+    <script type="text/javascript">
+    $(function(){
+    	load();
+    });
+       function load(){
+    	   var url="sys/sysarea/listAll"
+    	     $.ajax({
+                 type: "POST",
+                 url:  baseURL + url,
+                 contentType: "application/json",
+                 success: function(r){
+                     if(r.code === 0){
+                    	 if(r.list==null){
+                    		 $("#dateList").append('暂时没有可处理数据')  ;
+                    	 }
+                    	 $("#province").html("");
+                    	 $("#province").append('<option value="">请选择省份</option>');
+                    	 $.each(r.list, function(i, item){
+                    		 $("#province").append('<option value='+item.name+'>'+item.name+'</option>') ;
+                    		 });
+                    	$("#weight").html("");
+                    	 $("#weight").append('<option value="0">请选择重量</option>');
+                    	 for(var i=1;i<21;i++){
+                    		 $("#weight").append('<option value='+i+'>'+i+'公斤</option>') 
+                    	 }
+                     }else{
+                         alert(r.msg);
+                     }
+                 }
+             });
+       }
+       
+       
+       function query(){
+    	   var index = layer.load(1, {
+    		   	  shade: [0.2,'#fff'] //0.1透明度的白色背景
+    		   	});
+    	   var url="sys/grossprofit/sum";
+    	   var customer = $("#customer").val();
+    	   var province = $("#province").val();
+    	   var weight = $("#weight").val();
+    	   if(customer==""&&province==""&&weight==0){
+    		   alert("没有任何汇总条件");
+    		   return;
+    	   }
+    	   
+    	   $.ajax({
+               type: "POST",
+               url:  baseURL + url,
+               data: {'customer':customer,'province':province,'weight':weight},
+               success: function(r){
+            	   $("#sumtb").html("");
+                   if(r.code === 0){
+                	   if(null!=r.map&&""!=r.map){
+                		   $("#sumtb").append('<td>'+r.map.debtorMoney+'</td><td>'+r.map.lenderMoney+'</td><td>'+r.map.baseBil+'</td><td>'+r.map.count+'</td><td>'+r.map.grossProfit+'</td>')  ;
+                	   }
+                  	    layer.close(index);
+                   }
+               }
+           });
+       }
+    </script>
+    
+</body>
+</html>

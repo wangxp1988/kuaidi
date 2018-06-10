@@ -1,5 +1,6 @@
 package io.renren.modules.sys.entity;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -79,8 +80,13 @@ public class ExpVoucherEntity implements Serializable {
 	 */
 	private Date createDate;
 	/**
-	 * 
+	 * 毛利
 	 */
+	@TableField(exist=false)
+	private BigDecimal grossProfit;
+	@TableField(exist=false)
+	private BigDecimal baseBil;
+	
 	private Long deptId;
 
 	/**
@@ -260,4 +266,18 @@ public class ExpVoucherEntity implements Serializable {
 	public Long getDeptId() {
 		return deptId;
 	}
+	public BigDecimal getGrossProfit() {
+		return grossProfit;
+	}
+	public void setGrossProfit(BigDecimal grossProfit) {
+		this.grossProfit = grossProfit;
+	}
+	public BigDecimal getBaseBil() {
+		return baseBil;
+	}
+	public void setBaseBil(BigDecimal baseBil) {
+		this.baseBil = baseBil;
+	}
+	
+	
 }

@@ -42,5 +42,15 @@ public class ExpBaseServiceImpl extends ServiceImpl<ExpBaseDao, ExpBaseEntity> i
 				.last("limit 0,1") 
 				);
 	}
+	
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public BigDecimal selectBaseBill(Map<String, Object> params) {
+		return (BigDecimal) this.selectObj(new EntityWrapper<ExpBaseEntity>()
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.setSqlSelect("base_bill")
+				.last("limit 0,1") 
+				);
+	}
 
 }

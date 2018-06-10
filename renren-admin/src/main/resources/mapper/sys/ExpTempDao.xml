@@ -37,7 +37,7 @@
     <select id="selectFromBalanceAccount" resultType="io.renren.modules.sys.entity.ExpTempEntity">
 		    SELECT
 			a.waybill_number,
-			a.send_time AS creat_date,
+			a.send_time AS create_date,
 			c.`code` AS customer_code,
 			c.`name` AS customer_name,
 			a.recipient_province AS destination_province,

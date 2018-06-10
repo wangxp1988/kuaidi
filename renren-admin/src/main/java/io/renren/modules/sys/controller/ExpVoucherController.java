@@ -127,5 +127,4 @@ public class ExpVoucherController {
     			  "借方金额","贷方金额","借方重量","贷方重量","客户编码","创建时间"}; 
     	  ExportExcel.exportExcel(response,params.get("dates")+"凭证信息.xls",Title, plist);  
     }
-
 }

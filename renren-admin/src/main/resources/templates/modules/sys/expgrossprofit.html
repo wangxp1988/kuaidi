@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>凭证管理</title>
+		<#include "/header.html">
+<script src="${request.contextPath}/statics/js/plugins/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+             <div class="form-group col-sm-2">
+				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="start_dates" placeholder="选择开始日期">
+			</div>
+             <div class="form-group col-sm-2">
+				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="end_dates" placeholder="选择结束日期">
+			</div>
+			<#if shiro.hasPermission("sys:grossprofit:list")>
+            <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;查询</a>
+			</#if>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+				<div class="form-group">
+                        <div class="col-sm-2 control-label">凭证摘要</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.voucherRemark" placeholder="凭证摘要"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">二级编码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.twoLevelCoding" placeholder="二级编码"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">二级名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.twoLevelName" placeholder="二级名称"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">客户名称</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.customerName" placeholder="客户名称"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">运单号</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.waybillNumber" placeholder="运单号"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">目的网点</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.destinationDot" placeholder="目的网点"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">借方金额</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.debtorMoney" placeholder="借方金额"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">贷方金额</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.lenderMoney" placeholder="贷方金额"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">借方重量</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.debtorWeight" placeholder="借方重量"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">贷方重量</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.lenderWeight" placeholder="贷方重量"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">客户编码</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.customerCode" placeholder="客户编码"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label">创建时间</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.createDate" placeholder="创建时间"/>
+                        </div>
+                    </div>
+											                    <div class="form-group">
+                        <div class="col-sm-2 control-label"></div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expVoucher.deptId" placeholder=""/>
+                        </div>
+                    </div>
+							            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="${request.contextPath}/statics/js/modules/sys/expgrossprfit.js?_${.now?long}"></script>
+</body>
+</html>

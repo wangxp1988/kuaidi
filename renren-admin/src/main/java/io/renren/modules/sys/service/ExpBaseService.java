@@ -19,5 +19,6 @@ public interface ExpBaseService extends IService<ExpBaseEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
 	BigDecimal selectBaseWeight(Map<String, Object> params);
+	public BigDecimal selectBaseBill(Map<String, Object> params);
 }
 

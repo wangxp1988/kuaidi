@@ -61,5 +61,118 @@
 		)
 		</foreach>
      </insert>
-
+      <!--计算毛利 -->
+       <select id="selectPageMy" resultType="io.renren.modules.sys.entity.ExpVoucherEntity">
+			SELECT
+				v.customer_code,
+				v.customer_name,
+				v.waybill_number,
+				v.destination_dot,
+				v.debtor_weight,
+				v.debtor_money,
+				len.lender_money,
+				v.create_date,
+				${baseBil} AS base_bil,
+				(
+					v.debtor_money - len.lender_money - ${baseBil}
+				) AS gross_profit
+			FROM
+				exp_voucher v
+			LEFT JOIN (
+				SELECT
+					SUM(le.debtor_money) AS lender_money,
+					le.waybill_number
+				FROM
+					exp_voucher le
+				WHERE
+					le.two_level_coding = '600201'
+				GROUP BY
+					le.waybill_number
+			) AS len ON len.waybill_number = v.waybill_number
+			<where>
+			 <if test="null!=filter and ''!=filter">
+				${filter}
+		     </if>
+			AND v.two_level_coding = '112201'
+			 <if test="null!=startDates and ''!=startDates">
+			AND DATE_FORMAT(v.create_date, '%Y-%m-%d')&gt;=#{startDates}
+			</if> 
+			<if test="null!=endDates and ''!=endDates">
+			AND DATE_FORMAT(v.create_date, '%Y-%m-%d')&lt;=#{endDates}
+			</if>
+			AND v.debtor_money > 0
+			</where>
+		    LIMIT #{currPage},#{limit}
+       </select>
+       <!--时间段内毛收入数量-->
+        <select id="selectCountMy" resultType="Integer">
+           SELECT
+				count(*)
+			FROM
+				exp_voucher v
+			<where>
+			 <if test="null!=filter and ''!=filter">
+				${filter}
+		     </if>
+				AND v.two_level_coding = '112201'
+				 <if test="null!=startDates and ''!=startDates">
+				AND DATE_FORMAT(v.create_date, '%Y-%m-%d')&gt;=#{startDates}
+				</if> 
+				<if test="null!=endDates and ''!=endDates">
+				AND DATE_FORMAT(v.create_date, '%Y-%m-%d')&lt;=#{endDates}
+				</if>
+				AND v.debtor_money > 0
+			</where>
+        </select>
+        <!-- 毛收入汇总 -->
+        <select id="SelectGrossProfitSum" resultType="map">
+		   SELECT 
+			     count(v.waybill_number) AS count,
+				 sum(v.debtor_money) AS debtorMoney,
+				 sum(len.lender_money) AS lenderMoney,
+				 ${baseBil} AS baseBil,
+				 sum(
+					v.debtor_money - len.lender_money - ${baseBil}
+				) AS grossProfit
+			FROM
+				exp_voucher v
+			LEFT JOIN (
+				SELECT
+					SUM(le.debtor_money) AS lender_money,
+					le.waybill_number
+				FROM
+					exp_voucher le
+				WHERE
+					le.two_level_coding = '600201'
+				GROUP BY
+					le.waybill_number
+			) AS len ON len.waybill_number = v.waybill_number
+			
+			<where>
+				 <if test="null!=filter and ''!=filter">
+					${filter}
+			     </if>
+			     AND v.two_level_coding = '112201' 
+			     AND v.debtor_money > 0 
+			     <if test="null!=customer and ''!=customer">
+			         AND (v.customer_code=#{customer} OR v.customer_name=#{customer})
+			     </if> 
+			     <if test="null!=weight and 0!=weight">
+			        AND debtor_weight=#{weight}
+			     </if> 
+			     <if test="null!=province and ''!=province">
+			        AND v.destination_dot=#{province}
+			     </if> 
+		     </where>
+		     GROUP BY v.two_level_coding
+			     <if test="null!=customer and ''!=customer">
+			        ,v.customer_code
+			     </if> 
+			     <if test="null!=weight and 0!=weight">
+			       ,debtor_weight
+			     </if> 
+			     <if test="null!=province and ''!=province">
+			        ,v.destination_dot
+			     </if> 
+        </select>
 </mapper>
