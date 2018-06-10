@@ -92,6 +92,7 @@
     	   var province = $("#province").val();
     	   var weight = $("#weight").val();
     	   if(customer==""&&province==""&&weight==0){
+    		   layer.close(index);
     		   alert("没有任何汇总条件");
     		   return;
     	   }
