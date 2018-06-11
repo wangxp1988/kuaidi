@@ -47,7 +47,7 @@ public class ExpGrossProfitServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 	     return  new PageUtils(list, count, query.getLimit(), query.getCurrPage());
 	}
 	 @DataFilter(subDept = true, user = false,tableAlias="v")
-	public Map<String, Object> SelectGrossProfitSum(Map<String, Object> params) {
+	public List<Map<String, Object>> SelectGrossProfitSum(Map<String, Object> params) {
 		 BigDecimal baseBil= expBaseService.selectBaseBill(params);
 		 params.put("baseBil", baseBil);
 		 return this.expVoucherDao.SelectGrossProfitSum(params);

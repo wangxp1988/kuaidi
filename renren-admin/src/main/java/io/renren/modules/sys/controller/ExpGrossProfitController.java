@@ -1,5 +1,6 @@
 package io.renren.modules.sys.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -38,7 +39,7 @@ public class ExpGrossProfitController {
 	@RequestMapping("sum")
 	@RequiresPermissions("sys:grossprofit:list")
 	public R listsum(@RequestParam Map<String, Object> params) {
-		Map<String,Object> o = grossProfitService.SelectGrossProfitSum(params);
-		return R.ok().put("map", o);
+		List<Map<String,Object>> o = grossProfitService.SelectGrossProfitSum(params);
+		return R.ok().put("list", o);
 	}
 }

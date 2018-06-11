@@ -3,16 +3,17 @@
 <head>
 <title>角色管理</title>
 <#include "/header.html">
+<script src="${request.contextPath}/statics/js/plugins/My97DatePicker/WdatePicker.js"></script>
 </head>
 <body>
 	<div>
 		 <div class="grid-btn">
-             <!-- <div class="form-group col-sm-2">
-				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="start_dates" placeholder="选择开始日期">
+             <div class="form-group col-sm-2">
+				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="start_dates" placeholder="选择开始日期（必须）">
 			</div>
              <div class="form-group col-sm-2">
-				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="end_dates" placeholder="选择结束日期">
-			</div> -->
+				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="end_dates" placeholder="选择结束日期（必选）">
+			</div>
 			<div class="form-group col-sm-2">
 				<input type="text" class="form-control"  id="customer" placeholder="客户或客户编码">
 			</div>
@@ -33,18 +34,12 @@
 			  <!-- Default panel contents -->
 			  <div class="panel-heading">毛利汇总信息</div>
 			 <table class="table">
-		        <thead>
-		          <tr>
-		            <th>收入金额</th>
-		            <th>成本金额</th>
-		            <th>面单金额</th>
-		            <th>运单数</th>
-		            <th>毛利金额</th>
-		          </tr>
+		        <thead id="sumth">
+		         
 		        </thead>
-		        <tbody>
-		          <tr id="sumtb">
-		          </tr>
+		        <tbody id="sumtb" >
+		          
+		          
 		        </tbody>
 		      </table>
 			</div>
@@ -91,22 +86,56 @@
     	   var customer = $("#customer").val();
     	   var province = $("#province").val();
     	   var weight = $("#weight").val();
-    	   if(customer==""&&province==""&&weight==0){
-    		   layer.close(index);
-    		   alert("没有任何汇总条件");
-    		   return;
-    	   }
+    	   var startDates = $("#start_dates").val();
+    	   var endDates = $("#end_dates").val();
     	   
+    	    if(""==startDates||""==endDates){
+    	        layer.close(index);
+    	    	alert("汇总时间必须选择");
+    	    	return;
+    	    }
+    	   $("#sumth").html("");
+    	   var html1="<tr>";
+    	   if(customer!=""){
+    		   html1+="<th>客户名称</th> <th>客户编号</th>";
+    	   }
+           if(province!=""){
+        	  html1+="<th>省份</th>";
+           }
+           if(weight!=""&&weight!=0){
+        	  html1+="<th>重量</th>";
+           }
+    	   if(customer==""&&province==""&&weight==0){
+    		  html1+= "<th>客户名称</th><th>客户编号</th><th>省份</th><th>重量</th>";
+    	   }
+    	   html1+="<th>收入金额</th><th>成本金额</th><th>面单金额</th><th>运单数</th><th>毛利金额</th>";
+    	   html1+="</tr>";
+    	   $("#sumth").append(html1);
     	   $.ajax({
                type: "POST",
                url:  baseURL + url,
-               data: {'customer':customer,'province':province,'weight':weight},
+               data: {'customer':customer,'province':province,'weight':weight,"startDates":startDates,"endDates":endDates},
                success: function(r){
             	   $("#sumtb").html("");
                    if(r.code === 0){
-                	   if(null!=r.map&&""!=r.map){
-                		   $("#sumtb").append('<td>'+r.map.debtorMoney+'</td><td>'+r.map.lenderMoney+'</td><td>'+r.map.baseBil+'</td><td>'+r.map.count+'</td><td>'+r.map.grossProfit+'</td>')  ;
-                	   }
+                	   $.each(r.list, function(i, item){
+                		   var html2="<tr>";
+                		   
+                		   if(customer!=""){
+                    		   html2+="<td>"+item.customerName+"</td> <td>"+item.customerCode+"</td>";
+                    	   }
+                           if(province!=""){
+                        	  html2+="<td>"+province+"</td>"
+                           }
+                           if(weight!=""&&weight!=0){
+                        	  html2+="<td>"+weight+"公斤</td>"
+                           }
+                    	   if(customer==""&&province==""&&weight==0){
+                    		  html2+= "<td>"+item.customerName+"</td><td>"+item.customerCode+"</td><td>"+item.destinationDot+"</td><td>"+item.weight+"</td>";
+                    	   }
+                		   
+                		   $("#sumtb").append(html2+'<td>'+item.debtorMoney+'</td><td>'+item.lenderMoney+'</td><td>'+item.baseBil+'</td><td>'+item.count+'</td><td>'+item.grossProfit+'</td>'+'</tr>');
+                	   });
                   	    layer.close(index);
                    }
                }

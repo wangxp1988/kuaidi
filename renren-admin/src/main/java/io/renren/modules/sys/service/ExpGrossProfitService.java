@@ -1,6 +1,6 @@
 package io.renren.modules.sys.service;
 
-import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 
@@ -21,6 +21,6 @@ public interface ExpGrossProfitService  extends IService<ExpVoucherEntity> {
 	 * @param province
 	 * @return
 	 */
-	Map<String, Object> SelectGrossProfitSum(Map<String, Object> params);
+	List<Map<String, Object>> SelectGrossProfitSum(Map<String, Object> params);
 
 }
