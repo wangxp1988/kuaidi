@@ -146,7 +146,7 @@
 				 <if test="null!=dates and ''!=dates">
 					 And  DATE_FORMAT(m.create_date,'%Y-%m-%d')=#{dates}
 				</if>
-				AND m.money > 0 AND m.column_name LIKE '支出%'
+				AND m.money > 0 AND m.column_name LIKE '支出%' AND m.waybill_number NOT LIKE "N%"
 			 </where>
 		</select>
 		<select id="selectInOrder" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">
@@ -171,7 +171,7 @@
 				 <if test="null!=dates and ''!=dates">
 					 And  DATE_FORMAT(m.create_date,'%Y-%m-%d')=#{dates}
 				</if>
-				AND m.money > 0 AND m.column_name LIKE '收入%'
+				AND m.money > 0 AND m.column_name LIKE '收入%' AND m.waybill_number NOT LIKE "N%"
 			 </where>
 		</select>
 	<select id="selectGeneralIn" resultType="io.renren.modules.sys.entity.ExpOrdersEntity">

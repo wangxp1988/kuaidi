@@ -303,34 +303,57 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 	        		List<ExpOrdersEntity> orderList=expOrdersService.selectOutOrder(params);
 	        		List<ExpVoucherEntity> voucherList=new ArrayList<ExpVoucherEntity>();
 	        		 orderList.forEach(item->{
-	 		        	ExpVoucherEntity voucherBorrow=new ExpVoucherEntity();
-	 		        	voucherBorrow.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
-	 		        	voucherBorrow.setTwoLevelCoding(Constant.OUT_IN_OUT_SECOND_CODE_BORROW);
-	 		        	voucherBorrow.setTwoLevelName(Constant.OUT_IN_OUT_SECOND_NAME_BORROW);
-	 		        	voucherBorrow.setCustomerName(item.getCustomerName());
-	 		        	voucherBorrow.setWaybillNumber(item.getWaybillNumber());
-	 		        	voucherBorrow.setDestinationDot(item.getDestinationProvince());
-	 		        	voucherBorrow.setDebtorMoney(item.getMoney());
-	 		        	voucherBorrow.setDebtorWeight(item.getWeight());
-	 		        	voucherBorrow.setCustomerCode(item.getCustomerCode());
-	 		        	voucherBorrow.setCreateDate(item.getCreateDate());//时间
-	 		        	voucherBorrow.setVoucherCode(sdf.format(item.getCreateDate())+2);
-	 		        	voucherBorrow.setDeptId(deptId);
-	 		        	voucherList.add(voucherBorrow);
-	 		        	ExpVoucherEntity voucherLoan=new ExpVoucherEntity();
-	 		        	voucherLoan.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
-	 		        	voucherLoan.setTwoLevelCoding(Constant.OUT_IN_OUT_SECOND_CODE_LOAN);
-	 		        	voucherLoan.setTwoLevelName(Constant.OUT_IN_OUT_SECOND_NAME_LOAN);
-	 		        	voucherLoan.setCustomerName(item.getCustomerName());
-	 		        	voucherLoan.setWaybillNumber(item.getWaybillNumber());
-	 		        	voucherLoan.setDestinationDot(item.getDestinationProvince());
-	 		        	voucherLoan.setLenderMoney(item.getMoney());
-	 		        	voucherLoan.setLenderWeight(item.getOldWeight());
-	 		        	voucherLoan.setCustomerCode(item.getCustomerCode());
-	 		        	voucherLoan.setCreateDate(item.getCreateDate());//时间
-	 		        	voucherLoan.setVoucherCode(sdf.format(item.getCreateDate())+2);
-	 		        	voucherLoan.setDeptId(deptId);
-	 		        	voucherList.add(voucherLoan);
+	        			if(StringUtils.isNotBlank(item.getDestinationProvince())) {
+		 		        	ExpVoucherEntity voucherBorrow=new ExpVoucherEntity();
+		 		        	voucherBorrow.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
+		 		        	voucherBorrow.setTwoLevelCoding(Constant.OUT_IN_OUT_SECOND_CODE_BORROW);
+		 		        	voucherBorrow.setTwoLevelName(Constant.OUT_IN_OUT_SECOND_NAME_BORROW+"-"+item.getDes());
+		 		        	voucherBorrow.setCustomerName(item.getCustomerName());
+		 		        	voucherBorrow.setWaybillNumber(item.getWaybillNumber());
+		 		        	voucherBorrow.setDestinationDot(item.getDestinationProvince());
+		 		        	voucherBorrow.setDebtorMoney(item.getMoney());
+		 		        	voucherBorrow.setDebtorWeight(item.getWeight());
+		 		        	voucherBorrow.setCustomerCode(item.getCustomerCode());
+		 		        	voucherBorrow.setCreateDate(item.getCreateDate());//时间
+		 		        	voucherBorrow.setVoucherCode(sdf.format(item.getCreateDate())+2);
+		 		        	voucherBorrow.setDeptId(deptId);
+		 		        	voucherList.add(voucherBorrow);
+		 		        	ExpVoucherEntity voucherLoan=new ExpVoucherEntity();
+		 		        	voucherLoan.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
+		 		        	voucherLoan.setTwoLevelCoding(Constant.OUT_IN_OUT_SECOND_CODE_LOAN);
+		 		        	voucherLoan.setTwoLevelName(Constant.OUT_IN_OUT_SECOND_NAME_LOAN+"-"+item.getDes());
+		 		        	voucherLoan.setCustomerName(item.getCustomerName());
+		 		        	voucherLoan.setWaybillNumber(item.getWaybillNumber());
+		 		        	voucherLoan.setDestinationDot(item.getDestinationProvince());
+		 		        	voucherLoan.setLenderMoney(item.getMoney());
+		 		        	voucherLoan.setLenderWeight(item.getOldWeight());
+		 		        	voucherLoan.setCustomerCode(item.getCustomerCode());
+		 		        	voucherLoan.setCreateDate(item.getCreateDate());//时间
+		 		        	voucherLoan.setVoucherCode(sdf.format(item.getCreateDate())+2);
+		 		        	voucherLoan.setDeptId(deptId);
+		 		        	voucherList.add(voucherLoan);
+	        			}else {
+	        				ExpVoucherEntity voucherBorrow=new ExpVoucherEntity();
+	                		voucherBorrow.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDes()+"-"+item.getMoney()+"元");//凭证摘要
+	        	        	voucherBorrow.setTwoLevelCoding(Constant.PAI_IN_OUT_SECOND_CODE_BORROW);
+	        	        	voucherBorrow.setTwoLevelName(Constant.PAI_IN_OUT_SECOND_NAME_BORROW);
+	        	        	voucherBorrow.setWaybillNumber(item.getWaybillNumber());
+	        	        	voucherBorrow.setDebtorMoney(item.getMoney());
+	        	        	voucherBorrow.setCreateDate(item.getCreateDate());//时间
+	        	        	voucherBorrow.setVoucherCode(sdf.format(item.getCreateDate())+2);
+	        	        	voucherBorrow.setDeptId(deptId);
+	        	        	voucherList.add(voucherBorrow);
+	                		ExpVoucherEntity voucherLoan=new ExpVoucherEntity();
+	                		voucherLoan.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDes()+"-"+item.getMoney()+"元");//凭证摘要
+	        	        	voucherLoan.setTwoLevelCoding(Constant.PAI_IN_OUT_SECOND_CODE_LOAN);
+	        	        	voucherLoan.setTwoLevelName(Constant.PAI_IN_OUT_SECOND_NAME_LOAN);
+	        	        	voucherLoan.setWaybillNumber(item.getWaybillNumber());
+	        	        	voucherLoan.setLenderMoney(item.getMoney());
+	        	        	voucherLoan.setCreateDate(item.getCreateDate());//时间
+	        	        	voucherLoan.setVoucherCode(sdf.format(item.getCreateDate())+2);
+	        	        	voucherLoan.setDeptId(deptId);
+	        	        	voucherList.add(voucherLoan);
+	        			}
 	 		        });
 	 		        this.batchSave(voucherList);//批量保存凭证
 	 		        return R.ok().put("num", 9).put("msg", "收支表——支出凭证处理完成");
@@ -343,64 +366,71 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
         	//收支表中收入
         	if(params.get("num").equals("10")) {
         		try {
+        			//中转表关联
         			List<ExpOrdersEntity> orderList=expOrdersService.selectInOrder(params);
         			List<ExpVoucherEntity> voucherList=new ArrayList<ExpVoucherEntity>();
         			if(null!=orderList&&orderList.size()>0) {
    	        		 orderList.forEach(item->{
-   	 		        	ExpVoucherEntity voucherBorrow=new ExpVoucherEntity();
-   	 		        	voucherBorrow.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
-   	 		        	voucherBorrow.setTwoLevelCoding(Constant.IN_IN_OUT_SECOND_CODE_BORROW);
-   	 		        	voucherBorrow.setTwoLevelName(Constant.IN_IN_OUT_SECOND_NAME_BORROW+"-"+item.getDes());
-   	 		        	voucherBorrow.setCustomerName(item.getCustomerName());
-   	 		        	voucherBorrow.setWaybillNumber(item.getWaybillNumber());
-   	 		        	voucherBorrow.setDestinationDot(item.getDestinationProvince());
-   	 		        	voucherBorrow.setDebtorMoney(item.getMoney());
-   	 		        	voucherBorrow.setDebtorWeight(item.getWeight());
-   	 		        	voucherBorrow.setCustomerCode(item.getCustomerCode());
-   	 		        	voucherBorrow.setCreateDate(item.getCreateDate());//时间
-   	 		        	voucherBorrow.setVoucherCode(sdf.format(item.getCreateDate())+2);
-   	 		        	voucherBorrow.setDeptId(deptId);
-   	 		        	voucherList.add(voucherBorrow);
-   	 		        	ExpVoucherEntity voucherLoan=new ExpVoucherEntity();
-   	 		        	voucherLoan.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
-   	 		        	voucherLoan.setTwoLevelCoding(Constant.IN_IN_OUT_SECOND_CODE_LOAN);
-   	 		        	voucherLoan.setTwoLevelName(Constant.IN_IN_OUT_SECOND_NAME_LOAN+"-"+item.getDes());
-   	 		        	voucherLoan.setCustomerName(item.getCustomerName());
-   	 		        	voucherLoan.setWaybillNumber(item.getWaybillNumber());
-   	 		        	voucherLoan.setDestinationDot(item.getDestinationProvince());
-   	 		        	voucherLoan.setLenderMoney(item.getMoney());
-   	 		        	voucherLoan.setLenderWeight(item.getOldWeight());
-   	 		        	voucherLoan.setCustomerCode(item.getCustomerCode());
-   	 		        	voucherLoan.setCreateDate(item.getCreateDate());//时间
-   	 		        	voucherLoan.setVoucherCode(sdf.format(item.getCreateDate())+2);
-   	 		        	voucherLoan.setDeptId(deptId);
-   	 		        	voucherList.add(voucherLoan);
+   	        			 
+   	        			if(StringUtils.isNotBlank(item.getDestinationProvince())){
+   	        				ExpVoucherEntity voucherBorrow=new ExpVoucherEntity();
+   	   	 		        	voucherBorrow.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
+   	   	 		        	voucherBorrow.setTwoLevelCoding(Constant.IN_IN_OUT_SECOND_CODE_BORROW);
+   	   	 		        	voucherBorrow.setTwoLevelName(Constant.IN_IN_OUT_SECOND_NAME_BORROW+"-"+item.getDes());
+   	   	 		        	voucherBorrow.setCustomerName(item.getCustomerName());
+   	   	 		        	voucherBorrow.setWaybillNumber(item.getWaybillNumber());
+   	   	 		        	voucherBorrow.setDestinationDot(item.getDestinationProvince());
+   	   	 		        	voucherBorrow.setDebtorMoney(item.getMoney());
+   	   	 		        	voucherBorrow.setDebtorWeight(item.getWeight());
+   	   	 		        	voucherBorrow.setCustomerCode(item.getCustomerCode());
+   	   	 		        	voucherBorrow.setCreateDate(item.getCreateDate());//时间
+   	   	 		        	voucherBorrow.setVoucherCode(sdf.format(item.getCreateDate())+2);
+   	   	 		        	voucherBorrow.setDeptId(deptId);
+   	   	 		        	voucherList.add(voucherBorrow);
+   	   	 		        	ExpVoucherEntity voucherLoan=new ExpVoucherEntity();
+   	   	 		        	voucherLoan.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
+   	   	 		        	voucherLoan.setTwoLevelCoding(Constant.IN_IN_OUT_SECOND_CODE_LOAN);
+   	   	 		        	voucherLoan.setTwoLevelName(Constant.IN_IN_OUT_SECOND_NAME_LOAN+"-"+item.getDes());
+   	   	 		        	voucherLoan.setCustomerName(item.getCustomerName());
+   	   	 		        	voucherLoan.setWaybillNumber(item.getWaybillNumber());
+   	   	 		        	voucherLoan.setDestinationDot(item.getDestinationProvince());
+   	   	 		        	voucherLoan.setLenderMoney(item.getMoney());
+   	   	 		        	voucherLoan.setLenderWeight(item.getOldWeight());
+   	   	 		        	voucherLoan.setCustomerCode(item.getCustomerCode());
+   	   	 		        	voucherLoan.setCreateDate(item.getCreateDate());//时间
+   	   	 		        	voucherLoan.setVoucherCode(sdf.format(item.getCreateDate())+2);
+   	   	 		        	voucherLoan.setDeptId(deptId);
+   	   	 		        	voucherList.add(voucherLoan);
+   	        			}else {
+   	        				ExpVoucherEntity voucherBorrow=new ExpVoucherEntity();
+   	                		voucherBorrow.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDes()+"-"+item.getMoney()+"元");//凭证摘要
+   	        	        	voucherBorrow.setTwoLevelCoding(Constant.PAI_IN_OUT_SECOND_CODE_BORROW);
+   	        	        	voucherBorrow.setTwoLevelName(Constant.PAI_IN_OUT_SECOND_NAME_BORROW);
+   	        	        	voucherBorrow.setWaybillNumber(item.getWaybillNumber());
+   	        	        	voucherBorrow.setDebtorMoney(item.getMoney());
+   	        	        	voucherBorrow.setCreateDate(item.getCreateDate());//时间
+   	        	        	voucherBorrow.setVoucherCode(sdf.format(item.getCreateDate())+2);
+   	        	        	voucherBorrow.setDeptId(deptId);
+   	        	        	voucherList.add(voucherBorrow);
+   	                		ExpVoucherEntity voucherLoan=new ExpVoucherEntity();
+   	                		voucherLoan.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDes()+"-"+item.getMoney()+"元");//凭证摘要
+   	        	        	voucherLoan.setTwoLevelCoding(Constant.PAI_IN_OUT_SECOND_CODE_LOAN);
+   	        	        	voucherLoan.setTwoLevelName(Constant.PAI_IN_OUT_SECOND_NAME_LOAN);
+   	        	        	voucherLoan.setWaybillNumber(item.getWaybillNumber());
+   	        	        	voucherLoan.setLenderMoney(item.getMoney());
+   	        	        	voucherLoan.setCreateDate(item.getCreateDate());//时间
+   	        	        	voucherLoan.setVoucherCode(sdf.format(item.getCreateDate())+2);
+   	        	        	voucherLoan.setDeptId(deptId);
+   	        	        	voucherList.add(voucherLoan);
+   	        			}
+   	 		        	
    	 		        });
         			}
-        			//查找收入但是不包含N
-        			List<ExpMoneyInOutEntity> listin=expMoneyInOutService.selectInNotIsN(params);
+        			//派单--------查找收入但是不包含N也不在orders中的运单
+        		/*	List<ExpMoneyInOutEntity> listin=expMoneyInOutService.selectInNotIsN(params);
         			listin.forEach(item->{
-                		ExpVoucherEntity voucherBorrow=new ExpVoucherEntity();
-                		voucherBorrow.setVoucherRemark(item.getWaybillNumber()+"-"+item.getColumnName()+"-"+item.getMoney()+"元");//凭证摘要
-        	        	voucherBorrow.setTwoLevelCoding(Constant.PAI_IN_OUT_SECOND_CODE_BORROW);
-        	        	voucherBorrow.setTwoLevelName(Constant.PAI_IN_OUT_SECOND_NAME_BORROW);
-        	        	voucherBorrow.setWaybillNumber(item.getWaybillNumber());
-        	        	voucherBorrow.setDebtorMoney(item.getMoney());
-        	        	voucherBorrow.setCreateDate(item.getCreateDate());//时间
-        	        	voucherBorrow.setVoucherCode(sdf.format(item.getCreateDate())+2);
-        	        	voucherBorrow.setDeptId(deptId);
-        	        	voucherList.add(voucherBorrow);
-                		ExpVoucherEntity voucherLoan=new ExpVoucherEntity();
-                		voucherLoan.setVoucherRemark(item.getWaybillNumber()+"-"+item.getColumnName()+"-"+item.getMoney()+"元");//凭证摘要
-        	        	voucherLoan.setTwoLevelCoding(Constant.PAI_IN_OUT_SECOND_CODE_LOAN);
-        	        	voucherLoan.setTwoLevelName(Constant.PAI_IN_OUT_SECOND_NAME_LOAN);
-        	        	voucherLoan.setWaybillNumber(item.getWaybillNumber());
-        	        	voucherLoan.setLenderMoney(item.getMoney());
-        	        	voucherLoan.setCreateDate(item.getCreateDate());//时间
-        	        	voucherLoan.setVoucherCode(sdf.format(item.getCreateDate())+2);
-        	        	voucherLoan.setDeptId(deptId);
-        	        	voucherList.add(voucherLoan);
-                	});
+                		
+                	});*/
         			 this.batchSave(voucherList);//批量保存凭证
         			 return R.ok().put("num", 10).put("msg", "收支表——收入凭证处理完成");
 				} catch (Exception e) {

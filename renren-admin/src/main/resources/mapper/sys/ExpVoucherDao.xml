@@ -254,4 +254,142 @@
 					) as x
 				</where>
           </select>
+          <!--根据用户编码，获取账单  -->
+          <select id="selectReceivablesByCode" resultType="map">
+           SELECT
+               DATE_FORMAT(v.create_date, '%Y-%m-%d') AS createDate,
+				v.voucher_remark AS voucherRemark,
+				v.voucher_code  AS voucherCode,
+				v.customer_name AS customerName,
+				v.customer_code AS customerCode,
+				SUM(IFNULL(v.debtor_money, 0)) AS debtorSum,
+				SUM(IFNULL(v.lender_money, 0)) AS lenderSum
+			FROM
+				exp_voucher v
+			<where>
+				v.two_level_coding = '112201'
+				<if test="null!=start_dates and ''!=start_dates">
+				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &gt;= #{start_dates}
+				</if>
+				<if test="null!=end_dates and ''!=end_dates">
+				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;=#{end_dates}
+				</if>
+				<if test="null!=customerCode and ''!=customerCode">
+			   AND v.customer_code = #{customerCode}
+			   </if>
+		</where> 
+			GROUP BY
+				v.waybill_number
+			ORDER BY
+				v.customer_code ASC
+          </select>
+          <select id="selectReceivablesByCodes" resultType="map">
+           SELECT
+				v.voucher_remark AS voucherRemark,
+				v.customer_name AS customerName,
+				v.customer_code AS customerCode,
+				SUM(IFNULL(v.debtor_money, 0)) AS debtorSum,
+				SUM(IFNULL(v.lender_money, 0)) AS lenderSum
+			FROM
+				exp_voucher v
+			<where>
+				v.two_level_coding = '112201'
+				<if test="null!=start_dates and ''!=start_dates">
+				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &gt;= #{start_dates}
+				</if>
+				<if test="null!=end_dates and ''!=end_dates">
+				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;=#{end_dates}
+				</if>
+			    AND customer_code IN (
+								SELECT
+									`code`
+								FROM
+									exp_customer
+								<where>
+								<if test="null!=type and ''!=type">
+									type = #{type}
+								</if>
+								</where>
+							)
+							
+			</where>
+			GROUP BY
+				v.waybill_number
+			ORDER BY
+				customerCode ASC
+			LIMIT #{currPage},#{limit}
+          </select>
+          <select id="selectReceivablesByCodesCount" resultType="Integer">
+           SELECT
+			COUNT(*)
+					FROM
+						(
+							SELECT
+								count(*)
+							FROM
+								exp_voucher v
+						<where>
+								v.two_level_coding = '112201'
+							<if test="null!=start_dates and ''!=start_dates">
+							AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &gt;= #{start_dates}
+							</if>
+							<if test="null!=end_dates and ''!=end_dates">
+							AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;=#{end_dates}
+							</if>
+							AND customer_code IN (
+								SELECT
+									`code`
+								FROM
+									exp_customer
+								<where>
+									<if test="null!=type and ''!=type">
+										type = #{type}
+									</if>
+								</where>
+							)
+						</where>
+							GROUP BY
+								v.waybill_number
+							ORDER BY
+								v.customer_code ASC
+						) AS tem
+          </select>
+          
+          
+          
+          
+         <!--得出初期余额 -->
+          <select id="selectInitialBalance" resultType="decimal">
+			SELECT
+				SUM(IFNULL(v.debtor_money, 0)) - SUM(IFNULL(v.lender_money, 0)) AS 'initialBalance'
+			FROM
+				exp_voucher v
+			LEFT JOIN exp_customer c ON v.customer_code = c.`code`
+			WHERE
+				v.two_level_coding = '112201'
+			<if test="null!=start_dates and ''!=start_dates">
+				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;#{start_dates}
+			</if>
+			<if test="null!=start_dates and ''!=start_dates">
+			AND v.customer_code =  #{customerCode}
+			</if>
+          </select>
+          <!--得出期末余额 -->
+          <select id="selectEndingBalance" resultType="decimal">
+			SELECT
+				IFNULL(#{initialBalance}, 0) + SUM(IFNULL(v.debtor_money, 0)) - SUM(IFNULL(v.lender_money, 0)) AS ' endingBalance'
+			FROM
+				exp_voucher v
+			WHERE
+				v.two_level_coding = '112201'
+			<if test="null!=start_dates and ''!=start_dates">
+				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &gt;= #{start_dates}
+				</if>
+				<if test="null!=end_dates and ''!=end_dates">
+				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;=#{end_dates}
+				</if>
+				<if test="null!=customerCode and ''!=customerCode">
+			    AND v.customer_code =#{customerCode}
+			    </if>
+          </select>
 </mapper>

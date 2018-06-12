@@ -116,4 +116,13 @@ public List<ExpCustomerEntity> selectAllDept(Map<String, Object> params) {
 			);
 }
 
+@Override
+@DataFilter(subDept = true, user = false)
+public List<ExpCustomerEntity> selectCustomerByType(Map<String, Object> params) {
+	return  this.selectList(new EntityWrapper<ExpCustomerEntity>()
+			.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+			.eq(params.get("type") != null, "type", params.get("type"))
+			  );
+}
+
 }

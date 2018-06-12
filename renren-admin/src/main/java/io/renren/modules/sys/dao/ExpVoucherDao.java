@@ -59,4 +59,40 @@ public interface ExpVoucherDao extends BaseMapper<ExpVoucherEntity> {
 	 * @return
 	 */
 	int selectReceivablesCount(Map<String, Object> params);
+	
+	/**
+	 *  根据用户编码和日期，获取账单   
+	 * @param params
+	 * @return
+	 */
+	List<Map<String, Object>> selectReceivablesByCode(Map<String, Object> params);
+	
+	
+	/**
+	 * 根据日期和客户编码获取初期余额
+	 * @param params
+	 * @return
+	 */
+	BigDecimal selectInitialBalance(Map<String, Object> params);
+	/**
+	 * 根据日期和客户编码获取初期余额
+	 * @param params
+	 * @return
+	 */
+	BigDecimal selectEndingBalance(Map<String, Object> params);
+	
+	/**
+	 *  根据用户ID集合和日期，获取账单  列表
+	 * @param params
+	 * @return
+	 */
+	List<Map<String, Object>> selectReceivablesByCodes(Map<String, Object> params);
+	
+	
+	/**
+	 *  根据用户ID集合和日期，获取账单  数量
+	 * @param params
+	 * @return
+	 */
+	int selectReceivablesByCodesCount(Map<String, Object> params);
 }
