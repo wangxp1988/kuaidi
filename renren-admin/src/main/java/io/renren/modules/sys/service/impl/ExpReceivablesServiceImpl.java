@@ -1,6 +1,10 @@
 package io.renren.modules.sys.service.impl;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -62,19 +66,48 @@ public class ExpReceivablesServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 		 File zip = new File(diskDirPath+ File.separator +"("+params.get("start_dates")+"-"+params.get("start_dates")+")运费表"+ ".zip");// 压缩文件  
 		 List<String> listFile=new ArrayList<String>();
 		 customerCode.forEach(item->{
-			 String fileName=item.getName()+"应付运费"+"("+params.get("start_dates")+"-"+params.get("start_dates")+")运费表";
+			 String fileName=item.getName()+"应付运费"+"("+params.get("start_dates")+"至"+params.get("start_dates")+")运费表";
 			 params.put("customerCode", item.getCode());
 			 List<Map<String, Object>> list=expVoucherDao.selectReceivablesByCode(params);
-			 ExportExcelBatch.exportExcel(response, fileName, Title, list, diskDirPath);
-			 listFile.add(fileName);
+			 if(null!=list&&list.size()>0) {
+				 String file=ExportExcelBatch.exportExcel(response, fileName, Title, list, diskDirPath);
+				 listFile.add(file); 
+			 }
+			
 		 });
 		
 		 File srcfile[] = new File[listFile.size()];  
 	        for (int i = 0, n1 = listFile.size(); i < n1; i++) {  
 	            srcfile[i] = new File(listFile.get(i));  
-	        }  
+	        } 
 	    ExportExcelBatch.ZipFiles(srcfile, zip); 
-		
+	    for(File file :srcfile) {
+	    	file.delete();
+	    }
+	    //定义输出流，以便打开保存对话框______________________begin 
+		try {
+			OutputStream os = new BufferedOutputStream(response.getOutputStream());
+		// 取得输出流    
+	    response.reset();// 清空输出流    
+	    response.setHeader("Content-disposition", "attachment; filename="+ new String(zip.getName().getBytes("GB2312"),"ISO8859-1")); 
+	  // 设定输出文件头    
+	    response.setContentType("application/octet-stream");
+	    //response.setContentType("application/msexcel");// 定义输出类型   
+	    //定义输出流，以便打开保存对话框_______________________end 
+	    FileInputStream inStream = new FileInputStream(zip);  
+        byte[] buf = new byte[4096];  
+        int readLength;  
+        while (((readLength = inStream.read(buf)) != -1)) {  
+        	os.write(buf, 0, readLength);  
+        } 
+        inStream.close(); 
+        os.flush();  
+        os.close(); 
+        response.flushBuffer();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

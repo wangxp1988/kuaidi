@@ -1,9 +1,11 @@
 package io.renren.common.utils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 
 import jxl.Workbook;
 import jxl.format.Alignment;
@@ -41,9 +44,10 @@ public class ExportExcelBatch {
 	 */
 	public final static String exportExcel(HttpServletResponse response, String fileName, String[] Title, List<Map<String, Object>> list,String path) {
 		String result = "系统提示：Excel文件导出成功！";
+		String file =path+ File.separator+fileName+".xls"; 
 		// 以下开始输出到EXCEL
 		try {
-			// 定义输出流，以便打开保存对话框______________________begin
+		/*	// 定义输出流，以便打开保存对话框______________________begin
 			OutputStream os = response.getOutputStream();// 取得输出流
 			response.reset();// 清空输出流
 			response.setHeader("Content-disposition",
@@ -51,18 +55,19 @@ public class ExportExcelBatch {
 			// 设定输出文件头
 			response.setContentType("application/msexcel");// 定义输出类型
 			// 定义输出流，以便打开保存对话框_______________________end
-
+*/
+			 
+			 FileOutputStream o = new FileOutputStream(file);  
+			
 			/** **********创建工作簿************ */
-			WritableWorkbook workbook = Workbook.createWorkbook(os);
+			WritableWorkbook workbook = Workbook.createWorkbook(o);
 
 			/** **********创建工作表************ */
-
 			WritableSheet sheet = workbook.createSheet("Sheet1", 0);
-
 			/** **********设置纵横打印（默认为纵打）、打印纸***************** */
 			jxl.SheetSettings sheetset = sheet.getSettings();
 			sheetset.setProtected(false);
-
+                
 			/** ************设置单元格字体************** */
 			WritableFont NormalFont = new WritableFont(WritableFont.ARIAL, 10);
 			WritableFont BoldFont = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD);
@@ -77,46 +82,72 @@ public class ExportExcelBatch {
 
 			// 用于正文居左
 			WritableCellFormat wcf_left = new WritableCellFormat(NormalFont);
-			wcf_left.setBorder(Border.NONE, BorderLineStyle.THIN); // 线条
+			wcf_left.setBorder(Border.ALL, BorderLineStyle.THIN); // 线条
 			wcf_left.setVerticalAlignment(VerticalAlignment.CENTRE); // 文字垂直对齐
 			wcf_left.setAlignment(Alignment.LEFT); // 文字水平对齐
 			wcf_left.setWrap(false); // 文字是否换行
+			// 用于正文居右
+			WritableCellFormat wcf_right = new WritableCellFormat(NormalFont);
+			wcf_right.setBorder(Border.ALL, BorderLineStyle.THIN); // 线条
+			wcf_right.setVerticalAlignment(VerticalAlignment.CENTRE); // 文字垂直对齐
+			wcf_right.setAlignment(Alignment.RIGHT); // 文字水平对齐
+			wcf_right.setWrap(false); // 文字是否换行
 
 			/** ***************以下是EXCEL开头大标题，暂时省略********************* */
-			 sheet.mergeCells(0, 0, 7, 0);
-			 sheet.addCell(new Label(0, 0, "运费明细表", wcf_center));
+			 sheet.mergeCells(1, 0, 7, 0);
+			 sheet.addCell(new Label(1, 0, "运费明细表", wcf_center));
 			/** ***************以下是EXCEL第一行列标题********************* */
-			for (int i = 1; i < Title.length; i++) {
-				sheet.addCell(new Label(i, 0, Title[i], wcf_center));
+			for (int i = 0; i < Title.length; i++) {
+				sheet.addCell(new Label(i+1, 1, Title[i], wcf_center));
 			}
 			/** ***************以下是EXCEL正文数据********************* */
 			int i = 2;
 			for (Map<String,Object> map : list) {
 				if(null!=map.get("createDate")&&""!=map.get("createDate")) {
-					sheet.addCell(new Label(2, i, map.get("createDate").toString(), wcf_left));
+					sheet.addCell(new Label(1, i, map.get("createDate").toString(), wcf_left));
+					sheet.setColumnView(1, 15);
 				}
 				if(null!=map.get("voucherRemark")&&""!=map.get("voucherRemark")) {
-					sheet.addCell(new Label(3, i, map.get("voucherRemark").toString(), wcf_left));
+					sheet.addCell(new Label(2, i, map.get("voucherRemark").toString(), wcf_left));
+					sheet.setColumnView(2, 35);
 				}
-				/*sheet.addCell(new Label(4, i, "", wcf_left));*/
+				  sheet.addCell(new Label(3, i, "", wcf_left)); 
 				if(null!=map.get("debtorSum")&&""!=map.get("debtorSum")) {
-					sheet.addCell(new Label(5, i, map.get("debtorSum").toString(), wcf_left));
+					sheet.setColumnView(4, 10);
+					sheet.addCell(new Label(4, i, map.get("debtorSum").toString(), wcf_left));
 				}
 				if(null!=map.get("lenderSum")&&""!=map.get("lenderSum")) {
-					sheet.addCell(new Label(6, i, map.get("lenderSum").toString(), wcf_left));
+					sheet.setColumnView(5, 10);
+					sheet.addCell(new Label(5, i, map.get("lenderSum").toString(), wcf_left));
+					
 				}
-				/*sheet.addCell(new Label(7, i, map.get("").toString(), wcf_left));*/
-				 
+				sheet.addCell(new Label(6, i,"", wcf_left));
+				sheet.setColumnView(6, 15);
 				if(null!=map.get("voucherCode")&&""!=map.get("voucherCode")) {
-					sheet.addCell(new Label(8, i, map.get("voucherCode").toString(), wcf_left));
+					sheet.setColumnView(7, 20);
+					sheet.addCell(new Label(7, i, map.get("voucherCode").toString(), wcf_left));
 				}
 				i++;
 			}
 			//添加小计
+			sheet.addCell(new Label(1, i, "", wcf_left));
+			sheet.addCell(new Label(2, i, "小计：", wcf_right));
+			sheet.addCell(new Label(3, i, "12312", wcf_left));
+			sheet.addCell(new Label(5, i, "1231312", wcf_left));
+			sheet.addCell(new Label(4, i, "13123", wcf_right));
+			sheet.addCell(new Label(6, i, "123123", wcf_left));
+			sheet.addCell(new Label(7, i, "", wcf_left));
 			
-			
-			
-			
+			 i++;
+			 //制表
+			 sheet.addCell(new Label(1, i, "制表：", wcf_right));
+			 sheet.addCell(new Label(2, i, "老板", wcf_left));
+			 sheet.addCell(new Label(3, i, " ", wcf_left));
+			 sheet.addCell(new Label(4, i, " ", wcf_left));
+			 sheet.addCell(new Label(5, i, " ", wcf_left));
+			 sheet.addCell(new Label(6, i, "制表日期：", wcf_right));
+			 SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+			 sheet.addCell(new Label(7, i,sdf.format(new Date()),wcf_left));
 			
 			/** **********将以上缓存中的内容写到EXCEL文件中******** */
 			workbook.write();
@@ -128,7 +159,7 @@ public class ExportExcelBatch {
 			System.out.println(result);
 			e.printStackTrace();
 		}
-		return result;
+		return file;
 	}
 	
 	

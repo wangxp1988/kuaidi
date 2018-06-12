@@ -165,6 +165,6 @@ function exports(){
 		alert("请选择客户类型");
 		return;
 	}
-	location.href=baseURL + "sys/receivables/exports?start_dates="+start_dates+"&end_dates="+end_dates+"&type="+type;
+	location.href=baseURL + "sys/receivables/export?start_dates="+start_dates+"&end_dates="+end_dates+"&type="+type;
 }
 

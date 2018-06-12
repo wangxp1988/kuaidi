@@ -23,7 +23,7 @@
 			<#if shiro.hasPermission("sys:receivables:billlist")>
             <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;查询</a>
 			</#if>
-			<#if shiro.hasPermission("sys:receivables:exports")>
+			<#if shiro.hasPermission("sys:receivables:export")>
             <a class="btn btn-primary"  onclick="exports();"><i class="fa fa-plus"></i>&nbsp;批量导出账单</a>
 			</#if>
         </div>
