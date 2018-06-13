@@ -9,22 +9,28 @@
 <div id="rrapp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
-             <div class="form-group col-sm-2">
-				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="start_dates" placeholder="选择开始日期">
+             <div class="form-group col-sm-1">
+				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="start_dates" placeholder="开始日期">
 			</div>
-             <div class="form-group col-sm-2">
-				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="end_dates" placeholder="选择结束日期">
+             <div class="form-group col-sm-1">
+				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="end_dates" placeholder="结束日期">
 			</div>
              <div class="form-group col-sm-2">
 				  <select class="form-control" id="type">
 				    
 				 </select>
 			</div>
-			<#if shiro.hasPermission("sys:receivables:billlist")>
-            <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;查询</a>
-			</#if>
+			 <div class="form-group col-sm-1">
+				  <select class="form-control" id="exportType">
+				     <option value="1">全部导出</option>
+				     <option value="2">导出借方</option>
+				 </select>
+			</div> 
 			<#if shiro.hasPermission("sys:receivables:export")>
             <a class="btn btn-primary"  onclick="exports();"><i class="fa fa-plus"></i>&nbsp;批量导出账单</a>
+			</#if>
+			<#if shiro.hasPermission("sys:receivables:billlist")>
+            <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;查询</a>
 			</#if>
         </div>
         <table id="jqGrid"></table>

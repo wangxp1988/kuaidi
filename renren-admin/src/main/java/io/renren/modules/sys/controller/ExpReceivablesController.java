@@ -1,5 +1,10 @@
 package io.renren.modules.sys.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,9 +60,39 @@ public class ExpReceivablesController {
 	 */
 	@RequestMapping("export")
 	@RequiresPermissions("sys:receivables:export")
-	public void receivablesExport(HttpServletRequest request,HttpServletResponse response,@RequestParam Map<String, Object> params) {
+	public R receivablesExport(HttpServletRequest request,HttpServletResponse response,@RequestParam Map<String, Object> params) {
 		 
-		expReceivablesService.receivablesExport(response,params,diskDirPath);
+		String fileName=expReceivablesService.receivablesExport(response,params,diskDirPath);
+		return R.ok().put("fileName", fileName);
 		
+	}
+	
+	
+	@RequestMapping("downzip")
+	public void downZip(HttpServletRequest request,HttpServletResponse response,@RequestParam String fileName) {
+		 //定义输出流，以便打开保存对话框______________________begin 
+		try {
+			OutputStream os = new BufferedOutputStream(response.getOutputStream());
+		// 取得输出流    
+	    response.reset();// 清空输出流    
+	    response.setHeader("Content-disposition", "attachment; filename="+ new String(fileName.getBytes("GB2312"),"ISO8859-1")); 
+	  // 设定输出文件头    
+	    response.setContentType("application/octet-stream");
+	    //response.setContentType("application/msexcel");// 定义输出类型   
+	    //定义输出流，以便打开保存对话框_______________________end 
+	    File zip =new File(diskDirPath+File.separator+fileName);
+	    FileInputStream inStream = new FileInputStream(zip);  
+        byte[] buf = new byte[4096];  
+        int readLength;  
+        while (((readLength = inStream.read(buf)) != -1)) {  
+        	os.write(buf, 0, readLength);  
+        } 
+        inStream.close(); 
+        os.flush();  
+        os.close(); 
+        response.flushBuffer();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

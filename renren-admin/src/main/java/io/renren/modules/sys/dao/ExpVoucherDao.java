@@ -75,7 +75,7 @@ public interface ExpVoucherDao extends BaseMapper<ExpVoucherEntity> {
 	 */
 	BigDecimal selectInitialBalance(Map<String, Object> params);
 	/**
-	 * 根据日期和客户编码获取初期余额
+	 * 根据日期和客户编码获取期末余额
 	 * @param params
 	 * @return
 	 */

@@ -12,6 +12,6 @@ public interface ExpReceivablesService {
     //
 	PageUtils queryReceivablesPage(Map<String, Object> params);
 	//批量导出
-	void receivablesExport(HttpServletResponse response,Map<String, Object> params, String diskDirPath);
+	String receivablesExport(HttpServletResponse response,Map<String, Object> params, String diskDirPath);
 
 }

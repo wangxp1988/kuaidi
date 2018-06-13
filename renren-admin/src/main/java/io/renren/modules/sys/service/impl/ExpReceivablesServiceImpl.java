@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -60,17 +62,24 @@ public class ExpReceivablesServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 	/**
 	 * 批量导出
 	 */
-	public void receivablesExport(HttpServletResponse response,Map<String, Object> params, String diskDirPath) {
+	public String receivablesExport(HttpServletResponse response,Map<String, Object> params, String diskDirPath) {
 		 List<ExpCustomerEntity> customerCode= expCustomerService.selectCustomerByType(params);
 		 String[] Title={"日期","凭证摘要","初期余额","借方金额","贷方金额","期末余额","凭证号码"};
-		 File zip = new File(diskDirPath+ File.separator +"("+params.get("start_dates")+"-"+params.get("start_dates")+")运费表"+ ".zip");// 压缩文件  
+		 File zip = new File(diskDirPath+ File.separator +"("+params.get("start_dates")+"至"+params.get("end_dates")+")运费表"+ ".zip");// 压缩文件  
 		 List<String> listFile=new ArrayList<String>();
 		 customerCode.forEach(item->{
-			 String fileName=item.getName()+"应付运费"+"("+params.get("start_dates")+"至"+params.get("start_dates")+")运费表";
+			
 			 params.put("customerCode", item.getCode());
 			 List<Map<String, Object>> list=expVoucherDao.selectReceivablesByCode(params);
+			 BigDecimal initialBalance=expVoucherDao.selectInitialBalance(params);
+			 if(null==initialBalance) {
+				 initialBalance=new BigDecimal(0);
+			 }
+			 params.put("initialBalance", initialBalance);
+			 BigDecimal endingBalance=expVoucherDao.selectEndingBalance(params);
+			 String fileName=item.getName()+"应付运费-"+endingBalance+"元("+params.get("start_dates")+"至"+params.get("end_dates")+")运费表"+new Date().getTime(); 
 			 if(null!=list&&list.size()>0) {
-				 String file=ExportExcelBatch.exportExcel(response, fileName, Title, list, diskDirPath);
+				 String file=ExportExcelBatch.exportExcel(response, fileName, Title, list, diskDirPath,initialBalance,endingBalance,item.getName(),params);
 				 listFile.add(file); 
 			 }
 			
@@ -84,30 +93,8 @@ public class ExpReceivablesServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 	    for(File file :srcfile) {
 	    	file.delete();
 	    }
-	    //定义输出流，以便打开保存对话框______________________begin 
-		try {
-			OutputStream os = new BufferedOutputStream(response.getOutputStream());
-		// 取得输出流    
-	    response.reset();// 清空输出流    
-	    response.setHeader("Content-disposition", "attachment; filename="+ new String(zip.getName().getBytes("GB2312"),"ISO8859-1")); 
-	  // 设定输出文件头    
-	    response.setContentType("application/octet-stream");
-	    //response.setContentType("application/msexcel");// 定义输出类型   
-	    //定义输出流，以便打开保存对话框_______________________end 
-	    FileInputStream inStream = new FileInputStream(zip);  
-        byte[] buf = new byte[4096];  
-        int readLength;  
-        while (((readLength = inStream.read(buf)) != -1)) {  
-        	os.write(buf, 0, readLength);  
-        } 
-        inStream.close(); 
-        os.flush();  
-        os.close(); 
-        response.flushBuffer();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	    return zip.getName();
+	   
 	}
-
+     
 }

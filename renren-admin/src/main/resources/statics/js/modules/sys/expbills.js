@@ -143,28 +143,51 @@ function query(){
 	     }).trigger("reloadGrid");
 }
 
-function exports(){
-	var index = layer.load(1, {
-	   	  shade: [0.2,'#fff'] //0.1透明度的白色背景
-	   	});
+function exports(file){
 	 var start_dates = $("#start_dates").val();
 	 var end_dates = $("#end_dates").val();
 	 var type =$("#type").val();
+	 var exportType =$("#exportType").val();
 	if(null==start_dates||start_dates==""){
-		 layer.close(index);
 		alert("请选择开始日期");
 		return;
 	}
 	if(null==end_dates||end_dates==""){
-		 layer.close(index);
 		alert("请选择结束日期");
 		return;
 	}
 	if(null==type||type==""){
-		layer.close(index);
 		alert("请选择客户类型");
 		return;
 	}
-	location.href=baseURL + "sys/receivables/export?start_dates="+start_dates+"&end_dates="+end_dates+"&type="+type;
+	var url="sys/receivables/export";
+	if(file!=null&&file!=""){
+		location.href=baseURL + "sys/receivables/downzip?fileName="+file;
+		return;
+	}
+	var index = layer.load(2, {
+	   	  shade: [0.2,'#fff'] //0.1透明度的白色背景
+	   	});
+	$.ajax({
+	    type: "POST",
+	    url:  baseURL + url,
+	    data: {'start_dates':start_dates,'end_dates':end_dates,'type':type,"exportType":exportType},
+	    success: function(r){
+	    if(r.code === 0){
+	        file=r.fileName;
+	        layer.close(index);
+	        exports(file);
+	    }else{
+	    	 layer.close(index);
+	        alert(r.msg);
+	    }
+	}
+	});
+	
+	//location.href=baseURL + "sys/receivables/export?start_dates="+start_dates+"&end_dates="+end_dates+"&type="+type;
+	
+	
 }
+
+
 
