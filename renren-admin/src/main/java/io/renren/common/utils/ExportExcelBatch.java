@@ -39,8 +39,8 @@ public class ExportExcelBatch {
 	 *            EXCEL文件正文数据集合
 	 * @return
 	 */
-	public final static String exportExcel(HttpServletResponse response, String fileName, String[] Title,
-			List<Map<String, Object>> list, String path, BigDecimal initialBalance,BigDecimal endingBalance,String userName,Map<String, Object> params) {
+	public final static String exportExcel(String fileName, String[] Title,
+			List<Map<String, Object>> list, String path,String userName,Map<String, Object> params) {
 		String result = "系统提示：Excel文件导出成功！";
 		String file = path + File.separator + fileName + ".xls";
 		String exportType=params.get("exportType").toString();
@@ -95,13 +95,11 @@ public class ExportExcelBatch {
 			sheet.mergeCells(1, 0, 7, 0);
 			sheet.addCell(new Label(1, 0, "运费明细表", wcf_center));
 			/** ***************以下是EXCEL第二行行列标题********************* */
-			sheet.addCell(new Label(1, 1, "客户名称", wcf_right));
+			sheet.addCell(new Label(1, 1, "客户名称:", wcf_right));
 			sheet.addCell(new Label(2, 1, userName, wcf_left));
 			sheet.addCell(new Label(3, 1, "", wcf_left));
-			sheet.addCell(new Label(4, 1, "", wcf_left));
-			sheet.addCell(new Label(5, 1, "", wcf_left));
-			sheet.addCell(new Label(6, 1, "时段", wcf_right));
-			sheet.addCell(new Label(7, 1,params.get("start_dates")+"至"+params.get("end_dates"), wcf_left));
+			sheet.addCell(new Label(4, 1, "时段:", wcf_right));
+			sheet.addCell(new Label(5, 1,params.get("start_dates")+"至"+params.get("end_dates"), wcf_left));
 			
 			/** ***************以下是EXCEL第三行列标题********************* */
 			for (int i = 0; i < Title.length; i++) {
@@ -121,63 +119,59 @@ public class ExportExcelBatch {
 					sheet.addCell(new Label(2, i, map.get("voucherRemark").toString(), wcf_left));
 					sheet.setColumnView(2, 35);
 				}
-				sheet.addCell(new Label(3, i, "", wcf_left));
 				if (null != map.get("debtorSum") && "" != map.get("debtorSum")) {
 					BigDecimal debtorSum=new BigDecimal(map.get("debtorSum").toString());
 					debtorSums=debtorSums.add(debtorSum);
-					sheet.setColumnView(4, 10);
-					sheet.addCell(new Label(4, i, map.get("debtorSum").toString(), wcf_left));
+					sheet.setColumnView(3, 10);
+					sheet.addCell(new Label(3, i, map.get("debtorSum").toString(), wcf_left));
 				}
 				if(exportType.equals("1")) {
 					if (null != map.get("lenderSum") && "" != map.get("lenderSum")) {
-						sheet.setColumnView(5, 10);
+						sheet.setColumnView(4, 10);
 						BigDecimal lenderSum=new BigDecimal(map.get("lenderSum").toString());
 						lenderSums=lenderSums.add(lenderSum);
-						sheet.addCell(new Label(5, i, map.get("lenderSum").toString(), wcf_left));
+						sheet.addCell(new Label(4, i, map.get("lenderSum").toString(), wcf_left));
 					}
 				}else {
-					  sheet.addCell(new Label(5, i,"", wcf_left));
+					  sheet.addCell(new Label(4, i,"", wcf_left));
 				}
 				
-				sheet.addCell(new Label(6, i, "", wcf_left));
-				sheet.setColumnView(6, 15);
 				if (null != map.get("voucherCode") && "" != map.get("voucherCode")) {
-					sheet.setColumnView(7, 25);
-					sheet.addCell(new Label(7, i, map.get("voucherCode").toString(), wcf_left));
+					sheet.setColumnView(5, 25);
+					sheet.addCell(new Label(5, i, map.get("voucherCode").toString(), wcf_left));
 				}
 				i++;
 			}
 			// 添加小计
 			sheet.addCell(new Label(1, i, "", wcf_left));
 			sheet.addCell(new Label(2, i, "小计：", wcf_right));
-			if(exportType.equals("1")) {
+			/*if(exportType.equals("1")) {
 			  sheet.addCell(new Label(3, i, initialBalance.toString(), wcf_left));
 			}else {
 		      sheet.addCell(new Label(3, i, "", wcf_left));
-			}
-			sheet.addCell(new Label(4, i, debtorSums.toString(), wcf_left));
+			}*/
+			sheet.addCell(new Label(3, i, debtorSums.toString(), wcf_left));
 			if(exportType.equals("1")) {
-			 sheet.addCell(new Label(5, i, lenderSums.toString(), wcf_left));
+			 sheet.addCell(new Label(4, i, lenderSums.toString(), wcf_left));
 			}else {
 			 sheet.addCell(new Label(5, i,"", wcf_left));
 			}
-			if(exportType.equals("1")) {
+			/*if(exportType.equals("1")) {
 			   sheet.addCell(new Label(6, i, endingBalance.toString(), wcf_left));
 			}else {
 				sheet.addCell(new Label(6, i,"", wcf_left));
-			}
-			sheet.addCell(new Label(7, i, "", wcf_left));
+			}*/
+			sheet.addCell(new Label(5, i, "", wcf_left));
 
 			i++;
 			// 制表
 			sheet.addCell(new Label(1, i, "制表：", wcf_right));
 			sheet.addCell(new Label(2, i, "老板", wcf_left));
+		 
 			sheet.addCell(new Label(3, i, " ", wcf_left));
-			sheet.addCell(new Label(4, i, " ", wcf_left));
-			sheet.addCell(new Label(5, i, " ", wcf_left));
-			sheet.addCell(new Label(6, i, "制表日期：", wcf_right));
+			sheet.addCell(new Label(4, i, "制表日期：", wcf_right));
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-			sheet.addCell(new Label(7, i, sdf.format(new Date()), wcf_left));
+			sheet.addCell(new Label(5, i, sdf.format(new Date()), wcf_left));
 
 			/** **********将以上缓存中的内容写到EXCEL文件中******** */
 			workbook.write();
