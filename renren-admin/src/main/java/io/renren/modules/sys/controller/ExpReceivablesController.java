@@ -42,15 +42,14 @@ public class ExpReceivablesController {
 		return R.ok().put("page", page);
 	}
 	
-	@RequestMapping("listexport")
+	
+	@RequestMapping("expotslist")
 	@RequiresPermissions("sys:receivables:list")
-	public void receivablesListExport(HttpServletRequest request,HttpServletResponse response,@RequestParam Map<String, Object> params) {
+	public void expotslist(HttpServletRequest request,HttpServletResponse response,@RequestParam Map<String, Object> params) {
 		params.put("response", response);
-		 expReceivablesService.receivablesListExport(params);
+		params.put("diskDirPath", diskDirPath);  
+		expReceivablesService.expotslist(params);
 	}
-	
-	
-	
 	/**
 	 * 参数 开始时间，结束时间 ，客户类型  ，结果类型（只查借款，全查）
 	 * @param params
@@ -71,6 +70,7 @@ public class ExpReceivablesController {
 	@RequestMapping("export")
 	@RequiresPermissions("sys:receivables:export")
 	public R receivablesExport(HttpServletRequest request,HttpServletResponse response,@RequestParam Map<String, Object> params) {
+		params.put("response", response);
 		params.put("diskDirPath", diskDirPath);
 		String fileName=expReceivablesService.receivablesExport(params);
 		return R.ok().put("fileName", fileName);

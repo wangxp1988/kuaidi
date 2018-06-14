@@ -21,10 +21,10 @@
 				 </select>
 			</div>
 			<#if shiro.hasPermission("sys:grossprofit:list")>
-            <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;查询</a>
+            <a class="btn btn-primary"  onclick="exports();"><i class="fa fa-plus"></i>&nbsp;批量导出账单</a>
 			</#if>
 			<#if shiro.hasPermission("sys:grossprofit:list")>
-            <a class="btn btn-primary"  onclick="exports();"><i class="fa fa-plus"></i>&nbsp;批量导出账单</a>
+            <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;查询</a>
 			</#if>
         </div>
         <table id="jqGrid"></table>
@@ -33,6 +33,7 @@
 </div>
 
 <script src="${request.contextPath}/statics/js/modules/sys/expreceivables.js?_${.now?long}"></script>
+
 <script type="text/javascript">
 
 $(function(){

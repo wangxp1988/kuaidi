@@ -1,19 +1,18 @@
 package io.renren.modules.sys.service.impl;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,6 @@ import io.renren.common.annotation.DataFilter;
 import io.renren.common.utils.ExportExcelBatch;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
-import io.renren.modules.sys.dao.ExpCustomerDao;
 import io.renren.modules.sys.dao.ExpVoucherDao;
 import io.renren.modules.sys.entity.ExpCustomerEntity;
 import io.renren.modules.sys.entity.ExpVoucherEntity;
@@ -48,8 +46,14 @@ public class ExpReceivablesServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 	@Autowired
 	private ExpCustomerService expCustomerService;
 	@Override
-	@DataFilter(subDept = true, user = false,tableAlias="c")
+	@DataFilter(subDept = true, user = false)
 	public PageUtils queryPage(Map<String, Object> params) {
+		
+		//'sql_filter
+		if(null!=params.get("sql_filter")) {
+			params.put("sql_filter_one", params.get("sql_filter").toString().replace("dept_id", "c.dept_id"));
+			params.put("sql_filter_two","vo."+params.get("sql_filter").toString().replace("dept_id", "vo.dept_id"));
+		}
 			 int count=this.expVoucherDao.selectReceivablesCount(params);
 			 Query query=new Query<Map<String, Object>>(params);
 			 params.put("currPage", (query.getCurrPage()-1)*query.getLimit());
@@ -76,24 +80,33 @@ public class ExpReceivablesServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 	 */
 	@DataFilter(subDept = true, user = false,tableAlias="v")
 	public String receivablesExport(Map<String, Object> params) {
-		 List<ExpCustomerEntity> customerCode= expCustomerService.selectCustomerByType(params);
-		 //String[] Title={"日期","凭证摘要","初期余额","借方金额","贷方金额","期末余额","凭证号码"};
-		 String[] Title={"日期","凭证摘要","借方金额","贷方金额","凭证号码"};
+		HttpServletResponse response=(HttpServletResponse)params.get("response");
 		 String diskDirPath=params.get("diskDirPath").toString();
-		 File zip = new File(diskDirPath+ File.separator +"("+params.get("start_dates")+"至"+params.get("end_dates")+")运费表"+new Date().getTime()+ ".zip");// 压缩文件  
+		 Map<String, Object> params2=new HashMap<String, Object>();
+		 params2.putAll(params);
+		 List<ExpCustomerEntity> customerCode= expCustomerService.selectCustomerByType(params2);
+		 String[] Title={"日期","凭证摘要","初期余额","借方金额","贷方金额","期末余额","凭证号码"};
+		 File zip = new File(diskDirPath+ File.separator +"("+params.get("start_dates")+"至"+params.get("end_dates")+")运费表"+ ".zip");// 压缩文件  
 		 List<String> listFile=new ArrayList<String>();
 		 customerCode.forEach(item->{
 			 params.put("customerCode", item.getCode());
 			 List<Map<String, Object>> list=expVoucherDao.selectReceivablesByCode(params);
-			 /*BigDecimal initialBalance=expVoucherDao.selectInitialBalance(params);
+			 BigDecimal initialBalance=expVoucherDao.selectInitialBalance(params);
 			 if(null==initialBalance) {
 				 initialBalance=new BigDecimal(0);
 			 }
 			 params.put("initialBalance", initialBalance);
-			 BigDecimal endingBalance=expVoucherDao.selectEndingBalance(params);*/
-			 String fileName=item.getName()+"应付运费-("+params.get("start_dates")+"至"+params.get("end_dates")+")运费表"+new Date().getTime(); 
+			 BigDecimal endingBalance=expVoucherDao.selectEndingBalance(params);
+			 BigDecimal debtorSum = expVoucherDao.selectReceivablesDebtorSum(params);
+			 String exportType=params.get("exportType").toString();
+			 String fileName;
+			 if(exportType.equals("1")) {
+				 fileName=item.getName()+"应付运费-"+endingBalance+"元("+params.get("start_dates")+"至"+params.get("end_dates")+")运费表"+new Date().getTime(); 
+			 }else {
+				 fileName=item.getName()+"应付运费-"+debtorSum+"元("+params.get("start_dates")+"至"+params.get("end_dates")+")运费表"+new Date().getTime();
+			 }
 			 if(null!=list&&list.size()>0) {
-				 String file=ExportExcelBatch.exportExcel(fileName, Title, list, diskDirPath,item.getName(),params);
+				 String file=ExportExcelBatch.exportExcel(response, fileName, Title, list, diskDirPath,initialBalance,endingBalance,item.getName(),params);
 				 listFile.add(file); 
 			 }
 			
@@ -110,27 +123,35 @@ public class ExpReceivablesServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 	    return zip.getName();
 	   
 	}
-	@Override
-	@DataFilter(subDept = true, user = false,tableAlias="c")
-	public void receivablesListExport(Map<String, Object> params) {
-		List<Map<String, Object>> list=this.expVoucherDao.selectReceivables(params);
-		String[] Title={"客户编码","客户名称","客户类型","借方金额","贷方金额"};
-		String filename="";
-		if(null!=params.get("start_dates")&&!"".equals(params.get("start_dates"))) {
-			filename+=params.get("start_dates")+"——";
-		}
-      if(null!=params.get("end_dates")&&!"".equals(params.get("end_dates"))) {
-    	  filename+=params.get("end_dates");
-			
-		}
-      if(null!=params.get("type")&&!"".equals(params.get("type"))) {
-    	  filename+=params.get("type");
-       }
-		exportExcel((HttpServletResponse)params.get("response"),filename+"应收账单统计表.xls",Title,list);
+	/**
+	 * 批量导出应收账款
+	 */
+	@DataFilter(subDept = true, user = false)
+	public void expotslist(Map<String, Object> params) {
+				if(null!=params.get("sql_filter")) {
+					params.put("sql_filter_one", params.get("sql_filter").toString().replace("dept_id", "c.dept_id"));
+					params.put("sql_filter_two","vo."+params.get("sql_filter").toString().replace("dept_id", "vo.dept_id"));
+				}
+			 List<Map<String, Object>> list=this.expVoucherDao.selectReceivables(params);
+			 String[] Title= {"客户名称","客户编号","客户类型","借方金额","贷方金额","初期余额","期末余额"};
+			 String filename="";
+				if(null!=params.get("start_dates")&&!"".equals(params.get("start_dates"))) {
+					filename+=params.get("start_dates")+"——";
+				}
+		      if(null!=params.get("end_dates")&&!"".equals(params.get("end_dates"))) {
+		    	  filename+=params.get("end_dates");
+					
+				}
+		      if(null!=params.get("type")&&!"".equals(params.get("type"))) {
+		    	  filename+=params.get("type");
+		       }
+		      filename+="应收账单统计表.xls";
+			 exportExcel((HttpServletResponse)params.get("response"), filename, Title, list);
+		
 	}
 	
 	
-	public String exportExcel(HttpServletResponse response,String fileName,String[] Title, List<Map<String, Object>> list) { 
+	 public  String exportExcel(HttpServletResponse response,String fileName,String[] Title, List<Map<String, Object>> list) { 
 		 String result="系统提示：Excel文件导出成功！";  
 		 // 以下开始输出到EXCEL 
 		 try {   
@@ -199,7 +220,12 @@ public class ExpReceivablesServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 			  if (null != map.get("lenderSum") && "" != map.get("lenderSum")) {
 				sheet.addCell(new Label(4,i, map.get("lenderSum").toString(), wcf_left));
 			  }
-				 
+			  if (null != map.get("initialBalance") && "" != map.get("initialBalance")) {
+				  sheet.addCell(new Label(5,i, map.get("initialBalance").toString(), wcf_left));
+			  }
+			  if (null != map.get("endingBalance") && "" != map.get("endingBalance")) {
+				  sheet.addCell(new Label(6,i, map.get("endingBalance").toString(), wcf_left));
+			  }
 		    i++; 
 		  } 
 		  /** **********将以上缓存中的内容写到EXCEL文件中******** */ 
