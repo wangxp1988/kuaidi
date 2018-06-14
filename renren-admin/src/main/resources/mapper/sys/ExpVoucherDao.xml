@@ -102,6 +102,7 @@
 			</if>
 			AND v.debtor_money > 0
 			</where>
+			 ORDER BY gross_profit
 		    LIMIT #{currPage},#{limit}
        </select>
        <!--时间段内毛收入数量-->
@@ -191,67 +192,82 @@
         <!-- 应收款汇总 -->
          <select id="selectReceivables"  resultType="map">
              SELECT
-				    v.customer_name as customerName,
-				    v.customer_code as customerCode,
-				    temp.type as customerType,
-					SUM(IFNULL(v.debtor_money,0)) AS 'debtorSum',
-					SUM(IFNULL(v.lender_money,0)) AS 'lenderSum',
-					IFNULL(temp.initial_balance,0) AS 'initialBalance',
-				    IFNULL(temp.initial_balance,0)+SUM(IFNULL(v.debtor_money,0))-SUM(IFNULL(v.lender_money,0)) AS ' endingBalance'
+					temp.`code` AS customerCode,
+					temp.`name` AS customerName,
+					temp.type AS customerType,
+					temp.initial_balance AS 'initialBalance',
+					IFNULL(tempv.debtorSum,0) as debtorSum ,
+					IFNULL(tempv.lenderSum, 0) AS lenderSum,
+					IFNULL(temp.initial_balance, 0) + IFNULL(tempv.debtorSum, 0) - IFNULL(tempv.lenderSum, 0) AS 'endingBalance'
 				FROM
-					exp_voucher v
+					(
+						SELECT
+							c.type,
+							c.`code`,
+							c.`name`,
+							IFNULL(x.initial_balance, 0) AS initial_balance
+						FROM
+							exp_customer c
+						LEFT JOIN (
+							SELECT
+								customer_code,
+								SUM(IFNULL(v.debtor_money, 0)) - SUM(IFNULL(v.lender_money, 0)) AS 'initial_balance'
+							FROM
+								exp_voucher v
+							<where>
+							v.two_level_coding = '112201'
+							AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;#{start_dates}
+							</where>
+							GROUP BY
+								v.customer_code
+						) AS x ON c.`code` = x.customer_code
+						<where>
+						<if test="null!=sql_filter_one and ''!=sql_filter_one">
+							   ${sql_filter_one}
+					    </if>
+						<if test="null!=type and ''!=type">
+						  AND c.type = #{type}
+						</if>
+						</where>
+					) AS temp
 				LEFT JOIN (
 					SELECT
-						SUM(IFNULL(v.debtor_money, 0)) - SUM(IFNULL(v.lender_money, 0)) AS 'initial_balance',
-						c.type,
-						v.customer_code
+						SUM(IFNULL(vo.debtor_money, 0)) AS 'debtorSum',
+						SUM(IFNULL(vo.lender_money, 0)) AS 'lenderSum',
+						vo.customer_code AS customerCode
 					FROM
-						exp_voucher v
-					LEFT JOIN exp_customer c ON v.customer_code = c.`code`
+						exp_voucher vo
 					<where>
-						v.two_level_coding = '112201'
-					 <if test="null!=start_dates and ''!=start_dates">
-					   AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;#{start_dates}
-					 </if>
-					</where>
-					GROUP BY
-						v.customer_code
-				) AS temp ON temp.customer_code = v.customer_code
-			 <where>
-			  <if test="null!=filter and ''!=filter">
-					${filter}
-			     </if>
-			   And v.two_level_coding = '112201'
-			   <if test="null!=start_dates and ''!=start_dates">
-			   AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &gt;= #{start_dates}
-			   </if>
-			   <if test="null!=end_dates and ''!=end_dates">
-				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;=#{end_dates}
-				</if>
-			 </where>
-				GROUP BY
-				v.customer_code order by customerCode asc
-				LIMIT #{currPage},#{limit}
-         </select>
-          <select id="selectReceivablesCount" resultType="Integer">
-            select count(*) from(
-				SELECT
-				count(*)
-				FROM
-					exp_voucher v
-				<where>
-			  <if test="null!=filter and ''!=filter">
-					${filter}
-			     </if>
-					AND v.two_level_coding = '112201'
-					<if test="null!=start_dates and ''!=start_dates">
-					   AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &gt;= #{start_dates}
+					     <if test="null!=sql_filter_two and ''!=sql_filter_two">
+						${sql_filter_two}
+					     </if>
+					   And vo.two_level_coding = '112201'
+					   <if test="null!=start_dates and ''!=start_dates">
+					   AND DATE_FORMAT(vo.create_date, '%Y-%m-%d') &gt;= #{start_dates}
 					   </if>
 					   <if test="null!=end_dates and ''!=end_dates">
-						AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;=#{end_dates}
+						AND DATE_FORMAT(vo.create_date, '%Y-%m-%d') &lt;=#{end_dates}
 						</if>
-					GROUP BY v.customer_code
-					) as x
+					</where>
+					GROUP BY
+						vo.customer_code
+				) AS tempv ON tempv.customerCode = temp.`code`
+				 <if test="null!=currPage and ''!=currPage">
+				LIMIT #{currPage},#{limit}
+				</if>
+         </select>
+          <select id="selectReceivablesCount" resultType="Integer">
+            	SELECT
+				count(*)
+				FROM
+				 exp_customer c
+				<where>
+			     <if test="null!=sql_filter_one and ''!=sql_filter_one">
+				  ${sql_filter_one}
+			     </if>
+			     <if test="null!=type and ''!=type">
+				   AND c.type = #{type}
+				  </if>
 				</where>
           </select>
           <!--根据用户编码，获取账单  -->
@@ -267,7 +283,11 @@
 			FROM
 				exp_voucher v
 			<where>
-				v.two_level_coding = '112201'
+			<if test="null!=filter and ''!=filter">
+					${filter}
+			     </if>
+			     
+			   AND 	v.two_level_coding = '112201'
 				<if test="null!=start_dates and ''!=start_dates">
 				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &gt;= #{start_dates}
 				</if>
@@ -283,6 +303,30 @@
 			ORDER BY
 				v.customer_code ASC
           </select>
+             <select id="selectReceivablesDebtorSum" resultType="decimal">
+               SELECT
+				SUM(IFNULL(v.debtor_money, 0)) AS debtorSum
+			   FROM
+				exp_voucher v
+                <where>
+                <if test="null!=sql_filter and ''!=sql_filter">
+                ${sql_filter}
+                </if>
+				 AND v.two_level_coding = '112201'
+				<if test="null!=start_dates and ''!=start_dates">
+				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &gt;= #{start_dates}
+				</if>
+				<if test="null!=end_dates and ''!=end_dates">
+				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;=#{end_dates}
+				</if>
+				<if test="null!=customerCode and ''!=customerCode">
+			   AND v.customer_code = #{customerCode}
+			   </if>
+		</where> 
+			GROUP BY
+				v.customer_code
+             </select>
+             
           <select id="selectReceivablesByCodes" resultType="map">
            SELECT
 				v.voucher_remark AS voucherRemark,
@@ -293,7 +337,10 @@
 			FROM
 				exp_voucher v
 			<where>
-				v.two_level_coding = '112201'
+			<if test="null!=sql_filter and ''!=sql_filter">
+                ${sql_filter}
+                </if>
+				AND v.two_level_coding = '112201'
 				<if test="null!=start_dates and ''!=start_dates">
 				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &gt;= #{start_dates}
 				</if>
@@ -304,10 +351,11 @@
 								SELECT
 									`code`
 								FROM
-									exp_customer
+									exp_customer c
 								<where>
+								 c.dept_id= v.dept_id
 								<if test="null!=type and ''!=type">
-									type = #{type}
+								and c.type = #{type}
 								</if>
 								</where>
 							)
@@ -329,7 +377,10 @@
 							FROM
 								exp_voucher v
 						<where>
-								v.two_level_coding = '112201'
+						<if test="null!=sql_filter and ''!=sql_filter">
+		                ${sql_filter}
+		                </if>
+						 AND v.two_level_coding = '112201'
 							<if test="null!=start_dates and ''!=start_dates">
 							AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &gt;= #{start_dates}
 							</if>
@@ -340,10 +391,11 @@
 								SELECT
 									`code`
 								FROM
-									exp_customer
+									exp_customer c
 								<where>
+								   c.dept_id= v.dept_id
 									<if test="null!=type and ''!=type">
-										type = #{type}
+										AND c.type = #{type}
 									</if>
 								</where>
 							)
@@ -355,9 +407,6 @@
 						) AS tem
           </select>
           
-          
-          
-          
          <!--得出初期余额 -->
           <select id="selectInitialBalance" resultType="decimal">
 			SELECT
@@ -365,14 +414,18 @@
 			FROM
 				exp_voucher v
 			LEFT JOIN exp_customer c ON v.customer_code = c.`code`
-			WHERE
-				v.two_level_coding = '112201'
+			<where>
+			<if test="null!=sql_filter and ''!=sql_filter">
+                ${sql_filter}
+                </if>
+				AND v.two_level_coding = '112201'
 			<if test="null!=start_dates and ''!=start_dates">
 				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;#{start_dates}
 			</if>
 			<if test="null!=start_dates and ''!=start_dates">
 			AND v.customer_code =  #{customerCode}
 			</if>
+			</where>
           </select>
           <!--得出期末余额 -->
           <select id="selectEndingBalance" resultType="decimal">
@@ -380,8 +433,11 @@
 				IFNULL(#{initialBalance}, 0) + SUM(IFNULL(v.debtor_money, 0)) - SUM(IFNULL(v.lender_money, 0)) AS ' endingBalance'
 			FROM
 				exp_voucher v
-			WHERE
-				v.two_level_coding = '112201'
+			<where>
+			<if test="null!=sql_filter and ''!=sql_filter">
+                ${sql_filter}
+                </if>
+				AND v.two_level_coding = '112201'
 			<if test="null!=start_dates and ''!=start_dates">
 				AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &gt;= #{start_dates}
 				</if>
@@ -391,5 +447,6 @@
 				<if test="null!=customerCode and ''!=customerCode">
 			    AND v.customer_code =#{customerCode}
 			    </if>
+			 </where>
           </select>
 </mapper>

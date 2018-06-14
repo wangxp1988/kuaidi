@@ -95,4 +95,5 @@ public interface ExpVoucherDao extends BaseMapper<ExpVoucherEntity> {
 	 * @return
 	 */
 	int selectReceivablesByCodesCount(Map<String, Object> params);
+	BigDecimal selectReceivablesDebtorSum(Map<String, Object> params);
 }

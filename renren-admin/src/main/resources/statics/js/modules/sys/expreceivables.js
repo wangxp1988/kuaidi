@@ -121,24 +121,19 @@ var vm = new Vue({
 });
 
 function exports(){
-	var index = layer.load(1, {
-	   	  shade: [0.2,'#fff'] //0.1透明度的白色背景
-	   	});
-	var dates=$("#dates").val();
-	if(null==dates||dates==""){
-		 layer.close(index);
-		alert("请选择日期");
-		return;
-	}
-	location.href=baseURL + "sys/expvoucher/export?dates="+dates;
+	 var start_dates = $("#start_dates").val();
+	 var end_dates = $("#end_dates").val();
+	 var type =$("#type").val();
+	location.href=baseURL + "sys/receivables/expotslist??start_dates="+start_dates+"&end_dates="+end_dates+"&type="+type;
 	
 }
 function query(){
 	 var start_dates = $("#start_dates").val();
 	 var end_dates = $("#end_dates").val();
+	 var type = $("#type").val();
 	 var page = $("#jqGrid").jqGrid('getGridParam','page');
 	    $("#jqGrid").jqGrid('setGridParam',{  
-	    postData:{start_dates:start_dates,end_dates:end_dates},
+	    postData:{start_dates:start_dates,end_dates:end_dates,type:type},
 	    page:page
 	     }).trigger("reloadGrid");
 }

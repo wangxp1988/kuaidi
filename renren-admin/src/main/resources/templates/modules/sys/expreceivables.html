@@ -15,6 +15,14 @@
              <div class="form-group col-sm-2">
 				<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="end_dates" placeholder="选择结束日期">
 			</div>
+			<div class="form-group col-sm-2">
+				  <select class="form-control" id="type">
+				    
+				 </select>
+			</div>
+			<#if shiro.hasPermission("sys:grossprofit:list")>
+            <a class="btn btn-primary"  onclick="exports();"><i class="fa fa-plus"></i>&nbsp;批量导出账单</a>
+			</#if>
 			<#if shiro.hasPermission("sys:grossprofit:list")>
             <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;查询</a>
 			</#if>
@@ -25,5 +33,31 @@
 </div>
 
 <script src="${request.contextPath}/statics/js/modules/sys/expreceivables.js?_${.now?long}"></script>
+
+<script type="text/javascript">
+
+$(function(){
+	load();
+});
+function load(){
+	var url="sys/expcustomertype/listAll";
+	$.ajax({
+        type: "POST",
+        url:  baseURL + url,
+        contentType: "application/json",
+        success: function(r){
+        if(r.code === 0){
+            $("#type").html("");
+           	$("#type").append('<option value="">请选择客户类型</option>');	
+         $.each(r.list, function(i, item){
+       		 $("#type").append('<option value='+item.name+'>'+item.name+'</option>') ;
+       	 });
+        }else{
+            alert(r.msg);
+        }
+	}
+   });
+}
+</script>
 </body>
 </html>
