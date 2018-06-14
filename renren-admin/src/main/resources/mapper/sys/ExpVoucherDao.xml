@@ -252,6 +252,7 @@
 					GROUP BY
 						vo.customer_code
 				) AS tempv ON tempv.customerCode = temp.`code`
+				ORDER BY tempv.debtorSum desc
 				 <if test="null!=currPage and ''!=currPage">
 				LIMIT #{currPage},#{limit}
 				</if>
