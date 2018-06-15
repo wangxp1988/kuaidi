@@ -22,5 +22,6 @@ public interface ExpGrossProfitService  extends IService<ExpVoucherEntity> {
 	 * @return
 	 */
 	List<Map<String, Object>> SelectGrossProfitSum(Map<String, Object> params);
+	void expotslist(Map<String, Object> params);
 
 }

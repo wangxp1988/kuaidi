@@ -3,6 +3,7 @@ package io.renren.modules.sys.dao;
 import io.renren.modules.sys.entity.ExpCustomerEntity;
 
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 
@@ -17,6 +18,6 @@ public interface ExpCustomerDao extends BaseMapper<ExpCustomerEntity> {
 
 	void saveList(List<ExpCustomerEntity> tempList);
 
-	List<ExpCustomerEntity> selectCustomerInRookie(List<Object> list);
+	List<ExpCustomerEntity> selectCustomerInRookie(Map<String, Object> params);
 	
 }

@@ -4,7 +4,7 @@ server:
         uri-encoding: UTF-8
         max-threads: 1000
         min-spare-threads: 30
-    port: 8082
+    port: 8089
     servlet:
         context-path: /renren-generator
 
@@ -13,9 +13,9 @@ spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: com.mysql.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/renren_security?useUnicode=true&characterEncoding=UTF-8
+        url: jdbc:mysql://47.98.139.199:3306/renren_security?useUnicode=true&characterEncoding=UTF-8
         username: root
-        password: admin
+        password: q1w2e3r4
     jackson:
         time-zone: GMT+8
         date-format: yyyy-MM-dd HH:mm:ss

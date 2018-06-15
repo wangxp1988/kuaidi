@@ -2,7 +2,6 @@ package io.renren.modules.sys.service.impl;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +11,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +50,7 @@ public class ExpReceivablesServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 		//'sql_filter
 		if(null!=params.get("sql_filter")) {
 			params.put("sql_filter_one", params.get("sql_filter").toString().replace("dept_id", "c.dept_id"));
-			params.put("sql_filter_two","vo."+params.get("sql_filter").toString().replace("dept_id", "vo.dept_id"));
+			params.put("sql_filter_two", params.get("sql_filter").toString().replace("dept_id", "vo.dept_id"));
 		}
 			 int count=this.expVoucherDao.selectReceivablesCount(params);
 			 Query query=new Query<Map<String, Object>>(params);

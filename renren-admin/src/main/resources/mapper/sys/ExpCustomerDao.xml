@@ -36,15 +36,20 @@
 	<!-- selectCustomerInRookie -->
 	<select id="selectCustomerInRookie" resultType="io.renren.modules.sys.entity.ExpCustomerEntity">
 	    SELECT  customer_code AS `code`,customer_name AS `name`,dept_id FROM exp_order_rookie 
-	    WHERE 
-	    customer_code IN (0
-	    <if test="list!=null and list.size()>0">
+	    <where>
+	       <if test="null!=filter and ''!=filter">
+				${filter} AND
+		    </if>
+		      customer_code IN (0
+	    <if test="listCode!=null and listCode.size()>0">
 	    ,
-          <foreach collection="list" item="item" index="index" separator=",">
+          <foreach collection="listCode" item="item" index="index" separator=",">
            #{item}
           </foreach>
           </if>
           ) 
+	    </where>
+	   
 	    GROUP BY customer_code
 	</select>
 </mapper>

@@ -82,8 +82,8 @@ var vm = new Vue({
                     });
                 }
             });
-        },
-        donate: function () {
+        }
+     /*   donate: function () {
             layer.open({
                 type: 2,
                 title: false,
@@ -92,7 +92,7 @@ var vm = new Vue({
                 shadeClose: false,
                 content: ['http://cdn.renren.io/donate.jpg', 'no']
             });
-        }
+        }*/
     },
     created: function () {
         this.getMenuList();

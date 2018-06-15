@@ -27,7 +27,7 @@ public interface ExpVoucherDao extends BaseMapper<ExpVoucherEntity> {
 	 * @param filter
 	 * @return
 	 */
-	int selectCountMy(@Param("startDates")String startDates,@Param("endDates")String endDates,@Param("filter")String filter);
+	int selectCountMy(@Param("baseBil")BigDecimal baseBil,@Param("startDates")String startDates,@Param("endDates")String endDates,@Param("filter")String filter,@Param("zero")String zero);
 	/**
 	 * 毛利明细
 	 * @param baseBil
@@ -38,7 +38,7 @@ public interface ExpVoucherDao extends BaseMapper<ExpVoucherEntity> {
 	 * @param filter
 	 * @return
 	 */
-	List<ExpVoucherEntity> selectPageMy(@Param("baseBil")BigDecimal baseBil,@Param("currPage")int currPage,@Param("limit")int limit,@Param("startDates")String startDates,@Param("endDates")String endDates,@Param("filter")String filter);
+	List<ExpVoucherEntity> selectPageMy(@Param("baseBil")BigDecimal baseBil,@Param("currPage")int currPage,@Param("limit")int limit,@Param("startDates")String startDates,@Param("endDates")String endDates,@Param("filter")String filter,@Param("zero")String zero);
 	
 	//Map<String, Object> SelectGrossProfitSum(@Param("baseBil")BigDecimal baseBil,@Param("filter")String filter,@Param("customer")String customer,@Param("weight")int weight,@Param("province")String province );
 	/**
@@ -96,4 +96,5 @@ public interface ExpVoucherDao extends BaseMapper<ExpVoucherEntity> {
 	 */
 	int selectReceivablesByCodesCount(Map<String, Object> params);
 	BigDecimal selectReceivablesDebtorSum(Map<String, Object> params);
+	List<ExpVoucherEntity> selectExpotsList(Map<String, Object> params);
 }
