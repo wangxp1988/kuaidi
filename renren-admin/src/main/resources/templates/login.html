@@ -1,77 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>物流业务管理平台</title>
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <link rel="stylesheet" href="${request.contextPath}/statics/css/bootstrap.min.css">
-  <link rel="stylesheet" href="${request.contextPath}/statics/css/font-awesome.min.css">
-  <link rel="stylesheet" href="${request.contextPath}/statics/css/AdminLTE.min.css">
-  <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-  <link rel="stylesheet" href="${request.contextPath}/statics/css/all-skins.min.css">
-  <link rel="stylesheet" href="${request.contextPath}/statics/css/main.css">
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<title>安能登录</title>
+<link href="${request.contextPath}/statics/css/denglu.css" type="text/css" rel="stylesheet">
+<script src="${request.contextPath}/statics/js/jquery-1.9.1.js"></script>
 </head>
-<body class="hold-transition login-page">
-<div class="login-box" id="rrapp" v-cloak>
-  <div class="login-logo">
-    <b>物流业务管理平台</b>
-  </div>
-  <!-- /.login-logo -->
-  <div class="login-box-body">
-      <p class="login-box-msg">管理员登录</p>
-      <div v-if="error" class="alert alert-danger alert-dismissible">
-        <h4 style="margin-bottom: 0px;"><i class="fa fa-exclamation-triangle"></i> {{errorMsg}}</h4>
-      </div>
-      <div class="form-group has-feedback">
-        <input type="text" class="form-control" v-model="username" placeholder="账号">
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-      </div>
-      <div class="form-group has-feedback">
-        <input type="password" class="form-control" v-model="password" placeholder="密码">
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-      </div>
-      <div class="form-group has-feedback">
-        <input type="text" class="form-control" v-model="captcha" @keyup.enter="login" placeholder="验证码">
-        <span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
-      </div>
-      <div class="form-group has-feedback">
-        <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">
-        &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" @click="refreshCode">点击刷新</a>
-      </div>
-      
-      
-      <div class="row">
-        <div class="col-xs-8">
-          <div class="checkbox icheck">
-          </div>
-        </div>
-        <!-- /.col -->
-        <div class="col-xs-4">
-          <button type="button" class="btn btn-primary btn-block btn-flat" @click="login">登录</button>
-        </div>
-        <!-- /.col -->
-      </div>
-    <!-- /.social-auth-links -->
 
-  </div>
-  <!-- /.login-box-body -->
+<body>
+<div class="bg-content">
+	<div class="pic-left">
+    	<img src="${request.contextPath}/statics/images/banner1.jpg">
+        <img src="${request.contextPath}/statics/images/banner2.jpg">
+        <img src="${request.contextPath}/statics/images/banner3.jpg">
+    </div>
+    <div class="login-con" id="rrapp" v-cloak>
+    	<img src="${request.contextPath}/statics/images/wuliu.png">
+        <div class="denglu">登录</div>
+        <h1> 用户名</h1>
+        <input type="text" placeholder="请输入用户名" v-model="username"> 
+            <h2> 密码</h2>
+        <input type="password" placeholder="请输入密码" v-model="password">
+        <div class="yanzheng">
+        	<input type="text" placeholder="验证码" v-model="captcha" @keyup.enter="login">
+            <img alt="如果看不清楚，请单击图片刷新！" class="pointer" :src="src" @click="refreshCode">
+        </div>
+        <div class="zhuce">
+           
+            <a href="#" class="zh" style="color: red;">{{errorMsg}}</a>  
+            <a href="#" class="wj">忘记密码</a> 
+            <div class="clearfix"></div>
+        </div>
+        <div class="dl" @click="login">登录</div>
+    </div>
+        <div class="clearfix"></div>
 </div>
-<!-- /.login-box -->
-<script src="${request.contextPath}/statics/libs/jquery.min.js"></script>
+
 <script src="${request.contextPath}/statics/libs/vue.min.js"></script>
-<script src="${request.contextPath}/statics/libs/bootstrap.min.js"></script>
-<script src="${request.contextPath}/statics/libs/jquery.slimscroll.min.js"></script>
 <script src="${request.contextPath}/statics/libs/fastclick.min.js"></script>
-<script src="${request.contextPath}/statics/libs/app.js"></script>
 <script type="text/javascript">
 var vm = new Vue({
 	el:'#rrapp',
@@ -87,6 +55,7 @@ var vm = new Vue({
 		if(self != top){
 			top.location.href = self.location.href;
 		}
+		$("zh").hide();
 	},
 	methods: {
 		refreshCode: function(){
@@ -105,8 +74,9 @@ var vm = new Vue({
 					}else{
 						vm.error = true;
 						vm.errorMsg = result.msg;
-						
+						$("zh").show();
 						vm.refreshCode();
+						
 					}
 				}
 			});
@@ -114,5 +84,26 @@ var vm = new Vue({
 	}
 });
 </script>
+<script>
+//banner部分
+//定时轮播
+$(".pic-left img").hide().eq(0).show()
+var x=0//计数用
+function lunbo(){//轮播过程
+	if(x<2){
+	x=x+1
+	}else{
+	x=0
+	}
+$(".pic-left img").hide().eq(x).show()}
+var dingshi = setInterval("lunbo()",2000)//每隔2秒执行lunbo
+$(".pic-left").mouseenter(function(){
+	clearInterval(dingshi)
+}).mouseleave(function(){
+	dingshi = setInterval("lunbo()",2000)
+})
+</script>
+
+
 </body>
 </html>

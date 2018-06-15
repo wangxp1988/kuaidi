@@ -37,8 +37,12 @@ public class KaptchaConfig {
     public DefaultKaptcha producer() {
         Properties properties = new Properties();
         properties.put("kaptcha.border", "no");
+        properties.put("kaptcha.image.width", "150");
+        properties.put("kaptcha.border.thickness", "2");
+        properties.put("kaptcha.image.height", "43");
         properties.put("kaptcha.textproducer.font.color", "black");
         properties.put("kaptcha.textproducer.char.space", "5");
+        properties.put("kaptcha.textproducer.font.size", "35");
         Config config = new Config(properties);
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
         defaultKaptcha.setConfig(config);

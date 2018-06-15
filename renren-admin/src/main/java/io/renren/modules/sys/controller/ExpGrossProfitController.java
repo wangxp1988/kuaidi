@@ -3,6 +3,8 @@ package io.renren.modules.sys.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,13 @@ public class ExpGrossProfitController {
 	public R list(@RequestParam Map<String, Object> params) {
 		PageUtils page = grossProfitService.queryPage(params);
 		return R.ok().put("page", page);
+	}
+	@RequestMapping("expotslist")
+	@RequiresPermissions("sys:grossprofit:list")
+	public void expotslist(@RequestParam Map<String, Object> params,HttpServletResponse response) {
+		params.put("response", response);
+		grossProfitService.expotslist(params);
+		
 	}
 	
 	@RequestMapping("sum")

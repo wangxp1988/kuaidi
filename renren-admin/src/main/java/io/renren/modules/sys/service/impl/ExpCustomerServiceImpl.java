@@ -74,8 +74,9 @@ public class ExpCustomerServiceImpl extends ServiceImpl<ExpCustomerDao, ExpCusto
 	 * 通过菜鸟表中获取用户信息
 	 */
 	@Override
-	public List<ExpCustomerEntity> selectCustomerInRookie(List<Object> listCode) {
-		return expCustomerDao.selectCustomerInRookie(listCode);
+	@DataFilter(subDept = true, user = false)
+	public List<ExpCustomerEntity> selectCustomerInRookie(Map<String, Object> params) {
+		return expCustomerDao.selectCustomerInRookie(params);
 	}
 
 	@Override
@@ -99,8 +100,8 @@ public class ExpCustomerServiceImpl extends ServiceImpl<ExpCustomerDao, ExpCusto
 	public int selectNullCount(Map<String, Object> params) {
 		int count=expCustomerDao.selectCount(new EntityWrapper<ExpCustomerEntity>()
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
-				.and("`code` IS NULL")
-				 .or("`price_name` IS NULL").or("`type` IS NULL")
+				.andNew("`code` IS NULL")
+				.or("`price_name` IS NULL").or("`type` IS NULL")
 				);
 		return count;
 	}

@@ -24,7 +24,7 @@ public interface ExpCustomerService extends IService<ExpCustomerEntity> {
 
 	List<Object> selectCustomerCode(Map<String, Object> params);
 
-	List<ExpCustomerEntity> selectCustomerInRookie(List<Object> listCode);
+	List<ExpCustomerEntity> selectCustomerInRookie(Map<String, Object> params);
 
 	List<Object> getCustomerName(Map<String, Object> params);
 

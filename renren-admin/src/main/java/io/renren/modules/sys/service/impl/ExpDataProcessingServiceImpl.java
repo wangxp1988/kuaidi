@@ -103,7 +103,8 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
     	//3、查找客户在没有的菜鸟用户编码
     	 List<Object> listCode= listCompare(listCustomerCode,listRookCustomerCode);
     	//4、查找出对应的用户信息
-    	List<ExpCustomerEntity> listCustomer=expCustomerService.selectCustomerInRookie(listCode);
+    	 params.put("listCode", listCode);
+    	List<ExpCustomerEntity> listCustomer=expCustomerService.selectCustomerInRookie(params);
     	if(null!=listCustomer&&listCustomer.size()>0) {
     		//添加到用户表中
     		expCustomerDao.saveList(listCustomer);
