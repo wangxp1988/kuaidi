@@ -71,6 +71,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
 			new EntityWrapper<SysUserEntity>()
 				.like(StringUtils.isNotBlank(username),"username", username)
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.orderBy("create_time", true)
 		);
 
 		for(SysUserEntity sysUserEntity : page.getRecords()){

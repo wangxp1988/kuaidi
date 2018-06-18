@@ -83,6 +83,11 @@ public class SysUserEntity implements Serializable {
 	 * 状态  0：禁用   1：正常
 	 */
 	private Integer status;
+	/**
+	 * 有效期
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
+	private Date availableDate;
 	
 	/**
 	 * 角色ID列表
@@ -93,7 +98,7 @@ public class SysUserEntity implements Serializable {
 	/**
 	 * 创建时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date createTime;
 
 	/**
@@ -251,4 +256,13 @@ public class SysUserEntity implements Serializable {
 	public void setDeptName(String deptName) {
 		this.deptName = deptName;
 	}
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
+	public Date getAvailableDate() {
+		return availableDate;
+	}
+
+	public void setAvailableDate(Date availableDate) {
+		this.availableDate = availableDate;
+	}
+	
 }

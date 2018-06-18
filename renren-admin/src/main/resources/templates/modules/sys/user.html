@@ -3,6 +3,7 @@
 <head>
 <title>管理员列表</title>
 <#include "/header.html">
+<script src="${request.contextPath}/statics/js/plugins/My97DatePicker/WdatePicker.js"></script>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -20,6 +21,9 @@
 			</#if>
 			<#if shiro.hasPermission("sys:user:delete")>
 			<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+			<#if shiro.hasPermission("sys:user:delete")>
+			<a class="btn btn-primary" @click="recharge"><i class="fa fa-credit-card"></i>&nbsp;充值</a>
 			</#if>
 		</div>
 	    <table id="jqGrid"></table>
@@ -45,6 +49,12 @@
 				<div class="col-sm-2 control-label">密码</div>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" v-model="user.password" placeholder="密码"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">有效日期</div><!-- availableDate -->
+				<div class="col-sm-10">
+					<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="dates" v-model="user.availableDate" @blur="getDate" placeholder="选择结束日期">
 				</div>
 			</div>
 			<div class="form-group">
@@ -83,7 +93,26 @@
 			</div>
 		</form>
 	</div>
+	  <!-- 充值 -->
+<div id="rechargeLayer" style="display: none;">
+	<form class="form-horizontal">
+	<div class="form-group">
+		<div class="form-group">
+		   	<div class="col-sm-2 control-label">账号</div>
+		    <span class="label label-success" style="vertical-align: bottom;">{{user.username}}</span>
+		</div>
+		<div class="form-group">
+		   	<div class="col-sm-2 control-label">金额</div>
+		   	<div class="col-sm-10">
+		      <input type="text" class="form-control" name="money" id="money"  placeholder="金额"/>
+		    </div>
+		</div>
+	</div>
+	</form>
 </div>
+</div>
+
+
 
 <!-- 选择部门 -->
 <div id="deptLayer" style="display: none;padding:10px;">

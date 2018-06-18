@@ -1,8 +1,10 @@
 package io.renren.modules.sys.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +16,13 @@ import java.util.Map;
 import io.renren.common.validator.ValidatorUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.POIXMLException;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -109,7 +118,7 @@ public class ExpMoneyInOutController {
     }
 
     @RequestMapping("import")
-  	public R Import(@RequestParam("file") MultipartFile file) throws IOException {
+  	public R Import(@RequestParam("file") MultipartFile file) throws Exception {
       	String filePath = UploadAndExcelUtil.saveFile(file,diskDirPath);
       	List  list=getAllByExcel(filePath);
       	if(list.get(0).equals(Constant.EXIST)) {
@@ -148,9 +157,103 @@ public class ExpMoneyInOutController {
       	
       	return R.ok();
       }
+    public  List getAllByExcel(String file) throws Exception{
+    	List list=new ArrayList(); 
+        String fileType=file.substring(file.lastIndexOf(".")+1); 
+        try { 
+          if("xls".equalsIgnoreCase(fileType)){ 
+            list= getAllByExcel2003(file); 
+          }else{ 
+            list= getAllByExcel2007(file); 
+          } 
+        } catch(OfficeXmlFileException e){//通过手动修改文件名 引起的异常 比如 3.xlsx 重命名 3.xls 其实际文件类型为xlsx 
+          list=getAllByExcel2007(file); 
+        } catch(POIXMLException e){//通过手动修改文件名 引起的异常 比如 3.xls 重命名 3.xlsx 其实际文件类型为xls 
+          list=getAllByExcel2003(file); 
+        } 
+        return list; 
+    }
+    
+    public  List getAllByExcel2007(String file) throws Exception {
+    	Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
+    	List list = new ArrayList();
+		Map<String, Object> params=new HashMap<String, Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+  		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+		try {
+		 FileInputStream in=new FileInputStream(file); 
+		    XSSFWorkbook wb=new XSSFWorkbook(in); 
+		    XSSFSheet sheet = wb.getSheetAt(0); 
+		    int rows = sheet.getPhysicalNumberOfRows(); 
+		    XSSFRow row=sheet.getRow(0); 
+		    int cells=row.getLastCellNum(); 
+		    Object[] csr=null; 
+		    List<String> colsNames=new ArrayList<String>();
+		    for(int i=1;i<rows;i++){ 
+		      row=sheet.getRow(i); 
+		      csr=new String[cells]; 
+		      int j=0;
+					//日期
+  					//String dateStr  = getValue(row,j++);
+		  	if(i==0) {
+					//网点编号
+					for(int num=0;num<cells;num++) {
+						colsNames.add( getValue(row,num));	
+					}
+					   
+				}else {
+				// 网点编码
+				String dotCode = getValue(row,j++);
+				//网点名称
+				String dotName =getValue(row,j++);
+				// 运单号
+				String waybillNumber = getValue(row,j++);
+				// 时间
+				String dateStr  =getValue(row,j++);
+				Date createDate =null;
+			if(StringUtils.isNotBlank(dateStr)) {
+				createDate= sdf.parse(dateStr);
+				if(i==1) {
+					params.put("createDate", createDate);
+					 int count=expMoneyInOutService.selectByTime(params);
+					 if(count>0) {
+						 list.add(Constant.EXIST);
+						 return list;
+					 }
+				}	
+			}
+				int temclos=cells-1-j;
+				for(int tem=0;tem<temclos;tem++) {
+					String columnName=colsNames.get(j).toString().trim();
+					if(!columnName.contains("合计")) {
+						String m=getValue(row,j++);
+						BigDecimal money=new BigDecimal(0);
+						if(StringUtils.isNoneBlank(m)) {
+							money=new BigDecimal(m);
+							if(money.signum()==-1) {
+								money=money.multiply(new BigDecimal(-1));
+							}
+						}
+					
+			         ExpMoneyInOutEntity entity=new ExpMoneyInOutEntity(waybillNumber, createDate, columnName, money, deptId);
+			         list.add(entity);
+					}else {
+						j++;
+					}
+				}
+				}
+		    } 
+		    if(in!=null) in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					list.add(Constant.FILE_ERROR);
+					return list;
+				} 
+		    return list; 
+    }
       
       
-      public List  getAllByExcel(String file) {
+      public List  getAllByExcel2003(String file) {
       	Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
   		List  list = new ArrayList ();
   		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -227,4 +330,32 @@ public class ExpMoneyInOutController {
     	  String colsNames="收入合计";
     	  System.out.println(colsNames.contains("合计"));
 	}
+      
+      public String getValue(XSSFRow row,int j){ 
+         	XSSFCell cell=row.getCell(j); 
+             int type=cell.getCellType(); 
+             String s=""; 
+             if(type==cell.CELL_TYPE_NUMERIC){ 
+               if(HSSFDateUtil.isCellDateFormatted(cell)){ 
+                 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+                 s=sdf.format(cell.getDateCellValue()); 
+               }else { 
+                 BigDecimal db = new BigDecimal(cell.getNumericCellValue()); 
+                 s=String.valueOf(db); 
+               } 
+             }else if(type==cell.CELL_TYPE_STRING){ 
+               s=cell.getStringCellValue(); 
+             }else if(type==cell.CELL_TYPE_BOOLEAN){ 
+               s=cell.getBooleanCellValue()+""; 
+             }else if(type==cell.CELL_TYPE_FORMULA){ 
+               s=cell.getCellFormula(); 
+             }else if(type==cell.CELL_TYPE_BLANK){ 
+               s=" "; 
+             }else if(type==cell.CELL_TYPE_ERROR){ 
+               s=" "; 
+             }else{ 
+                 
+             } 
+             return s.trim(); 
+           } 
 }

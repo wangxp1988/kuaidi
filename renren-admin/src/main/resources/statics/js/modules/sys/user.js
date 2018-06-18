@@ -3,8 +3,23 @@ $(function () {
         url: baseURL + 'sys/user/list',
         datatype: "json",
         colModel: [			
-			{ label: '用户ID', name: 'userId', index: "user_id", width: 45, key: true },
+			{ label: '用户ID', name: 'userId', index: "user_id", width: 45, key: true ,hidden:true},
 			{ label: '用户名', name: 'username', width: 75 },
+			{ label: '有效期', name: 'availableDate', width: 75 },
+			{ label: '剩余天数', name: 'availableDate', width: 100,formatter: function(value, options, row){
+				var sDate1=formatDate(new Date());  
+			    sDate2=formatDate(value);  
+			    var aDate, oDate1, oDate2, iDays;  
+			    aDate = sDate1.split("-");  
+			    oDate1 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0]);  //转换为yyyy-MM-dd格式  
+			    aDate = sDate2.split("-");  
+			    oDate2 = new Date(aDate[1] + '-' + aDate[2] + '-' + aDate[0]);  
+			    iDays=  Math.floor((oDate2 - oDate1)/(24*3600*1000)) 
+			   if(iDays<5){
+				  return '剩余<span class="label label-danger">'+iDays+'</span>天，即将到期';
+			   }
+			    return iDays;
+				} },
             { label: '所属部门', name: 'deptName', sortable: false, width: 75 },
 			{ label: '邮箱', name: 'email', width: 90 },
 			{ label: '手机号', name: 'mobile', width: 100 },
@@ -41,6 +56,30 @@ $(function () {
         }
     });
 });
+
+function formatDate(time,format='YY-MM-DD'){
+    var date = new Date(time);
+
+    var year = date.getFullYear(),
+        month = date.getMonth()+1,//月份是从0开始的
+        day = date.getDate(),
+        hour = date.getHours(),
+        min = date.getMinutes(),
+        sec = date.getSeconds();
+    var preArr = Array.apply(null,Array(10)).map(function(elem, index) {
+        return '0'+index;
+    });////开个长度为10的数组 格式为 00 01 02 03
+
+    var newTime = format.replace(/YY/g,year)
+                        .replace(/MM/g,preArr[month]||month)
+                        .replace(/DD/g,preArr[day]||day)
+                        .replace(/hh/g,preArr[hour]||hour)
+                        .replace(/mm/g,preArr[min]||min)
+                        .replace(/ss/g,preArr[sec]||sec);
+
+    return newTime;         
+}
+
 var setting = {
     data: {
         simpleData: {
@@ -98,6 +137,46 @@ var vm = new Vue({
                     vm.user.deptName = node.name;
                 }
             })
+        },
+        getDate:function(){
+        	vm.user.availableDate=$("#dates").val();
+        },
+        recharge:function(){
+        	
+        	 var userId = getSelectedRow();
+             if(userId == null){
+                 return ;
+             }
+             vm.getUser(userId);
+        	layer.open({
+				type: 1,
+				skin: 'layui-layer-molv',
+				title: "充值",
+				area: ['550px', '270px'],
+				shadeClose: false,
+				content: jQuery("#rechargeLayer"),
+				btn: ['充值','取消'],
+				btn1: function (index) {
+					var data = "userId="+userId+"&money="+$("#money").val()+"&userName="+vm.user.username;
+					alert(data);
+					$.ajax({
+						type: "POST",
+					    url: baseURL + "sys/exprecharge/save",
+					    data: data,
+					    dataType: "json",
+					    success: function(result){
+							if(result.code == 0){
+								layer.close(index);
+								layer.alert(vm.user.username+'充值成功', function(index){
+									location.reload();
+								});
+							}else{
+								layer.alert(result.msg);
+							}
+						}
+					});
+	            }
+			});
         },
         update: function () {
             var userId = getSelectedRow();

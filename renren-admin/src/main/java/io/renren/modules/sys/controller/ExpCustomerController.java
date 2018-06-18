@@ -1,9 +1,14 @@
 package io.renren.modules.sys.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +18,13 @@ import javax.servlet.http.HttpServletResponse;
 import io.renren.common.validator.ValidatorUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.POIXMLException;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.poifs.filesystem.OfficeXmlFileException;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,11 +36,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.renren.modules.sys.entity.CustomerEntity;
+import io.renren.modules.sys.entity.ExpBalanceAccountEntity;
 import io.renren.modules.sys.entity.ExpCustomerEntity;
 import io.renren.modules.sys.service.ExpCustomerService;
 import io.renren.modules.sys.shiro.ShiroUtils;
 import jxl.Sheet;
 import jxl.Workbook;
+import io.renren.common.utils.Constant;
 import io.renren.common.utils.ExportExcel;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
@@ -145,7 +159,7 @@ public class ExpCustomerController {
     }
     
     @RequestMapping("import")
-  	public R Import(@RequestParam("file") MultipartFile file) throws IOException {
+  	public R Import(@RequestParam("file") MultipartFile file) throws Exception {
       	String filePath = UploadAndExcelUtil.saveFile(file,diskDirPath);
       	List<ExpCustomerEntity> list=getAllByExcel(filePath);
       	
@@ -182,8 +196,75 @@ public class ExpCustomerController {
       	return R.ok();
       }
       
-      
-      public static List<ExpCustomerEntity> getAllByExcel(String file) {
+    
+    public  List getAllByExcel(String file) throws Exception{
+    	List list=new ArrayList(); 
+        String fileType=file.substring(file.lastIndexOf(".")+1); 
+        try { 
+          if("xls".equalsIgnoreCase(fileType)){ 
+            list= getAllByExcel2003(file); 
+          }else{ 
+            list= getAllByExcel2007(file); 
+          } 
+        } catch(OfficeXmlFileException e){//通过手动修改文件名 引起的异常 比如 3.xlsx 重命名 3.xls 其实际文件类型为xlsx 
+          list=getAllByExcel2007(file); 
+        } catch(POIXMLException e){//通过手动修改文件名 引起的异常 比如 3.xls 重命名 3.xlsx 其实际文件类型为xls 
+          list=getAllByExcel2003(file); 
+        } 
+        return list; 
+    }
+    public  List getAllByExcel2007(String file) throws Exception {
+    	Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
+    	List list = new ArrayList();
+		Map<String, Object> params=new HashMap<String, Object>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+		 FileInputStream in=new FileInputStream(file); 
+		    XSSFWorkbook wb=new XSSFWorkbook(in); 
+		    XSSFSheet sheet = wb.getSheetAt(0); 
+		    int rows = sheet.getPhysicalNumberOfRows(); 
+		    XSSFRow row=sheet.getRow(0); 
+		    int cells=row.getLastCellNum(); 
+		    Object[] csr=null; 
+		    for(int i=1;i<rows;i++){ 
+		      row=sheet.getRow(i); 
+		      csr=new String[cells]; 
+		     int j=1;
+				//客户编码
+					String code = getValue(row,j++);
+					// 客户名称
+					String name =getValue(row,j++);
+					//客户类型
+					String type =getValue(row,j++);
+					//联系人
+					String contacts =getValue(row,j++);
+					//电话
+					String phone =getValue(row,j++);
+					//地址
+					String address =getValue(row,j++);
+					// 价格表名称
+					String priceName =getValue(row,j++);
+					// 付款客户ID
+					String paymentId = getValue(row,j++);
+					// 付款客户名称
+					String paymentName = getValue(row,j++);
+					Long id = null;
+					String isStr=getValue(row,j++);
+					if(StringUtils.isNotBlank(isStr)) {
+						 id= new Long(isStr);
+					}
+					ExpCustomerEntity entity=new ExpCustomerEntity(id,code, name, type, contacts, phone, address, priceName, paymentId, paymentName, deptId);
+					list.add(entity);
+		    } 
+		    if(in!=null) in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					list.add(Constant.FILE_ERROR);
+					return list;
+				} 
+		    return list; 
+    }
+      public static List<ExpCustomerEntity> getAllByExcel2003(String file) {
       	Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
   		List<ExpCustomerEntity> list = new ArrayList<ExpCustomerEntity>();
   		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -228,4 +309,31 @@ public class ExpCustomerController {
 
   	}
 
+      public String getValue(XSSFRow row,int j){ 
+      	XSSFCell cell=row.getCell(j); 
+          int type=cell.getCellType(); 
+          String s=""; 
+          if(type==cell.CELL_TYPE_NUMERIC){ 
+            if(HSSFDateUtil.isCellDateFormatted(cell)){ 
+              SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+              s=sdf.format(cell.getDateCellValue()); 
+            }else { 
+              BigDecimal db = new BigDecimal(cell.getNumericCellValue()); 
+              s=String.valueOf(db); 
+            } 
+          }else if(type==cell.CELL_TYPE_STRING){ 
+            s=cell.getStringCellValue(); 
+          }else if(type==cell.CELL_TYPE_BOOLEAN){ 
+            s=cell.getBooleanCellValue()+""; 
+          }else if(type==cell.CELL_TYPE_FORMULA){ 
+            s=cell.getCellFormula(); 
+          }else if(type==cell.CELL_TYPE_BLANK){ 
+            s=" "; 
+          }else if(type==cell.CELL_TYPE_ERROR){ 
+            s=" "; 
+          }else{ 
+              
+          } 
+          return s.trim(); 
+        } 
 }
