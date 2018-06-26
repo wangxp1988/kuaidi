@@ -1,5 +1,6 @@
 package io.renren.modules.sys.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,11 +29,18 @@ public class ExpPriceServiceImpl extends ServiceImpl<ExpPriceDao, ExpPriceEntity
     @Override
     @DataFilter(subDept = true, user = false)
     public PageUtils queryPage(Map<String, Object> params) {
+    	String priceName = (String)params.get("priceName");
+    	String weight = (String)params.get("weight");
+    	String provinceName = (String)params.get("provinceName");
         Page<ExpPriceEntity> page = this.selectPage(
                 new Query<ExpPriceEntity>(params).getPage(),
-                new EntityWrapper<ExpPriceEntity>().addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+                new EntityWrapper<ExpPriceEntity>()
+                //.like(StringUtils.isNotBlank(username),"username", username)
+                .like(StringUtils.isNotBlank(priceName), "price_name", priceName)
+                .like(StringUtils.isNotBlank(provinceName), "province_name", provinceName)
+                .eq(StringUtils.isNotBlank(weight), "weight", weight)
+                .addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
         );
-
         return new PageUtils(page);
     }
 
@@ -60,6 +68,15 @@ public class ExpPriceServiceImpl extends ServiceImpl<ExpPriceDao, ExpPriceEntity
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
 				.orderDesc(columns)
 				);
+	}
+
+	@Override
+	 @DataFilter(subDept = true, user = false)
+	public void deleteAll(Map<String, Object> params) {
+		 this.delete(new EntityWrapper<ExpPriceEntity>()
+				 .addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				 );
+		
 	}
 
 }

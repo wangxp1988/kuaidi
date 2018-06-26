@@ -51,4 +51,16 @@ public class ExpGrossProfitController {
 		List<Map<String,Object>> o = grossProfitService.SelectGrossProfitSum(params);
 		return R.ok().put("list", o);
 	}
+	@RequestMapping("sumbycity")
+	@RequiresPermissions("sys:grossprofit:list")
+	public R listsumbycity(@RequestParam Map<String, Object> params) {
+		List<Map<String,Object>> o = grossProfitService.SelectGrossProfitSumOrderByCity(params);
+		return R.ok().put("list", o);
+	}
+	@RequestMapping("sumbyWeight")
+	@RequiresPermissions("sys:grossprofit:list")
+	public R sumbyWeight(@RequestParam Map<String, Object> params) {
+		List<Map<String,Object>> o = grossProfitService.SelectGrossProfitSumOrderByWeight(params);
+		return R.ok().put("list", o);
+	}
 }

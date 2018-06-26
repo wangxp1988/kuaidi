@@ -142,7 +142,6 @@ var vm = new Vue({
         	vm.user.availableDate=$("#dates").val();
         },
         recharge:function(){
-        	
         	 var userId = getSelectedRow();
              if(userId == null){
                  return ;
@@ -157,7 +156,7 @@ var vm = new Vue({
 				content: jQuery("#rechargeLayer"),
 				btn: ['充值','取消'],
 				btn1: function (index) {
-					var data = "userId="+userId+"&money="+$("#money").val()+"&userName="+vm.user.username;
+					var data = "userId="+userId+"&money="+$("#money").val()+"&userName="+vm.user.username+"&availableDate="+$("#availableDate").val();
 					alert(data);
 					$.ajax({
 						type: "POST",

@@ -135,7 +135,8 @@ function exports(){
 	 var end_dates = $("#end_dates").val();
 	 var zero = $("#zero").val();
 	 if(""==start_dates||null==start_dates){
-		 alert("导出必须选择时间段")
+		 alert("导出必须选择时间段");
+		 return;
 	 };
 	location.href=baseURL + "sys/grossprofit/expotslist?startDates="+start_dates+"&endDates="+end_dates+"&zero="+zero;
 	

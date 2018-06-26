@@ -40,7 +40,18 @@ $(function () {
 
 var vm = new Vue({
 	el:'#rrapp',
+	 created: function () {
+		 $.get(baseURL + "sys/expcustomertype/listAll", function(r){
+             vm.customerType = r.list;
+         });
+		},
 	data:{
+		q:{
+			code: null,
+			name:null,
+			type:"",
+			customerType:{}
+	    },
 		showList: true,
 		title: null,
 		expCustomer: {},
@@ -48,6 +59,7 @@ var vm = new Vue({
 		customerList:{},
 		 customerType:{}
 	},
+	
 	methods: {
 		query: function () {
 			vm.reload();
@@ -138,6 +150,7 @@ var vm = new Vue({
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 
+				postData:{'name': vm.q.name,'type':vm.q.type,'code': vm.q.code},
                 page:page
             }).trigger("reloadGrid");
 		},

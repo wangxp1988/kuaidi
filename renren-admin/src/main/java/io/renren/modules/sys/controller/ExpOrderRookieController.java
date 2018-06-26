@@ -36,7 +36,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import io.renren.modules.sys.entity.ExpOrderRookieEntity;
+import io.renren.modules.sys.entity.ExpTempEntity;
 import io.renren.modules.sys.service.ExpOrderRookieService;
+import io.renren.modules.sys.service.ExpTempService;
 import io.renren.modules.sys.shiro.ShiroUtils;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -61,6 +63,8 @@ public class ExpOrderRookieController {
 	private  String diskDirPath;
     @Autowired
     private ExpOrderRookieService expOrderRookieService;
+    @Autowired
+    private ExpTempService expTempService;
 
     /**
      * 列表
@@ -123,6 +127,7 @@ public class ExpOrderRookieController {
 	public R Import(@RequestParam("file") MultipartFile file) throws Exception {
     	String filePath = UploadAndExcelUtil.saveFile(file,diskDirPath);
     	List list=getAllByExcel(filePath);
+    	String dates="";
     	if(list.get(0).equals(Constant.EXIST)) {
     		return R.error("文件已经导入，不能重复导入");
     	}else if(list.get(0).equals(Constant.FILE_ERROR)) {
@@ -142,6 +147,10 @@ public class ExpOrderRookieController {
 					List<ExpOrderRookieEntity> tempList=new ArrayList<ExpOrderRookieEntity>();
 					tempList.addAll(list.subList(i*100, (i+1)*100));
 					expOrderRookieService.saveList(tempList);
+					if(i==0) {
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						dates=sdf.format(tempList.get(0).getCreateDate());
+					}
 				}
 			}else if(j>g){
 				for (int i=0;i<j;i++) {
@@ -152,15 +161,60 @@ public class ExpOrderRookieController {
 						tempList.addAll(list.subList(i*100, (i*100+list.size()%100)));
 					}
 					expOrderRookieService.saveList(tempList);
+					if(i==0) {
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						dates=sdf.format(tempList.get(0).getCreateDate());
+					}
 				}
 			}
+			
+			
 			long endTime=System.currentTimeMillis(); //获取结束时间
 			System.out.println("程序运行时间： "+(endTime-startTime)+"ms");
+			
+			//保存中转表
+			 
+			Map<String, Object> params=new HashMap<String, Object>();
+			params.put("dates",dates);
+			List<ExpTempEntity> lists=expTempService.selectFromRookieByDate(params);
+			this.batchSaveTemp(list);
     	}
     	
     	return R.ok();
     }
     
+    /**
+	  * 批量中转保存凭证
+	  * @param list
+	  */
+	 public void batchSaveTemp(List<ExpTempEntity> list) {
+		 if (null != list) {
+				int g=list.size()/100;
+				int j=0;
+				j=g;
+				if(list.size()%100>0){
+					j++;
+				}
+				System.out.println("j=="+j);
+				if(j==g){
+					for (int i=0;i<g;i++) {
+						List<ExpTempEntity> tempList=new ArrayList<ExpTempEntity>();
+						tempList.addAll(list.subList(i*100, (i+1)*100));
+						expTempService.saveList(tempList);
+					}
+				}else if(j>g){
+					for (int i=0;i<j;i++) {
+						List<ExpTempEntity> tempList=new ArrayList<ExpTempEntity>();
+						if(i<j-1){
+							tempList.addAll(list.subList(i*100, (i+1)*100));
+						}else if(i==j-1){
+							tempList.addAll(list.subList(i*100, (i*100+list.size()%100)));
+						}
+						expTempService.saveList(tempList);
+					}
+				}
+	    	} 
+	 }
     
     public  List getAllByExcel(String file) throws Exception{
     	List<Object[]> list=new ArrayList<Object[]>(); 

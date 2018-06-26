@@ -124,7 +124,7 @@ function exports(){
 	 var start_dates = $("#start_dates").val();
 	 var end_dates = $("#end_dates").val();
 	 var type =$("#type").val();
-	location.href=baseURL + "sys/receivables/expotslist??start_dates="+start_dates+"&end_dates="+end_dates+"&type="+type;
+	location.href=baseURL + "sys/receivables/expotslist?start_dates="+start_dates+"&end_dates="+end_dates+"&type="+type;
 	
 }
 function query(){

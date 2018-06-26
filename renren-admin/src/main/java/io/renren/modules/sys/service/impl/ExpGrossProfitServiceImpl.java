@@ -3,6 +3,7 @@ package io.renren.modules.sys.service.impl;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -62,8 +63,12 @@ public class ExpGrossProfitServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 		  
 		 int count=this.expVoucherDao.selectCountMy(baseBil,startDates,endDates,(String)params.get(Constant.SQL_FILTER),zero);
 		 Query query=new Query<ExpVoucherEntity>(params);
-		 List<ExpVoucherEntity> list=this.expVoucherDao.selectPageMy(baseBil,(query.getCurrPage()-1)*query.getLimit(),query.getLimit(),startDates,endDates,fillter,zero);
-	     return  new PageUtils(list, count, query.getLimit(), query.getCurrPage());
+		 List<ExpVoucherEntity> list=new ArrayList<ExpVoucherEntity>();
+		 ExpVoucherEntity en=this.expVoucherDao.selectPageMySum(baseBil,startDates,endDates,fillter,zero);
+		 list.add(en);
+		 List<ExpVoucherEntity> lists=this.expVoucherDao.selectPageMy(baseBil,(query.getCurrPage()-1)*query.getLimit(),query.getLimit(),startDates,endDates,fillter,zero);
+		  list.addAll(lists);
+		  return  new PageUtils(list, count, query.getLimit(), query.getCurrPage());
 	}
 	 @DataFilter(subDept = true, user = false,tableAlias="v")
 	public List<Map<String, Object>> SelectGrossProfitSum(Map<String, Object> params) {
@@ -72,6 +77,20 @@ public class ExpGrossProfitServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 		 return this.expVoucherDao.SelectGrossProfitSum(params);
 		 
 	}
+	 
+	 @DataFilter(subDept = true, user = false,tableAlias="v")
+	public List<Map<String, Object>> SelectGrossProfitSumOrderByCity(Map<String, Object> params) {
+		BigDecimal baseBil= expBaseService.selectBaseBill(params);
+		 params.put("baseBil", baseBil);
+			return this.expVoucherDao.SelectGrossProfitSumOrderByCity(params);
+    } 
+	 @DataFilter(subDept = true, user = false,tableAlias="v")
+	 public List<Map<String, Object>> SelectGrossProfitSumOrderByWeight(Map<String, Object> params) {
+		 BigDecimal baseBil= expBaseService.selectBaseBill(params);
+		 params.put("baseBil", baseBil);
+		 return this.expVoucherDao.SelectGrossProfitSumOrderByWeight(params);
+	 } 
+		 
 	@Override
 	 @DataFilter(subDept = true, user = false,tableAlias="v")
 	public void expotslist(Map<String, Object> params) {
@@ -197,7 +216,7 @@ public class ExpGrossProfitServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 		  e.printStackTrace(); 
 		 } 
 		 return result; 
-		 } 
-	 
+		 }
+
 
 }

@@ -75,7 +75,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 		 
 		
 /******************中转菜鸟**************************************************************/
-		if(params.get("num").equals("1")) {
+	/*	if(params.get("num").equals("1")) {
 			//从菜鸟中获取当天中转表数据，并批量保存
 			try {
 				//查询是否已经中转
@@ -90,11 +90,11 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 				return R.error().put("num", 1).put("msg", "今日菜鸟中转异常");
 			}
 			
-		}
+		}*/
 /******************中转菜鸟完成**************************************************************/
 		
 /******************中转表中客户和客户表中客户编码做对比********************************************/
-		if(params.get("num").equals("2")) {
+		if(params.get("num").equals("1")) {
 		//处理新用户的添加
     	//1、查找菜鸟七天内新用户添加完成
     	List<Object> listRookCustomerCode=expTempService.selectCustomerCode(params);
@@ -115,12 +115,12 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 		List<Object> rookieWaybillList=expTempService.selectWaybill(params);//只查中转7天内询运单号
         list = listCompare(rookieWaybillList,scanWaybillList);//得到中转中没有的
         //-------------------得到菜鸟中没有的运单号---------------------------------
-        return R.ok().put("num", 2).put("msg", "今日扫描与中转表对比完成");
+        return R.ok().put("num", 1).put("msg", "今日扫描与中转表对比完成");
 		}
 /******************中转表中客户和客户表中客户编码做对比，list是中转中没有扫描的单号集合完成*******************/
         params.put("list", list);
 /******************通过中转中没有的扫描单号List，来对比对账单中的数据***********************************/
-        if(params.get("num").equals("3")) {
+        if(params.get("num").equals("2")) {
         try {
         //菜鸟中没有List的订单要在对账单子对比出来，并获取新用户
         List<Object> listNameNew=expBalanceAccountService.getCustomerName(params);
@@ -137,9 +137,9 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
     		//添加到用户表中
         	expCustomerDao.saveList(newCustomer);
     	    }
-        return R.ok().put("num", 3).put("msg", "对比客户完成");
+        return R.ok().put("num", 2).put("msg", "对比客户完成");
         	} catch (Exception e) {
-        		return R.error().put("num", 3).put("msg", "对比客户异常");
+        		return R.error().put("num", 2).put("msg", "对比客户异常");
 			}
         
         }
@@ -147,35 +147,35 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
         
 /******************查看客户表中是否有空白的用户****************************************************/
         //--------------此处判断用户信息是否完善---------------------------------------------
-        if(params.get("num").equals("4")) {
+        if(params.get("num").equals("3")) {
         //此处判断用户信息是否完善SELECT COUNT(id) FROM exp_customer WHERE `code` IS NULL OR price_name IS NULL OR type IS NULL
 	        int count=expCustomerService.selectNullCount(params);
 	        if(count>0) {
-	        	return R.error().put("num", 4).put("msg", "客户信息未完善，请先去客户信息菜单中完善客户信息");
+	        	return R.error().put("num", 3).put("msg", "客户信息未完善，请先去客户信息菜单中完善客户信息");
 	        }else {
-	        	return R.ok().put("num", 4).put("msg", "客户信息已经完善");
+	        	return R.ok().put("num", 3).put("msg", "客户信息已经完善");
 	        }
         }
 /******************查看客户表中是否有空白的用户完成****************************************************/
         
 /******************将对账中的比对出来的信息保存到中转表中****************************************************/
-        if(params.get("num").equals("5")) {
+        if(params.get("num").equals("4")) {
         	try {
         		if(null!=list&&list.size()>0) {
         			List<ExpTempEntity> listBalanceAccount=expTempService.selectFromBalanceAccount(params);
             		expTempService.saveList(listBalanceAccount);
         		}
-        		return R.ok().put("num", 5).put("msg", "对账比对后中转成功");
+        		return R.ok().put("num",4).put("msg", "对账比对后中转成功");
 			} catch (Exception e) {
 				e.printStackTrace();
-				return R.error().put("num", 5).put("msg", "对账比对后中转异常"); 
+				return R.error().put("num",4).put("msg", "对账比对后中转异常"); 
 			}
         	
         }
 /******************将对账中的比对出来的信息保存到中转表中完成****************************************************/ 
         
 /******************今日扫描和中转表关联数据计算重量处理并保存****************************************************/
-        if(params.get("num").equals("6")) {
+        if(params.get("num").equals("5")) {
         	try {
         		//查出对应基数
         		BigDecimal baseWeight=expBaseService.selectBaseWeight(params);
@@ -188,9 +188,9 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
      	        listOne.addAll(listTwo); */
         		List<ExpOrdersEntity> listOnes =expOrdersService.selectScanAndTemp(params);
      	       expOrdersDao.saveOrdersBatch(listOnes);//批量保存到数据库,并将重量按照规则转化成整数
-     	       return R.ok().put("num", 6).put("msg", "数据计算重量处理完成");
+     	       return R.ok().put("num",5).put("msg", "数据计算重量处理完成");
 			} catch (Exception e) {
-				return R.error().put("num",6).put("msg","数据计算重量处理完成");
+				return R.error().put("num",5).put("msg","数据计算重量处理完成");
 			}
         }
 /******************数据计算重量处理并保存****************************************************/    
@@ -198,7 +198,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 /******************数据计算重量处理并保存****************************************************/  
         
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        if(params.get("num").equals("7")) {
+        if(params.get("num").equals("6")) {
         	try {
 		        //4、利用价格表 计算出运费收入 用户信息及价格等信息都可以获得
         		//查询的是exp_order表
@@ -237,13 +237,13 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 		        	voucherList.add(voucherLoan);
 		        });
 		        this.batchSave(voucherList);//批量保存凭证
-		        return R.ok().put("num", 7).put("msg", "收入凭证处理完成");
+		        return R.ok().put("num", 6).put("msg", "收入凭证处理完成");
         	} catch (Exception e) {
-        		 return R.error().put("num", 7).put("msg", "收入凭证处理异常");
+        		 return R.error().put("num",6).put("msg", "收入凭证处理异常");
 			}
         }
         //老板
-        if(params.get("num").equals("8")) {
+        if(params.get("num").equals("7")) {
         	try {
         	List<ExpVoucherEntity> voucherList=new ArrayList<ExpVoucherEntity>();
         	List<ExpMoneyInOutEntity> Nlist=expMoneyInOutService.selectLikeNIn(params);
@@ -293,13 +293,13 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 	        	voucherList.add(voucherLoan);
         	});
         	this.batchSave(voucherList);//批量保存凭证
-	        return R.ok().put("num", 8).put("msg", "收支凭证处理（老板、面单）完成");
+	        return R.ok().put("num", 7).put("msg", "收支凭证处理（老板、面单）完成");
         	} catch (Exception e) {
-       		 return R.error().put("num", 8).put("msg", "收支凭证处理（老板、面单）完成");
+       		 return R.error().put("num", 7).put("msg", "收支凭证处理（老板、面单）完成");
 			}
            }
         //收支表中支出凭证
-        	if(params.get("num").equals("9")) {
+        	if(params.get("num").equals("8")) {
 	        	try {
 	        		List<ExpOrdersEntity> orderList=expOrdersService.selectOutOrder(params);
 	        		List<ExpVoucherEntity> voucherList=new ArrayList<ExpVoucherEntity>();
@@ -357,15 +357,15 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 	        			}
 	 		        });
 	 		        this.batchSave(voucherList);//批量保存凭证
-	 		        return R.ok().put("num", 9).put("msg", "收支表——支出凭证处理完成");
+	 		        return R.ok().put("num", 8).put("msg", "收支表——支出凭证处理完成");
 	        	}catch (Exception e) {
 	        		e.printStackTrace();
-	        		return R.error().put("num", 9).put("msg", "收支表——支出凭证处理失败");
+	        		return R.error().put("num", 8).put("msg", "收支表——支出凭证处理失败");
 				}
         	}
         	
         	//收支表中收入
-        	if(params.get("num").equals("10")) {
+        	if(params.get("num").equals("9")) {
         		try {
         			//中转表关联
         			List<ExpOrdersEntity> orderList=expOrdersService.selectInOrder(params);
@@ -433,14 +433,14 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
                 		
                 	});*/
         			 this.batchSave(voucherList);//批量保存凭证
-        			 return R.ok().put("num", 10).put("msg", "收支表——收入凭证处理完成");
+        			 return R.ok().put("num", 9).put("msg", "收支表——收入凭证处理完成");
 				} catch (Exception e) {
 					e.printStackTrace();
-					 return R.error().put("num",10).put("msg", "收支表——收入凭证处理失败");
+					 return R.error().put("num",9).put("msg", "收支表——收入凭证处理失败");
 				}
         	}
         	//收款凭证
-        	if(params.get("num").equals("11")) {
+        	if(params.get("num").equals("10")) {
         		 try {
         			 List<ExpOrdersEntity> orderList=expOrdersService.selectGeneralIn(params);
  	        		List<ExpVoucherEntity> voucherList=new ArrayList<ExpVoucherEntity>();
@@ -484,10 +484,10 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
  	 		        	voucherList.add(voucherLoan);
  	 		        });
  	 		        this.batchSave(voucherList);//批量保存凭证
- 	 		      return R.ok().put("num",11).put("msg", "日常收支——收款凭证处理完成");
+ 	 		      return R.ok().put("num",10).put("msg", "日常收支——收款凭证处理完成");
 				} catch (Exception e) {
 					 e.printStackTrace();
-					 return R.error().put("num",11).put("msg", "日常收支——收款凭证处理失败");
+					 return R.error().put("num",10).put("msg", "日常收支——收款凭证处理失败");
 				}
         	}
         

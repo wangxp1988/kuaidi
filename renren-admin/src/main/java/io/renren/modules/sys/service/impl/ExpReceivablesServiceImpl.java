@@ -56,7 +56,11 @@ public class ExpReceivablesServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 			 Query query=new Query<Map<String, Object>>(params);
 			 params.put("currPage", (query.getCurrPage()-1)*query.getLimit());
 			 params.put("limit", query.getLimit());
-			 List<Map<String, Object>> list=this.expVoucherDao.selectReceivables(params);
+			 List<Map<String, Object>> list=new ArrayList<Map<String,Object>>();
+			 Map<String,Object> mp=expVoucherDao.selectReceivablesSum(params);
+			 list.add(mp);
+			 List<Map<String, Object>> lists=this.expVoucherDao.selectReceivables(params);
+			 list.addAll(lists);
 		     return  new PageUtils(list, count, query.getLimit(), query.getCurrPage());
 	}
 	@Override
@@ -127,8 +131,8 @@ public class ExpReceivablesServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 	@DataFilter(subDept = true, user = false)
 	public void expotslist(Map<String, Object> params) {
 				if(null!=params.get("sql_filter")) {
-					params.put("sql_filter_one", params.get("sql_filter").toString().replace("dept_id", "c.dept_id"));
-					params.put("sql_filter_two","vo."+params.get("sql_filter").toString().replace("dept_id", "vo.dept_id"));
+					params.put("sql_filter_one",params.get("sql_filter").toString().replace("dept_id", "c.dept_id"));
+					params.put("sql_filter_two",params.get("sql_filter").toString().replace("dept_id", "vo.dept_id"));
 				}
 			 List<Map<String, Object>> list=this.expVoucherDao.selectReceivables(params);
 			 String[] Title= {"客户名称","客户编号","客户类型","借方金额","贷方金额","初期余额","期末余额"};

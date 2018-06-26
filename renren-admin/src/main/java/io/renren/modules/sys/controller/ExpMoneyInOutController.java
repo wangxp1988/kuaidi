@@ -189,7 +189,7 @@ public class ExpMoneyInOutController {
 		    int cells=row.getLastCellNum(); 
 		    Object[] csr=null; 
 		    List<String> colsNames=new ArrayList<String>();
-		    for(int i=1;i<rows;i++){ 
+		    for(int i=0;i<rows;i++){ 
 		      row=sheet.getRow(i); 
 		      csr=new String[cells]; 
 		      int j=0;

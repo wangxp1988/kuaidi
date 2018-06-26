@@ -8,6 +8,21 @@
 <div id="rrapp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
+        <div class="form-group col-sm-2">
+				<input type="text" class="form-control"  v-model="q.name" @keyup.enter="query"  id="name" placeholder="客户名称">
+			</div>
+			<div class="form-group col-sm-2">
+				 <select class="form-control"  v-model="q.type"  @keyup.enter="query">
+                                   <option value="">请选择客户类型</option>
+						         <option v-for="(item,index) in  customerType"  :value="item.name">{{ item.name }}</option>
+						      </select>
+			</div>
+			<div class="form-group col-sm-2">
+				<input type="text" class="form-control"  v-model="q.code" @keyup.enter="query"  id="code" placeholder="客户编码">
+			</div>
+			<div class="form-group col-sm-2">
+			<a class="btn btn-default" @click="query">查询</a>
+			</div>
             <div class="form-group col-sm-2"> 
                    <input type="file" id="myfile" class="form-control" name="file" placeholder="上传文件"/>
             </div>
@@ -46,7 +61,7 @@
                         <div class="col-sm-2 control-label">客户类型</div>
                         <div class="col-sm-10">
                            <!--  <input type="text" class="form-control" v-model="expCustomer.type" placeholder="客户类型"/> -->
-                            <select class="form-control" v-model="expCustomer.type">
+                              <select class="form-control" v-model="expCustomer.type">
                                    <option value="0000">请选择客户类型</option>
 						         <option v-for="(item,index) in  customerType"  :value="item.name">{{ item.name }}</option>
 						      </select>

@@ -1,5 +1,6 @@
 package io.renren.modules.sys.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,9 +37,17 @@ public class ExpCustomerServiceImpl extends ServiceImpl<ExpCustomerDao, ExpCusto
     public PageUtils queryPage(Map<String, Object> params) {
     	List<String> columns=new ArrayList<String>();
     	columns.add("id");
+    	String name = (String)params.get("name");
+    	String code = (String)params.get("code");
+    	String type = (String)params.get("type");
+    	System.out.println(params.get("name")!=null);
         Page<ExpCustomerEntity> page = this.selectPage(
                 new Query<ExpCustomerEntity>(params).getPage(),
-                new EntityWrapper<ExpCustomerEntity>().addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER)).orderDesc(columns)
+                new EntityWrapper<ExpCustomerEntity>().addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+                .like(StringUtils.isNotBlank(name),"name", (String)params.get("name"))
+                .eq(StringUtils.isNotBlank(type), "type", (String)params.get("type"))
+                .eq(StringUtils.isNotBlank(code), "code", (String)params.get("code"))
+                .orderDesc(columns)
         );
 
         return new PageUtils(page);

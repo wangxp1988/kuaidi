@@ -97,4 +97,8 @@ public interface ExpVoucherDao extends BaseMapper<ExpVoucherEntity> {
 	int selectReceivablesByCodesCount(Map<String, Object> params);
 	BigDecimal selectReceivablesDebtorSum(Map<String, Object> params);
 	List<ExpVoucherEntity> selectExpotsList(Map<String, Object> params);
+	List<Map<String, Object>> SelectGrossProfitSumOrderByCity(Map<String, Object> params);
+	List<Map<String, Object>> SelectGrossProfitSumOrderByWeight(Map<String, Object> params);
+	ExpVoucherEntity selectPageMySum(@Param("baseBil")BigDecimal baseBil,@Param("startDates")String startDates,@Param("endDates")String endDates,@Param("filter")String filter,@Param("zero")String zero);
+	Map<String,Object> selectReceivablesSum(Map<String, Object> params);
 }

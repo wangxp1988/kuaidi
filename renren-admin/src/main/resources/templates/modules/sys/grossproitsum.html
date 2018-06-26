@@ -4,6 +4,7 @@
 <title>角色管理</title>
 <#include "/header.html">
 <script src="${request.contextPath}/statics/js/plugins/My97DatePicker/WdatePicker.js"></script>
+<script src="${request.contextPath}/statics/libs/echarts.min.js"></script>
 </head>
 <body>
 	<div>
@@ -30,6 +31,8 @@
             <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;按条件汇总</a>
 			</#if>
         </div>
+            <div id="main" style="width:100%;height:300px;margin-top: 30px;"></div>
+            <div id="main1" style="width:100%;height:300px;margin-top: 30px;"></div>
 		   <div class="panel panel-default">
 			  <!-- Default panel contents -->
 			  <div class="panel-heading">毛利汇总信息</div>
@@ -44,9 +47,16 @@
 		      </table>
 			</div>
     </div>
+
     
-    <script type="text/javascript">
+    
+    
+     <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+  
     $(function(){
+    	$("#main").hide();
+    	$("#main1").hide();
     	load();
     });
        function load(){
@@ -94,6 +104,8 @@
     	    	alert("汇总时间必须选择");
     	    	return;
     	    }
+    	    queryCharbyCity(startDates,endDates);
+    	    queryCharbyWeight(startDates,endDates)
     	   $("#sumth").html("");
     	   var html1="<tr>";
     	   if(customer!=""){
@@ -141,6 +153,177 @@
                }
            });
        }
+       
+       
+       function queryCharbyCity(startDates,endDates){
+    	   $("#main").show()
+    	   var url="sys/grossprofit/sumbycity";
+    	   var money= new Array();
+           var city= new Array();
+           var debtorMoney = new Array();
+           var lenderMoney = new Array();
+           var baseBil = new Array();
+    	   $.ajax({
+               type: "POST",
+               url:  baseURL + url,
+               async:false,
+               data: {"startDates":startDates,"endDates":endDates},
+               success: function(r){
+            	   if(r.code === 0){
+            		   $.each(r.list, function(i, item){
+            			   money.push(item.grossProfit);
+            			   city.push(item.destinationDot);
+            			   debtorMoney.push(item.debtorMoney);
+            			   lenderMoney.push(item.lenderMoney);
+            			   baseBil.push(item.baseBil);
+            		   });
+            	   }
+               }
+    	   });
+    	   console.log(money)
+    	   var myChart = echarts.init(document.getElementById('main'));
+           
+           // 指定图表的配置项和数据
+           var option = {
+        		    title: {
+        		        text: '按地区/日期'
+        		    },
+        		    tooltip: {
+        		        trigger: 'axis',
+        		        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+        		            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+        		        }
+        		    },
+        		    legend: {
+        		        data: ['收入', '成本', '面单', '毛利'],
+        		        align: 'right',
+        		        right: 10
+        		    },
+        		    grid: {
+        		        left: '3%',
+        		        right: '4%',
+        		        bottom: '3%',
+        		        containLabel: true
+        		    },
+        		    xAxis: [{
+        		        type: 'category',
+        		        data: city
+        		    }],
+        		    yAxis: [{
+        		        type: 'value',
+        		        name: '总价(元)',
+        		        axisLabel: {
+        		            formatter: '{value}'
+        		        }
+        		    }],
+        		    series: [{
+        		        name: '收入',
+        		        type: 'bar',
+        		        data: debtorMoney
+        		    }, {
+        		        name: '成本',
+        		        type: 'bar',
+        		        data: lenderMoney
+        		    }, {
+        		        name: '面单',
+        		        type: 'bar',
+        		        data: baseBil
+        		    }, {
+        		        name: '毛利',
+        		        type: 'bar',
+        		        data: money
+        		    }]
+        		};
+
+           // 使用刚指定的配置项和数据显示图表。
+           myChart.setOption(option);
+       }
+       
+       function queryCharbyWeight(startDates,endDates){
+    	   $("#main1").show()
+    	   var url="sys/grossprofit/sumbyWeight";
+    	   var money= new Array();
+           var weight= new Array();
+           var debtorMoney = new Array();
+           var lenderMoney = new Array();
+           var baseBil = new Array();
+    	   $.ajax({
+               type: "POST",
+               url:  baseURL + url,
+               async:false,
+               data: {"startDates":startDates,"endDates":endDates},
+               success: function(r){
+            	   if(r.code === 0){
+            		   $.each(r.list, function(i, item){
+            			   money.push(item.grossProfit);
+            			   weight.push(item.weight+"公斤");
+            			   debtorMoney.push(item.debtorMoney);
+            			   lenderMoney.push(item.lenderMoney);
+            			   baseBil.push(item.baseBil);
+            		   });
+            	   }
+               }
+    	   });
+    	   var myChart = echarts.init(document.getElementById('main1'));
+           
+           // 指定图表的配置项和数据
+           var option = {
+        		    title: {
+        		        text: '按重量/日期'
+        		    },
+        		    tooltip: {
+        		        trigger: 'axis',
+        		        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+        		            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+        		        }
+        		    },
+        		    legend: {
+        		        data: ['收入', '成本', '面单', '毛利'],
+        		        align: 'right',
+        		        right: 10
+        		    },
+        		    grid: {
+        		        left: '3%',
+        		        right: '4%',
+        		        bottom: '3%',
+        		        containLabel: true
+        		    },
+        		    xAxis: [{
+        		        type: 'category',
+        		        data: weight
+        		    }],
+        		    yAxis: [{
+        		        type: 'value',
+        		        name: '总价(元)',
+        		        axisLabel: {
+        		            formatter: '{value}'
+        		        }
+        		    }],
+        		    series: [{
+        		        name: '收入',
+        		        type: 'bar',
+        		        data: debtorMoney
+        		    }, {
+        		        name: '成本',
+        		        type: 'bar',
+        		        data: lenderMoney
+        		    }, {
+        		        name: '面单',
+        		        type: 'bar',
+        		        data: baseBil
+        		    }, {
+        		        name: '毛利',
+        		        type: 'bar',
+        		        data: money
+        		    }]
+        		};
+
+           // 使用刚指定的配置项和数据显示图表。
+           myChart.setOption(option);
+       }
+       
+       
+       
     </script>
     
 </body>

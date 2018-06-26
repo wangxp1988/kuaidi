@@ -38,13 +38,28 @@ $(function () {
 
 var vm = new Vue({
 	el:'#rrapp',
+	  
+    created: function () {
+	 $.get(baseURL + "sys/sysarea/listAll", function(r){
+         vm.provinceList = r.list;
+     });
+	},
 	data:{
+		q:{
+			priceName: null,
+			provinceName: "",
+			weight: "",
+		    provinceList:{}
+        },
 		showList: true,
 		title: null,
 		expPrice: {},
 		provinceList:{}
 	},
-	methods: {
+ 	methods: {
+		 created: function (){
+			 this.getProvinceList()
+		 },
 		query: function () {
 			vm.reload();
 		},
@@ -86,6 +101,23 @@ var vm = new Vue({
 				}
 			});
 		},
+		delAll:function(){
+			confirm('确定要清空您的记录？', function(){
+				$.ajax({
+					type: "POST",
+				    url: baseURL + "sys/expprice/deleteAll",
+				    success: function(r){
+						if(r.code == 0){
+							alert('操作成功', function(index){
+								$("#jqGrid").trigger("reloadGrid");
+							});
+						}else{
+							alert(r.msg);
+						}
+					}
+				});
+			});
+		},
 		del: function (event) {
 			var ids = getSelectedRows();
 			if(ids == null){
@@ -124,6 +156,7 @@ var vm = new Vue({
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 
+			   postData:{'priceName': vm.q.priceName,'provinceName':vm.q.provinceName,'weight': vm.q.weight},
                 page:page
             }).trigger("reloadGrid");
 		}

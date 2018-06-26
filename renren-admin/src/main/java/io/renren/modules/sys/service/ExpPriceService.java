@@ -23,5 +23,7 @@ public interface ExpPriceService extends IService<ExpPriceEntity> {
 	List<ExpPriceEntity> listAllName(Map<String, Object> params);
 
 	List<ExpPriceEntity> selectAllDept(Map<String, Object> params);
+
+	void deleteAll(Map<String, Object> params);
 }
 

@@ -62,13 +62,13 @@ public class ExpRechargeController {
      */
     @RequestMapping("/save")
     @RequiresPermissions("sys:exprecharge:save")
-    public R save(Long userId,BigDecimal money,String userName){
+    public R save(Long userId,BigDecimal money,String userName,String availableDate){
     	 ExpRechargeEntity expRecharge=new ExpRechargeEntity();
     	expRecharge.setMoney(money);
     	expRecharge.setUserName(userName);
     	expRecharge.setUserId(userId);
     	expRecharge.setCreateDate(new Date());
-        expRechargeService.insert(expRecharge);
+        expRechargeService.saveR(expRecharge,availableDate);
 
         return R.ok();
     }

@@ -126,6 +126,15 @@ public class ExpPriceController {
 
         return R.ok();
     }
+    /**
+     * 删除
+     */
+    @RequestMapping("/deleteAll")
+    @RequiresPermissions("sys:expprice:delete")
+    public R deleteAll(Map<String, Object> params){
+    	 expPriceService.deleteAll(params);
+    	return R.ok();
+    }
     
     @RequestMapping("export")
     public void export(HttpServletRequest request,HttpServletResponse response,Map<String, Object> params) {

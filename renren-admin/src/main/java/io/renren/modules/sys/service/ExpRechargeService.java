@@ -16,5 +16,7 @@ import java.util.Map;
 public interface ExpRechargeService extends IService<ExpRechargeEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+	void saveR(ExpRechargeEntity expRecharge, String availableDate);
 }
 
