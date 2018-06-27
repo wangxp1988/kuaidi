@@ -163,12 +163,15 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
         	try {
         		if(null!=list&&list.size()>0) {
         			List<ExpTempEntity> listBalanceAccount=expTempService.selectFromBalanceAccount(params);
-            		expTempService.saveList(listBalanceAccount);
+        			if(null!=listBalanceAccount&&listBalanceAccount.size()>0) {
+        				expTempService.saveList(listBalanceAccount);
+        			}
+            		
         		}
         		return R.ok().put("num",4).put("msg", "对账比对后中转成功");
 			} catch (Exception e) {
 				e.printStackTrace();
-				return R.error().put("num",4).put("msg", "对账比对后中转异常"); 
+				return R.error().put("num",4).put("msg", "对账比对后中转失败"); 
 			}
         	
         }
@@ -179,6 +182,9 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
         	try {
         		//查出对应基数
         		BigDecimal baseWeight=expBaseService.selectBaseWeight(params);
+        		if(baseWeight==null) {
+        			baseWeight=new BigDecimal(0);
+        		}
         		params.put("baseWeight", baseWeight);
         		/* //通过list（list保存的是菜鸟中没有，扫描有的运单号），然后扫描和对账关联取出对应数据
         		 List<ExpOrdersEntity> listOne=expOrdersService.selectNotInRookie(params);
@@ -190,7 +196,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
      	       expOrdersDao.saveOrdersBatch(listOnes);//批量保存到数据库,并将重量按照规则转化成整数
      	       return R.ok().put("num",5).put("msg", "数据计算重量处理完成");
 			} catch (Exception e) {
-				return R.error().put("num",5).put("msg","数据计算重量处理完成");
+				return R.error().put("num",5).put("msg","数据计算重量处理失败");
 			}
         }
 /******************数据计算重量处理并保存****************************************************/    
@@ -239,7 +245,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 		        this.batchSave(voucherList);//批量保存凭证
 		        return R.ok().put("num", 6).put("msg", "收入凭证处理完成");
         	} catch (Exception e) {
-        		 return R.error().put("num",6).put("msg", "收入凭证处理异常");
+        		 return R.error().put("num",6).put("msg", "收入凭证处理失败");
 			}
         }
         //老板
@@ -295,7 +301,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
         	this.batchSave(voucherList);//批量保存凭证
 	        return R.ok().put("num", 7).put("msg", "收支凭证处理（老板、面单）完成");
         	} catch (Exception e) {
-       		 return R.error().put("num", 7).put("msg", "收支凭证处理（老板、面单）完成");
+       		 return R.error().put("num", 7).put("msg", "收支凭证处理（老板、面单）失败");
 			}
            }
         //收支表中支出凭证

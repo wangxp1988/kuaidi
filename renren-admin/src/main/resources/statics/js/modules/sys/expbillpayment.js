@@ -3,14 +3,17 @@ $(function () {
         url: baseURL + 'sys/expbillpayment/list',
         datatype: "json",
         colModel: [			
-			{ label: 'id', name: 'id', index: 'id', width: 50, key: true,hidden:true },
+			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
 			{ label: '账单期间', name: 'billingPeriod', index: 'billing_period', width: 80 }, 			
 			{ label: '客户类型', name: 'customerType', index: 'customer_type', width: 80 }, 			
 			{ label: '客户编码', name: 'customerCode', index: 'customer_code', width: 80 }, 			
 			{ label: '客户名称', name: 'customerName', index: 'customer_name', width: 80 }, 			
 			{ label: '应收运费', name: 'receivable', index: 'receivable', width: 80 }, 			
 			{ label: '已付运费', name: 'paid', index: 'paid', width: 80 }, 			
-			{ label: '未付运费', name: 'unpaid', index: 'unpaid', width: 80 }			
+			{ label: '未付运费', name: 'unpaid', index: 'unpaid', width: 80 }, 			
+			{ label: '开始时间', name: 'startDate', index: 'start_date', width: 80 }, 			
+			{ label: '结束时间', name: 'endDate', index: 'end_date', width: 80 }, 			
+			{ label: '', name: 'deptId', index: 'dept_id', width: 80 }			
         ],
 		viewrecords: true,
         height: 385,

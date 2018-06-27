@@ -12,7 +12,7 @@ import java.util.Date;
  * 
  * @author chenshun
  * @email sunlightcs@gmail.com
- * @date 2018-06-27 15:27:46
+ * @date 2018-06-27 22:46:59
  */
 @TableName("exp_bill_payment")
 public class ExpBillPaymentEntity implements Serializable {
@@ -51,6 +51,14 @@ public class ExpBillPaymentEntity implements Serializable {
 	 * 未付运费
 	 */
 	private BigDecimal unpaid;
+	/**
+	 * 开始时间
+	 */
+	private Date startDate;
+	/**
+	 * 结束时间
+	 */
+	private Date endDate;
 	/**
 	 * 
 	 */
@@ -151,6 +159,30 @@ public class ExpBillPaymentEntity implements Serializable {
 	 */
 	public BigDecimal getUnpaid() {
 		return unpaid;
+	}
+	/**
+	 * 设置：开始时间
+	 */
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	/**
+	 * 获取：开始时间
+	 */
+	public Date getStartDate() {
+		return startDate;
+	}
+	/**
+	 * 设置：结束时间
+	 */
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	/**
+	 * 获取：结束时间
+	 */
+	public Date getEndDate() {
+		return endDate;
 	}
 	/**
 	 * 设置：

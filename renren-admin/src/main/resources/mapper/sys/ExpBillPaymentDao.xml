@@ -4,17 +4,59 @@
 <mapper namespace="io.renren.modules.sys.dao.ExpBillPaymentDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="io.renren.modules.sys.entity.ExpBillPaymentEntity" id="expBillPaymentMap">
-        <result property="id" column="id"/>
-        <result property="billingPeriod" column="billing_period"/>
-        <result property="customerType" column="customer_type"/>
-        <result property="customerCode" column="customer_code"/>
-        <result property="customerName" column="customer_name"/>
-        <result property="receivable" column="receivable"/>
-        <result property="paid" column="paid"/>
-        <result property="unpaid" column="unpaid"/>
-        <result property="deptId" column="dept_id"/>
-    </resultMap>
+	<resultMap
+		type="io.renren.modules.sys.entity.ExpBillPaymentEntity"
+		id="expBillPaymentMap">
+		<result property="id" column="id" />
+		<result property="billingPeriod" column="billing_period" />
+		<result property="customerType" column="customer_type" />
+		<result property="customerCode" column="customer_code" />
+		<result property="customerName" column="customer_name" />
+		<result property="receivable" column="receivable" />
+		<result property="paid" column="paid" />
+		<result property="unpaid" column="unpaid" />
+		<result property="startDate" column="start_date" />
+		<result property="endDate" column="end_date" />
+		<result property="deptId" column="dept_id" />
+	</resultMap>
 
+	<select id="SelectExpBillPaymentByVoucher" resultType="io.renren.modules.sys.entity.ExpBillPaymentEntity">
+	SELECT
+		   ${startDates}'至'${endDates} AS billing_period,
+		    ${startDates} AS start_date,
+		    ${endDates} AS end_date,
+		    c.type AS customer_type,
+		 	v.customer_name AS customer_name,
+			v.customer_code AS customer_code,
+			SUM(IFNULL(v.debtor_money, 0)) AS receivable
+	FROM
+		exp_voucher v
+	INNER JOIN 
+   		exp_customer c
+    ON 
+    c.`code`=v.customer_code
+	WHERE 1=1
+	<if test="null!=sql_filter and ''!=sql_filter">
+             AND   ${sql_filter}
+     </if>
+	AND v.two_level_coding = '112201'
+	AND DATE_FORMAT(v.create_date, '%Y-%m-%d')  &gt;=#{startDates}
+	AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;=#{endDates}
+	AND customer_code IN (
+		SELECT
+			`code`
+		FROM
+			exp_customer c
+		WHERE
+			c.dept_id = v.dept_id
+		AND c.type = #{type}
+	)
+	GROUP BY
+		v.customer_code
+	ORDER BY
+		customerCode ASC
+	
+	
+	</select>
 
 </mapper>
