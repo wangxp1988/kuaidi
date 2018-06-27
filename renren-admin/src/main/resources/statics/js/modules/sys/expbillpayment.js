@@ -1,27 +1,23 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'sys/expbalanceaccount/list',
+        url: baseURL + 'sys/expbillpayment/list',
         datatype: "json",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true,hidden:true },
-			{ label: '运单号', name: 'waybillNumber', index: 'waybill_number', width: 80 }, 			
-			{ label: '寄件人', name: 'sender', index: 'sender', width: 80 }, 			
-			{ label: '网点', name: 'branch', index: 'branch', width: 80 }, 			
-			{ label: '寄件时间', name: 'sendTime', index: 'send_time', width: 80 }, 			
-			{ label: '寄件省份', name: 'sendProvince', index: 'send_province', width: 80 }, 			
-			/*{ label: '收件人', name: 'recipient', index: 'recipient', width: 80 }, 	*/		
-			{ label: '收件省份', name: 'recipientProvince', index: 'recipient_province', width: 80 }, 			
-			{ label: '揽件业务员', name: 'salesman', index: 'salesman', width: 80 }, 			
-			/*{ label: '月结客户名称', name: 'customerName', index: 'customer_name', width: 80 }, 			
-			{ label: '月结客户手机', name: 'customerPhone', index: 'customer_phone', width: 80 }, 	*/		
-			{ label: '实际重量', name: 'actualWeight', index: 'actual_weight', width: 80 }			
+			{ label: '账单期间', name: 'billingPeriod', index: 'billing_period', width: 80 }, 			
+			{ label: '客户类型', name: 'customerType', index: 'customer_type', width: 80 }, 			
+			{ label: '客户编码', name: 'customerCode', index: 'customer_code', width: 80 }, 			
+			{ label: '客户名称', name: 'customerName', index: 'customer_name', width: 80 }, 			
+			{ label: '应收运费', name: 'receivable', index: 'receivable', width: 80 }, 			
+			{ label: '已付运费', name: 'paid', index: 'paid', width: 80 }, 			
+			{ label: '未付运费', name: 'unpaid', index: 'unpaid', width: 80 }			
         ],
 		viewrecords: true,
         height: 385,
         rowNum: 10,
 		rowList : [10,30,50],
         rownumbers: true, 
-        rownumWidth: 100, 
+        rownumWidth: 25, 
         autowidth:true,
         multiselect: true,
         pager: "#jqGridPager",
@@ -48,7 +44,7 @@ var vm = new Vue({
 	data:{
 		showList: true,
 		title: null,
-		expBalanceAccount: {}
+		expBillPayment: {}
 	},
 	methods: {
 		query: function () {
@@ -57,7 +53,7 @@ var vm = new Vue({
 		add: function(){
 			vm.showList = false;
 			vm.title = "新增";
-			vm.expBalanceAccount = {};
+			vm.expBillPayment = {};
 		},
 		update: function (event) {
 			var id = getSelectedRow();
@@ -70,12 +66,12 @@ var vm = new Vue({
             vm.getInfo(id)
 		},
 		saveOrUpdate: function (event) {
-			var url = vm.expBalanceAccount.id == null ? "sys/expbalanceaccount/save" : "sys/expbalanceaccount/update";
+			var url = vm.expBillPayment.id == null ? "sys/expbillpayment/save" : "sys/expbillpayment/update";
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
                 contentType: "application/json",
-			    data: JSON.stringify(vm.expBalanceAccount),
+			    data: JSON.stringify(vm.expBillPayment),
 			    success: function(r){
 			    	if(r.code === 0){
 						alert('操作成功', function(index){
@@ -96,7 +92,7 @@ var vm = new Vue({
 			confirm('确定要删除选中的记录？', function(){
 				$.ajax({
 					type: "POST",
-				    url: baseURL + "sys/expbalanceaccount/delete",
+				    url: baseURL + "sys/expbillpayment/delete",
                     contentType: "application/json",
 				    data: JSON.stringify(ids),
 				    success: function(r){
@@ -112,8 +108,8 @@ var vm = new Vue({
 			});
 		},
 		getInfo: function(id){
-			$.get(baseURL + "sys/expbalanceaccount/info/"+id, function(r){
-                vm.expBalanceAccount = r.expBalanceAccount;
+			$.get(baseURL + "sys/expbillpayment/info/"+id, function(r){
+                vm.expBillPayment = r.expBillPayment;
             });
 		},
 		reload: function (event) {
@@ -125,29 +121,3 @@ var vm = new Vue({
 		}
 	}
 });
-
-function imports(){
-	var fd=new FormData();
-	fd.append("file",$("#myfile").get(0).files[0]);
-	 var index = layer.load(1, {
-	   	  shade: [0.8,'#fff'] //0.1透明度的白色背景
-	   	});
-        $.ajax({  
-            type: 'POST',  
-            url: baseURL + "sys/expbalanceaccount/import",  
-            data: fd,
-            cache:false,
-            contentType:false,
-            processData:false,
-            success : function(data){  
-            	layer.close(index);
-            	if(data.code==0){
-            		alert("数据导入成功");
-            	}else{
-            		alert(data.msg)
-            	}
-            	
-            	 $("#jqGrid").jqGrid('setGridParam',{}).trigger("reloadGrid");
-               }     
-    }); 
-}

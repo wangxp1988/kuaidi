@@ -3,7 +3,7 @@ $(function () {
         url: baseURL + 'sys/expgeneralinout/list',
         datatype: "json",
         colModel: [			
-			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
+			{ label: 'id', name: 'id', index: 'id', width: 50, key: true,hidden:true },
 			{ label: '客户编码', name: 'customerId', index: 'customer_id', width: 80 }, 			
 			{ label: '运单号', name: 'waybillNumber', index: 'waybill_number', width: 80 }, 			
 			{ label: '客户', name: 'consumer', index: 'consumer', width: 80 }, 			
@@ -12,8 +12,7 @@ $(function () {
 			{ label: '支出金额', name: 'moneyOut', index: 'money_out', width: 80 }, 			
 			{ label: '账户', name: 'account', index: 'account', width: 80 }, 			
 			{ label: '备注', name: 'remarks', index: 'remarks', width: 80 }, 			
-			{ label: '记账日期', name: 'createTime', index: 'create_time', width: 80 }, 			
-			{ label: '部门ID', name: 'deptId', index: 'dept_id', width: 80 }			
+			{ label: '记账日期', name: 'createTime', index: 'create_time', width: 80 } 			
         ],
 		viewrecords: true,
         height: 385,
