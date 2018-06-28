@@ -217,6 +217,7 @@ $(function () {
    */
   $('.btn-group[data-toggle="btn-toggle"]').each(function () {
     var group = $(this);
+   
     $(this).find(".btn").on('click', function (e) {
       group.find(".btn.active").removeClass("active");
       $(this).addClass("active");

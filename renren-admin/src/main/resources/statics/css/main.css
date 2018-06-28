@@ -11,7 +11,7 @@ html { overflow-x:hidden; }
     float: none;
     margin-top: 0px;
     padding-left: 10px;
-    background: #ecf0f5;
+    background: #fff;
 }
 
 .main-footer {
@@ -28,7 +28,7 @@ html { overflow-x:hidden; }
 	margin-bottom:12px;
 }
 .grid-btn .btn{
-	margin-right:10px;
+	/* margin-right:10px; */
 }
 .pointer{cursor: pointer;}
 
@@ -52,3 +52,125 @@ tbody > tr > th {font-weight: normal; }
 .form-horizontal{
 	width:550px;padding-top:20px;
 }
+/*qj 2018.6.27*/
+/*左侧导航样式*/
+.skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side{
+	background-color:#353a5d;
+}
+.skin-blue .sidebar-menu>li>.treeview-menu{
+	background-color:#353a5d;
+}
+.skin-blue .sidebar a{
+	color:#fefeff;
+}
+.skin-blue .treeview-menu>li>a{
+	color:#abacb8;
+}
+.skin-blue .sidebar-menu>li:hover>a i, .skin-blue .sidebar-menu>li.active>a i{
+	color:#fe8b08;
+}
+.skin-blue .content-header{
+	background-color:#fff;
+}
+.skin-blue .sidebar-menu>li:hover>a, .skin-blue .sidebar-menu>li.active>a{
+	border-left-color: transparent;
+}
+.sidebar-menu>li>a{
+	padding: 12px 5px 12px 14px;
+	margin-left:16px;
+	border-radius:25px 0 0 25px;
+}
+.sidebar-menu .treeview-menu>li>a{
+	padding-left:48px;
+}
+.sidebar-menu{
+	margin-top:30px;
+}
+.sidebar-menu>li.img-logo{
+	text-align:center;
+	margin-bottom:30px;
+}
+@media (min-width: 768px){
+	.sidebar-collapse .sidebar-menu>li.img-logo {
+	    display:none !important;
+	}
+	.sidebar-collapse .sidebar-menu>li>a{
+		margin-left:0;
+	}
+	.sidebar-collapse .sidebar-menu .treeview-menu>li>a{
+		padding: 5px 5px 5px 15px;
+	}
+}
+/*面包屑导航样式*/
+.breadcrumb>.active i{
+	color:#fe4300;
+}
+/*头部header*/
+.skin-blue .main-header .navbar{
+	background-color:#fff;
+	border-bottom:1px solid #333;
+}
+.skin-blue .main-header .navbar .nav>li>a{
+	color:#353a5d;
+}
+.skin-blue .main-header .navbar .sidebar-toggle{
+	color:#353a5d;
+}
+.skin-blue .main-header .navbar .sidebar-toggle:hover{
+	color:red;
+	background-color:#fff;
+}
+.skin-blue .main-header .navbar .nav>li>a:hover{
+	background-color:#fff;
+	color:#fe4300 !important;
+}
+.main-sidebar{
+	padding-top:30px;
+}
+/*按钮样式*/
+.btn-primary{
+	background-color:#353a5d;
+    border-color: #353a5d;
+}
+.btn-primary:hover,.btn-primary:active,.btn-primary:active:hover{
+	background-color:#353a5d;
+	opacity:0.9;
+}
+/*表格样式*/
+.table-bordered{
+	border:none;
+}
+.table-bordered>tbody>tr>td{
+	border:none;
+}
+.ui-jqgrid .ui-jqgrid-pager{
+	border:none;
+}
+ .table>thead:first-child>tr:first-child>th{
+ 	border:none;
+ 	color:#353a5d;
+ }
+ .ui-jqgrid{
+ 	border:none;
+ }
+ .table>tbody>tr>td.active{
+ 	background-color:transparent;
+ }
+ .table>thead:first-child>tr{
+ 	background-color:#cbccd6;
+ }
+ .ui-jqgrid .ui-jqgrid-htable .ui-th-div{
+ 	margin-top:0;
+ }
+ .ui-jqgrid .ui-jqgrid-view input{
+ 	margin-top:4px;
+ }
+ .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+ 	padding:8px;
+ }
+ .ui-jqgrid tr.jqgrow{
+ 	border-bottom:1px dotted #cfcfcf;
+ }
+ .ui-jqgrid .ui-jqgrid-btable tbody tr.jqgrow td{
+ 	color:#666;
+ }

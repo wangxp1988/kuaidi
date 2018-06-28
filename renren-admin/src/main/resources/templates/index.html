@@ -26,19 +26,20 @@
 <!-- Site wrapper -->
 <div class="wrapper" id="rrapp" v-cloak>
   <header class="main-header">
-    <a href="javascript:void(0);" class="logo">
-      <!-- mini logo for sidebar mini 50x50 pixels -->
+    <!-- <a href="javascript:void(0);" class="logo">
+      mini logo for sidebar mini 50x50 pixels
       <span class="logo-mini"><b>物流</b></span>
-      <!-- logo for regular state and mobile devices -->
+      logo for regular state and mobile devices
       <span class="logo-lg"><b>业务管理平台</b></span>
-    </a>
+    </a> -->
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top" role="navigation">
       <!-- Sidebar toggle button-->
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
         <span class="sr-only">Toggle navigation</span>
       </a>
-	  <div style="float:left;color:#fff;padding:15px 10px;">欢迎 {{user.username}}</div>
+      <div style="float:left;color:#353a5d;padding:7px 10px;font-size:25px;">物流业务管理平台</div>
+	  <div style="float:left;color:#353a5d;padding:15px 10px;">欢迎 {{user.username}}</div>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
 		  <li><a href="javascript:;" @click="updatePassword"><i class="fa fa-lock"></i> &nbsp;修改密码</a></li>
@@ -57,8 +58,10 @@
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
-        <li class="header">导航菜单</li>
-        
+        <!-- <li class="header">导航菜单</li> -->
+        <li class="img-logo">
+        	<img src="${request.contextPath}/statics/images/logo.png" alt="" />
+        </li>
         <!-- vue生成的菜单 -->
 		<menu-item :item="item" v-for="item in menuList"></menu-item>
       </ul>
@@ -84,12 +87,12 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <footer class="main-footer">
+  <!-- <footer class="main-footer">
     <div class="pull-right hidden-xs">
       Version 3.2.0
     </div>
-    Copyright &copy; 2018 <!-- <a href="http://www.renren.io" target="_blank">renren.io</a> --> All Rights Reserved
-  </footer>
+    Copyright &copy; 2018 <a href="http://www.renren.io" target="_blank">renren.io</a> All Rights Reserved
+  </footer> -->
 
   <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
@@ -121,7 +124,6 @@
 
 </div>
 <!-- ./wrapper -->
-
 
 
 <script src="${request.contextPath}/statics/libs/jquery.min.js"></script>
