@@ -3,7 +3,7 @@ $(function () {
         url: baseURL + 'sys/expbalanceaccount/list',
         datatype: "json",
         colModel: [			
-			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
+			{ label: 'id', name: 'id', index: 'id', width: 50, key: true,hidden:true },
 			{ label: '运单号', name: 'waybillNumber', index: 'waybill_number', width: 80 }, 			
 			{ label: '寄件人', name: 'sender', index: 'sender', width: 80 }, 			
 			{ label: '网点', name: 'branch', index: 'branch', width: 80 }, 			

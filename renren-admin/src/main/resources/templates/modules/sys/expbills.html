@@ -24,8 +24,8 @@
 				 <div class="col-sm-2">
 				 <label class="control-label">初期余额:</label>
 					  <select class="form-control" id="exportType">
-					     <option value="1">是</option>
 					     <option value="2">否</option>
+					     <option value="1">是</option>
 				     </select>
 				</div> 
 			</div>
@@ -38,6 +38,9 @@
 			</#if>
 			<#if shiro.hasPermission("sys:receivables:billlist")>
             <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;查询</a>
+			</#if>
+			<#if shiro.hasPermission("sys:receivables:billlist")>
+            <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp; 汇总账单收支表</a>
 			</#if>
         </div>
         <table id="jqGrid"></table>
