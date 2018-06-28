@@ -55,8 +55,6 @@
 		v.customer_code
 	ORDER BY
 		customerCode ASC
-	
-	
 	</select>
 
 </mapper>

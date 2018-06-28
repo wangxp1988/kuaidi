@@ -284,8 +284,8 @@
 			) AS len ON len.waybill_number = v.waybill_number
 			
 			<where>
-				 <if test="null!=filter and ''!=filter">
-					${filter}
+				 <if test="null!=sql_filter_one and ''!=sql_filter_one">
+					${sql_filter_one}
 			     </if>
 			     AND v.two_level_coding = '112201' 
 			     AND v.debtor_money > 0 
@@ -343,8 +343,8 @@
 			) AS len ON len.waybill_number = v.waybill_number
 			
 			<where>
-				 <if test="null!=filter and ''!=filter">
-					${filter}
+				 <if test="null!=sql_filter_one and ''!=sql_filter_one">
+					${sql_filter_one}
 			     </if>
 			     AND v.two_level_coding = '112201' 
 			     AND v.debtor_money > 0 
@@ -382,8 +382,8 @@
 			) AS len ON len.waybill_number = v.waybill_number
 			
 			<where>
-				 <if test="null!=filter and ''!=filter">
-					${filter}
+				 <if test="null!=sql_filter_one and ''!=sql_filter_one">
+					${sql_filter_one}
 			     </if>
 			     AND v.two_level_coding = '112201' 
 			     AND v.debtor_money > 0 

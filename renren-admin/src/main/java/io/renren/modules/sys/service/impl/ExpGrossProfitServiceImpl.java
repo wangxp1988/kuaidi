@@ -70,22 +70,31 @@ public class ExpGrossProfitServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 		  list.addAll(lists);
 		  return  new PageUtils(list, count, query.getLimit(), query.getCurrPage());
 	}
-	 @DataFilter(subDept = true, user = false,tableAlias="v")
+	 @DataFilter(subDept = true, user = false)
 	public List<Map<String, Object>> SelectGrossProfitSum(Map<String, Object> params) {
+		 if(null!=params.get("sql_filter")) {
+				params.put("sql_filter_one", params.get("sql_filter").toString().replace("dept_id", "v.dept_id"));
+			}
 		 BigDecimal baseBil= expBaseService.selectBaseBill(params);
 		 params.put("baseBil", baseBil);
 		 return this.expVoucherDao.SelectGrossProfitSum(params);
 		 
 	}
 	 
-	 @DataFilter(subDept = true, user = false,tableAlias="v")
+	 @DataFilter(subDept = true, user = false)
 	public List<Map<String, Object>> SelectGrossProfitSumOrderByCity(Map<String, Object> params) {
+		 if(null!=params.get("sql_filter")) {
+				params.put("sql_filter_one", params.get("sql_filter").toString().replace("dept_id", "v.dept_id"));
+			}
 		BigDecimal baseBil= expBaseService.selectBaseBill(params);
 		 params.put("baseBil", baseBil);
 			return this.expVoucherDao.SelectGrossProfitSumOrderByCity(params);
     } 
-	 @DataFilter(subDept = true, user = false,tableAlias="v")
+	 @DataFilter(subDept = true, user = false)
 	 public List<Map<String, Object>> SelectGrossProfitSumOrderByWeight(Map<String, Object> params) {
+		 if(null!=params.get("sql_filter")) {
+				params.put("sql_filter_one", params.get("sql_filter").toString().replace("dept_id", "v.dept_id"));
+			}
 		 BigDecimal baseBil= expBaseService.selectBaseBill(params);
 		 params.put("baseBil", baseBil);
 		 return this.expVoucherDao.SelectGrossProfitSumOrderByWeight(params);

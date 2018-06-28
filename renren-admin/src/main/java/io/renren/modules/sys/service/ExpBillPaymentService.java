@@ -16,5 +16,7 @@ import java.util.Map;
 public interface ExpBillPaymentService extends IService<ExpBillPaymentEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+	void SelectExpBillPaymentByVoucher(Map<String, Object> params);
 }
 

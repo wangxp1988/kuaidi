@@ -42,6 +42,15 @@ public class ExpBillPaymentController {
 
         return R.ok().put("page", page);
     }
+    /**
+     * 将账单数据同步到账单收支表中
+     */
+    @RequestMapping("/expbillToPayment")
+    @RequiresPermissions("sys:expbillpayment:list")
+    public R expbillToPayment(@RequestParam Map<String, Object> params){
+    	expBillPaymentService.SelectExpBillPaymentByVoucher(params);
+    	return R.ok();
+    }
 
 
     /**
