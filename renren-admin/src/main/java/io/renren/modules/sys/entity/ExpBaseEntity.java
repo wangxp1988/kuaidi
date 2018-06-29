@@ -31,6 +31,10 @@ public class ExpBaseEntity implements Serializable {
 	 * 面单成本
 	 */
 	private BigDecimal baseBill;
+	/**
+	 * 空白面单
+	 */
+	private BigDecimal blankBill;
 
 	private Long deptId;
 	/**
@@ -74,6 +78,14 @@ public class ExpBaseEntity implements Serializable {
 	}
 	public void setDeptId(Long deptId) {
 		this.deptId = deptId;
+	}
+	
+	
+	public BigDecimal getBlankBill() {
+		return blankBill;
+	}
+	public void setBlankBill(BigDecimal blankBill) {
+		this.blankBill = blankBill;
 	}
 	
 	

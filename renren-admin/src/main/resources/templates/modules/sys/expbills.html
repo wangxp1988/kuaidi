@@ -40,7 +40,7 @@
             <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;查询</a>
 			</#if>
 			<#if shiro.hasPermission("sys:receivables:billlist")>
-            <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp; 汇总账单收支表</a>
+            <a class="btn btn-primary"  onclick="querybillPayment();"><i class="fa fa-plus"></i>&nbsp; 汇总账单收支表</a>
 			</#if>
         </div>
         <table id="jqGrid"></table>
@@ -69,6 +69,43 @@ function load(){
        	 });
         }else{
             alert(r.msg);
+        }
+	}
+   });
+}
+
+function querybillPayment(){
+	var start_dates = $("#start_dates").val();
+	var end_dates = $("#end_dates").val();
+	var type =$("#type").val();
+	
+	if(null==start_dates||start_dates==""){
+		alert("请选择开始日期");
+		return;
+	}
+	if(null==end_dates||end_dates==""){
+		alert("请选择结束日期");
+		return;
+	}
+	if(null==type||type==""){
+		alert("请选择客户类型");
+		return;
+	}
+	var index = layer.load(2, {
+	   	  shade: [0.2,'#fff'] //0.1透明度的白色背景
+	   	});
+	var url="sys/expbillpayment/expbillToPayment";
+	$.ajax({
+        type: "POST",
+        url:  baseURL + url,
+        data:{start_dates:start_dates,end_dates:end_dates,type:type},
+        success: function(r){
+        if(r.code === 0){
+        	alert(r.msg);
+        	layer.close(index);
+        }else{
+            alert(r.msg);
+            layer.close(index);
         }
 	}
    });

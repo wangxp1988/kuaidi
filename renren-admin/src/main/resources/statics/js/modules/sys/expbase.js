@@ -5,7 +5,9 @@ $(function () {
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
 			{ label: '重量固定基数', name: 'baseWeight', index: 'base_weight', width: 80 }, 			
-			{ label: '面单成本', name: 'baseBill', index: 'base_bill', width: 80 }			
+			{ label: '电子面单', name: 'baseBill', index: 'base_bill', width: 80 },
+			{ label: '空白面单', name: 'blankBill', index: 'blank_bill', width: 80 },
+			
         ],
 		viewrecords: true,
         height: 385,

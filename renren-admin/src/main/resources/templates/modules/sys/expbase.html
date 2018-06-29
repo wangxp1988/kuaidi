@@ -25,19 +25,25 @@
     <div v-show="!showList" class="panel panel-default">
         <div class="panel-heading">{{title}}</div>
         <form class="form-horizontal">
-														                    <div class="form-group">
+				  <div class="form-group">
                         <div class="col-sm-2 control-label">重量固定基数</div>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" v-model="expBase.baseWeight" placeholder="重量固定基数"/>
                         </div>
                     </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">面单成本</div>
+				   <div class="form-group">
+                        <div class="col-sm-2 control-label">电子面单</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expBase.baseBill" placeholder="面单成本"/>
+                            <input type="text" class="form-control" v-model="expBase.baseBill" placeholder="电子面单"/>
                         </div>
                     </div>
-							            <div class="form-group">
+				   <div class="form-group">
+                        <div class="col-sm-2 control-label">空白面单</div>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" v-model="expBase.blankBill" placeholder="空白面单"/>
+                        </div>
+                    </div>
+			<div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>

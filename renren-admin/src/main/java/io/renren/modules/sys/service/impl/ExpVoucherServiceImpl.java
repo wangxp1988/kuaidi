@@ -1,5 +1,6 @@
 package io.renren.modules.sys.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,6 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
 import io.renren.modules.sys.dao.ExpVoucherDao;
-import io.renren.modules.sys.entity.ExpPriceEntity;
 import io.renren.modules.sys.entity.ExpVoucherEntity;
 import io.renren.modules.sys.service.ExpVoucherService;
 
@@ -30,11 +30,15 @@ public class ExpVoucherServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVoucher
     @Override
     @DataFilter(subDept = true, user = false)
     public PageUtils queryPage(Map<String, Object> params) {
+    	String voucherCode = (String)params.get("voucherCode");
+    	String customerCode = (String)params.get("customerCode");
         Page<ExpVoucherEntity> page = this.selectPage(
                 new Query<ExpVoucherEntity>(params).getPage(),
-                new EntityWrapper<ExpVoucherEntity>().addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+                new EntityWrapper<ExpVoucherEntity>()
+                .eq(StringUtils.isNotBlank(voucherCode), "voucher_code", voucherCode)
+                .eq(StringUtils.isNotBlank(customerCode), "customer_code", customerCode)
+                .addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
         );
-
         return new PageUtils(page);
     }
 

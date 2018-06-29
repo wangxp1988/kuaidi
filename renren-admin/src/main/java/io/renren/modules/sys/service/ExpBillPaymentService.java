@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.sys.entity.ExpBillPaymentEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,5 +19,7 @@ public interface ExpBillPaymentService extends IService<ExpBillPaymentEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
 	void SelectExpBillPaymentByVoucher(Map<String, Object> params);
+	
+	public List<Object> SelectExpBillPeriod(Map<String, Object> params);
 }
 

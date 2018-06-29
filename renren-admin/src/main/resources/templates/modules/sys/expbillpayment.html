@@ -8,6 +8,17 @@
 <div id="rrapp" v-cloak>
     <div v-show="showList">
         <div class="grid-btn">
+            <div class="form-group col-sm-2">
+				<!-- <input type="text" class="form-control"  v-model="q.billingPeriod" @keyup.enter="query"  id="billingPeriod" placeholder="账单期间"> -->
+				<select class="form-control" v-model="q.billingPeriod"  @keyup.enter="query">
+                                 <option value="">请选择账单期间</option>
+						         <option v-for="(item,index) in billingperiodlist"  :value="item">{{item}}</option>
+						      </select>
+			</div>
+            <div class="form-group col-sm-2">
+				<input type="text" class="form-control"  v-model="q.customer" @keyup.enter="query"  id="customer" placeholder="客户编号或客户名称">
+			</div>
+			<a class="btn btn-primary" @click="query">查询</a>
 			<#if shiro.hasPermission("sys:expbillpayment:save")>
             <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			</#if>
@@ -28,31 +39,31 @@
 														                    <div class="form-group">
                         <div class="col-sm-2 control-label">账单期间</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expBillPayment.billingPeriod" placeholder="账单期间"/>
+                            <input type="text" class="form-control" v-model="expBillPayment.billingPeriod" placeholder="账单期间" readonly="readonly"/>
                         </div>
                     </div>
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">客户类型</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expBillPayment.customerType" placeholder="客户类型"/>
+                            <input type="text" class="form-control" v-model="expBillPayment.customerType" placeholder="客户类型" readonly="readonly"/>
                         </div>
                     </div>
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">客户编码</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expBillPayment.customerCode" placeholder="客户编码"/>
+                            <input type="text" class="form-control" v-model="expBillPayment.customerCode" placeholder="客户编码" readonly="readonly"/>
                         </div>
                     </div>
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">客户名称</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expBillPayment.customerName" placeholder="客户名称"/>
+                            <input type="text" class="form-control" v-model="expBillPayment.customerName" placeholder="客户名称" readonly="readonly"/>
                         </div>
                     </div>
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">应收运费</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expBillPayment.receivable" placeholder="应收运费"/>
+                            <input type="text" class="form-control" v-model="expBillPayment.receivable" placeholder="应收运费" readonly="readonly"/>
                         </div>
                     </div>
 											                    <div class="form-group">
@@ -64,25 +75,7 @@
 											                    <div class="form-group">
                         <div class="col-sm-2 control-label">未付运费</div>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expBillPayment.unpaid" placeholder="未付运费"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">开始时间</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expBillPayment.startDate" placeholder="开始时间"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label">结束时间</div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expBillPayment.endDate" placeholder="结束时间"/>
-                        </div>
-                    </div>
-											                    <div class="form-group">
-                        <div class="col-sm-2 control-label"></div>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" v-model="expBillPayment.deptId" placeholder=""/>
+                            <input type="text" class="form-control" v-model="expBillPayment.unpaid" placeholder="未付运费" readonly="readonly"/>
                         </div>
                     </div>
 							            <div class="form-group">

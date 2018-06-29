@@ -4,17 +4,17 @@ $(function () {
         datatype: "json",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 50, key: true,hidden:true },
-			{ label: '凭证编码', name: 'voucherCode', index: 'voucher_code', width: 80 }, 			
-			{ label: '凭证摘要', name: 'voucherRemark', index: 'voucher_remark', width: 80 }, 			
-			{ label: '二级编码', name: 'twoLevelCoding', index: 'two_level_coding', width: 80 }, 			
+			{ label: '凭证编码', name: 'voucherCode', index: 'voucher_code', width: 60 }, 			
+			{ label: '凭证摘要', name: 'voucherRemark', index: 'voucher_remark', width: 150 }, 			
+			{ label: '二级编码', name: 'twoLevelCoding', index: 'two_level_coding', width: 50 }, 			
 			{ label: '二级名称', name: 'twoLevelName', index: 'two_level_name', width: 80 }, 			
 			{ label: '客户名称', name: 'customerName', index: 'customer_name', width: 80 }, 			
 			{ label: '运单号', name: 'waybillNumber', index: 'waybill_number', width: 80 }, 			
 			{ label: '目的网点', name: 'destinationDot', index: 'destination_dot', width: 80 }, 			
-			{ label: '借方金额', name: 'debtorMoney', index: 'debtor_money', width: 80 }, 			
-			{ label: '贷方金额', name: 'lenderMoney', index: 'lender_money', width: 80 }, 			
-			{ label: '借方重量', name: 'debtorWeight', index: 'debtor_weight', width: 80 }, 			
-			{ label: '贷方重量', name: 'lenderWeight', index: 'lender_weight', width: 80 }, 			
+			{ label: '借方金额', name: 'debtorMoney', index: 'debtor_money', width: 50 }, 			
+			{ label: '贷方金额', name: 'lenderMoney', index: 'lender_money', width: 50 }, 			
+			{ label: '借方重量', name: 'debtorWeight', index: 'debtor_weight', width: 50}, 			
+			{ label: '贷方重量', name: 'lenderWeight', index: 'lender_weight', width: 50 }, 			
 			{ label: '客户编码', name: 'customerCode', index: 'customer_code', width: 80 }, 			
 			{ label: '创建时间', name: 'createDate', index: 'create_date', width: 80 }, 			
         ],
@@ -48,6 +48,10 @@ $(function () {
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
+		q:{
+			voucherCode: null,
+			customerCode: null
+        },
 		showList: true,
 		title: null,
 		expVoucher: {}
@@ -121,7 +125,8 @@ var vm = new Vue({
 		reload: function (event) {
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
-			$("#jqGrid").jqGrid('setGridParam',{ 
+			$("#jqGrid").jqGrid('setGridParam',{
+				postData:{'voucherCode': vm.q.voucherCode,'customerCode':vm.q.customerCode},
                 page:page
             }).trigger("reloadGrid");
 		}

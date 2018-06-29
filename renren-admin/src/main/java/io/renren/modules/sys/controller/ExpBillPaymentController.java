@@ -1,6 +1,7 @@
 package io.renren.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import io.renren.common.validator.ValidatorUtils;
@@ -42,14 +43,27 @@ public class ExpBillPaymentController {
 
         return R.ok().put("page", page);
     }
+    
+    @RequestMapping("/billingperiodlist")
+    @RequiresPermissions("sys:expbillpayment:list")
+    public R billingperiodlist(@RequestParam Map<String, Object> params){
+        List<Object> list = expBillPaymentService.SelectExpBillPeriod(params);
+        return R.ok().put("list", list);
+    }
     /**
      * 将账单数据同步到账单收支表中
      */
     @RequestMapping("/expbillToPayment")
-    @RequiresPermissions("sys:expbillpayment:list")
+   // @RequiresPermissions("sys:expbillpayment:list")
     public R expbillToPayment(@RequestParam Map<String, Object> params){
-    	expBillPaymentService.SelectExpBillPaymentByVoucher(params);
-    	return R.ok();
+    	try {
+    		expBillPaymentService.SelectExpBillPaymentByVoucher(params);
+        	return R.ok("数据汇总完成，可到账单收支查看详细");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return R.error("数据异常");
+		}
+    	
     }
 
 

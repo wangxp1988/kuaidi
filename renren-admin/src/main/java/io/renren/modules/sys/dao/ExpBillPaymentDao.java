@@ -23,5 +23,9 @@ public interface ExpBillPaymentDao extends BaseMapper<ExpBillPaymentEntity> {
 	 * @return
 	 */
 	List<ExpBillPaymentEntity> SelectExpBillPaymentByVoucher(Map<String, Object> param);
+
+	void saveBatch(List<ExpBillPaymentEntity> list);
+
+	int selctCountInTimes(Map<String, Object> params);
 	
 }

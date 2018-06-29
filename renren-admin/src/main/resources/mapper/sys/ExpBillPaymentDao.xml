@@ -19,16 +19,17 @@
 		<result property="endDate" column="end_date" />
 		<result property="deptId" column="dept_id" />
 	</resultMap>
-
+        <!-- 在凭证表中获取到账单汇总信息 -->
 	<select id="SelectExpBillPaymentByVoucher" resultType="io.renren.modules.sys.entity.ExpBillPaymentEntity">
 	SELECT
-		   ${startDates}'至'${endDates} AS billing_period,
-		    ${startDates} AS start_date,
-		    ${endDates} AS end_date,
+		   '${start_dates}至${end_dates}' AS billing_period,
+		    '${start_dates}' AS start_date,
+		    '${end_dates}' AS end_date,
 		    c.type AS customer_type,
 		 	v.customer_name AS customer_name,
 			v.customer_code AS customer_code,
-			SUM(IFNULL(v.debtor_money, 0)) AS receivable
+			SUM(IFNULL(v.debtor_money, 0)) AS receivable,
+			v.dept_id
 	FROM
 		exp_voucher v
 	INNER JOIN 
@@ -37,11 +38,11 @@
     c.`code`=v.customer_code
 	WHERE 1=1
 	<if test="null!=sql_filter and ''!=sql_filter">
-             AND   ${sql_filter}
+             AND  ${sql_filter}
      </if>
 	AND v.two_level_coding = '112201'
-	AND DATE_FORMAT(v.create_date, '%Y-%m-%d')  &gt;=#{startDates}
-	AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;=#{endDates}
+	AND DATE_FORMAT(v.create_date, '%Y-%m-%d')  &gt;=#{start_dates}
+	AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;=#{end_dates}
 	AND customer_code IN (
 		SELECT
 			`code`
@@ -54,7 +55,35 @@
 	GROUP BY
 		v.customer_code
 	ORDER BY
-		customerCode ASC
+		v.customer_code ASC
 	</select>
-
+	<!-- 批量保存 -->
+    <insert id="saveBatch" parameterType="io.renren.modules.sys.entity.ExpBillPaymentEntity">
+       INSERT INTO exp_bill_payment
+		(
+       `billing_period`, `customer_type`, `customer_code`, `customer_name`, `receivable`, `paid`, `unpaid`, `start_date`, `end_date`, `dept_id`
+        )
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+         #{item.billingPeriod}, #{item.customerType}, #{item.customerCode}, #{item.customerName}, #{item.receivable}, #{item.paid}, #{item.unpaid}, #{item.startDate}, #{item.endDate}, #{item.deptId}	
+         )
+       </foreach>
+    </insert>
+    
+     <!-- 查询对应时间内存在的账单数量，如果存在说明已经汇总过，跳过汇总 -->
+     
+     <select id="selctCountInTimes" resultType="int">
+        SELECT COUNT(*) FROM exp_bill_payment v 
+        <where>
+         1=1
+         <if test="null!=sql_filter and ''!=sql_filter">
+             AND  ${sql_filter}
+         </if>
+         <if test="(null!=start_dates and ''!=start_dates) and (null!=end_dates and ''!=end_dates)">
+             AND  (#{start_dates}&lt;=v.start_date&lt;=#{end_dates} OR #{start_dates}&lt;=v.end_date&lt;=#{end_dates})
+         </if>
+        </where>
+      
+     </select>
 </mapper>
