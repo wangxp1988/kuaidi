@@ -123,7 +123,7 @@ public class ExpDailyScanController {
        	if(list.get(0).equals(Constant.EXIST)) {
     		return R.error("文件已经导入，不能重复导入");
     	}else if(list.get(0).equals(Constant.FILE_ERROR)) {
-    		return R.error("文件或者文件版本错误，支持Excel 97-2003");
+    		return R.error("文件错误");
     	}
        	if (null != list) {
        		long startTime=System.currentTimeMillis(); 
@@ -213,6 +213,7 @@ public class ExpDailyScanController {
 							 }
 						}	
 					}
+					j++;//此处跳过收件业务员列
    					//收件人
    					String recipient = getValue(row,j++);
    					// 寄件人
@@ -270,6 +271,7 @@ public class ExpDailyScanController {
 							 }
 						}	
 					}
+					j++;//此处跳过收件业务员列
    					//收件人
    					String recipient = rs.getCell(j++, i).getContents();
    					// 寄件人

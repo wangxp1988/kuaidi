@@ -21,6 +21,9 @@
     	load();
     });
        function load(){
+    	   var index = layer.load(1, {
+    		   	  shade: [0.8,'#fff'] //0.1透明度的白色背景
+    		   	});
     	   var url="sys/dataprocessing/getDateList"
     	     $.ajax({
                  type: "POST",
@@ -34,6 +37,7 @@
                     	 $.each(r.list, function(i, item){
                     		 $("#dateList").append('<a class="btn btn-default" id="'+item+'" onclick="dosomething(\''+item+'\',1);" >'+item+'</a>') ;
                     		 });
+                    	 layer.close(index);
                      }else{
                          alert(r.msg);
                      }
