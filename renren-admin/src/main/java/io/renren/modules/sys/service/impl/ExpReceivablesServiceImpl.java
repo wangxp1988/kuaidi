@@ -3,6 +3,7 @@ package io.renren.modules.sys.service.impl;
 import java.io.File;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import io.renren.modules.sys.dao.ExpVoucherDao;
 import io.renren.modules.sys.entity.ExpCustomerEntity;
 import io.renren.modules.sys.entity.ExpVoucherEntity;
 import io.renren.modules.sys.service.ExpCustomerService;
+import io.renren.modules.sys.service.ExpOrderRookieService;
 import io.renren.modules.sys.service.ExpReceivablesService;
 import jxl.Workbook;
 import jxl.format.Alignment;
@@ -43,14 +45,25 @@ public class ExpReceivablesServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 	private ExpVoucherDao expVoucherDao;
 	@Autowired
 	private ExpCustomerService expCustomerService;
+	@Autowired
+	private ExpOrderRookieService expOrderRookieService;
 	@Override
 	@DataFilter(subDept = true, user = false)
 	public PageUtils queryPage(Map<String, Object> params) {
-		
+		//start_dates="+start_dates+"&end_dates="+end_dates+"&type="+type
 		//'sql_filter
 		if(null!=params.get("sql_filter")) {
 			params.put("sql_filter_one", params.get("sql_filter").toString().replace("dept_id", "c.dept_id"));
 			params.put("sql_filter_two", params.get("sql_filter").toString().replace("dept_id", "vo.dept_id"));
+		}
+		
+		if(params.get("start_dates")==null||((String)params.get("start_dates")).equals("")) {
+			Object o=expOrderRookieService.getCreateDate(params);
+			if(o!=null) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				params.put("start_dates",o.toString());
+				params.put("end_dates", sdf.format(new Date()));
+			}
 		}
 			 int count=this.expVoucherDao.selectReceivablesCount(params);
 			 Query query=new Query<Map<String, Object>>(params);
@@ -241,6 +254,38 @@ public class ExpReceivablesServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 		  e.printStackTrace(); 
 		 } 
 		 return result; 
-		 } 
+		 }
+	@Override
+	@DataFilter(subDept = true, user = false,tableAlias="v")
+	public void exportOne(Map<String, Object> params) {
+		HttpServletResponse response=(HttpServletResponse)params.get("response");
+		 Map<String, Object> params2=new HashMap<String, Object>();
+		 params2.putAll(params);
+		 ExpCustomerEntity entity=(ExpCustomerEntity) expCustomerService.selectCustomerByCode(params2);
+		 List<Map<String, Object>> list=expVoucherDao.selectReceivablesByCode(params);
+		 BigDecimal initialBalance=expVoucherDao.selectInitialBalance(params);
+		 if(null==initialBalance) {
+			 initialBalance=new BigDecimal(0);
+		 }
+		 params.put("initialBalance", initialBalance);
+		 BigDecimal endingBalance=expVoucherDao.selectEndingBalance(params);
+		 BigDecimal debtorSum = expVoucherDao.selectReceivablesDebtorSum(params);
+		 String exportType=params.get("exportType").toString();
+		 String fileName;
+		 if(exportType.equals("1")) {
+			 fileName=entity.getName()+"应付运费-"+endingBalance+"元("+params.get("start_dates")+"至"+params.get("end_dates")+")运费表"+new Date().getTime(); 
+		 }else {
+			 fileName=entity.getName()+"应付运费-"+debtorSum+"元("+params.get("start_dates")+"至"+params.get("end_dates")+")运费表"+new Date().getTime();
+		 }
+		 if(null!=list&&list.size()>0) {
+			 String[] Title={"日期","凭证摘要","初期余额","借方金额","贷方金额","期末余额","凭证号码"};
+			ExportExcelBatch.exportExcelToResponse(response, fileName, Title, list,initialBalance,endingBalance,entity.getName(),params);
+		 }
+		
+	} 
+	 
+	 
+	 
+	 
      
 }

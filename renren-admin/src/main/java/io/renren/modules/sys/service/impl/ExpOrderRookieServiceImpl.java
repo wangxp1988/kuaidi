@@ -101,5 +101,21 @@ public class ExpOrderRookieServiceImpl extends ServiceImpl<ExpOrderRookieDao, Ex
 		 list.addAll(set);
 		return list;
 	}
-
+	
+	/**
+	 * 获取菜鸟首次的时间
+	 * 
+	 * SELECT DATE_FORMAT(create_date, '%Y-%m-%d') AS start_date FROM exp_order_rookie WHERE dept_id=13  ORDER BY  create_date ASC LIMIT 0,1 
+	 */
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public Object getCreateDate(Map<String, Object> params) {
+		return this.selectObj(
+				new EntityWrapper<ExpOrderRookieEntity>()
+				.setSqlSelect("DATE_FORMAT(create_date, '%Y-%m-%d')")
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.orderBy("create_date", true)
+				.last("LIMIT 0,1")
+				);
+	}
 }

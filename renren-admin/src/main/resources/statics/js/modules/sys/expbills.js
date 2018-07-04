@@ -188,6 +188,25 @@ function exports(file){
 	
 	
 }
+function exportOne(file){
+	 var start_dates = $("#start_dates").val();
+	 var end_dates = $("#end_dates").val();
+	 var expcustomer_code =$("#expcustomer_code").val();
+	 var exportType =$("#exportType").val();
+	if(null==start_dates||start_dates==""){
+		alert("请选择开始日期");
+		return;
+	}
+	if(null==end_dates||end_dates==""){
+		alert("请选择结束日期");
+		return;
+	}
+	if(null==expcustomer_code||expcustomer_code==""){
+		alert("请输入客户编码");
+		return;
+	}
+	location.href=baseURL + "sys/receivables/exportOne?start_dates="+start_dates+"&end_dates="+end_dates+"&customerCode="+expcustomer_code+"&exportType="+exportType;
+	}
 
 
 

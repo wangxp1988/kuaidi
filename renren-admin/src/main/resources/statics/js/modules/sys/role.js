@@ -217,7 +217,7 @@ var vm = new Vue({
             $.get(baseURL + "sys/menu/list", function(r){
                 menu_ztree = $.fn.zTree.init($("#menuTree"), menu_setting, r);
                 //展开所有节点
-                menu_ztree.expandAll(true);
+                menu_ztree.expandAll(false);
 
                 if(roleId != null){
                     vm.getRole(roleId);
@@ -229,7 +229,7 @@ var vm = new Vue({
             $.get(baseURL + "sys/dept/list", function(r){
                 data_ztree = $.fn.zTree.init($("#dataTree"), data_setting, r);
                 //展开所有节点
-                data_ztree.expandAll(true);
+                data_ztree.expandAll(false);
             });
         },
         getDept: function(){

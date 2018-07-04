@@ -16,10 +16,15 @@
 	             <div class="form-group col-sm-2">
 					<input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="end_dates" placeholder="结束日期">
 				</div>
+				 <div class="form-group col-sm-2">
+					<input type="text" class="form-control"   id="expcustomer_code" placeholder="客户编码">
+				</div>
 	            <div class="form-group col-sm-2">
 					  <select class="form-control" id="type">
 					 </select>
 				</div>
+			</div>
+             <div class="row">
 				<div class=" form-inline">
 				 <div class="col-sm-2">
 				 <label class="control-label">初期余额:</label>
@@ -28,20 +33,21 @@
 					     <option value="1">是</option>
 				     </select>
 				</div> 
-			</div>
-			</div>
-			 
-			 
-			 
-		  <#if shiro.hasPermission("sys:receivables:export")>
-            <a class="btn btn-primary"  onclick="exports();"><i class="fa fa-plus"></i>&nbsp;批量导出账单</a>
+			   </div>
+			   <#if shiro.hasPermission("sys:receivables:export")>
+              <a class="btn btn-primary"  onclick="exports();"><i class="fa fa-plus"></i>&nbsp;批量导出账单</a>
+			</#if>
+			<#if shiro.hasPermission("sys:receivables:export")>
+               <a class="btn btn-primary"  onclick="exportOne();"><i class="fa fa-plus"></i>&nbsp; 单客户导出账单</a>
 			</#if>
 			<#if shiro.hasPermission("sys:receivables:billlist")>
-            <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;查询</a>
+              <a class="btn btn-primary"  onclick="query();"><i class="fa fa-plus"></i>&nbsp;查询</a>
 			</#if>
 			<#if shiro.hasPermission("sys:receivables:billlist")>
-            <a class="btn btn-primary"  onclick="querybillPayment();"><i class="fa fa-plus"></i>&nbsp; 汇总账单收支表</a>
+               <a class="btn btn-primary"  onclick="querybillPayment();"><i class="fa fa-plus"></i>&nbsp; 汇总账单收支表</a>
 			</#if>
+			</div>
+		  
         </div>
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>

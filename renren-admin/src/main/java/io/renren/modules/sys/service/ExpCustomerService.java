@@ -33,5 +33,7 @@ public interface ExpCustomerService extends IService<ExpCustomerEntity> {
 	List<ExpCustomerEntity> selectAllDept(Map<String, Object> params);
 
 	List<ExpCustomerEntity> selectCustomerByType(Map<String, Object> params);
+
+	ExpCustomerEntity selectCustomerByCode(Map<String, Object> params2);
 }
 

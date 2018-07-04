@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.renren.common.utils.ExportExcelBatch;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.R;
 import io.renren.modules.sys.service.ExpReceivablesService;
@@ -105,4 +109,18 @@ public class ExpReceivablesController {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * 按单客户导出
+	 * @param request
+	 * @param response
+	 * @param params
+	 */
+	@RequestMapping("exportOne")
+	@RequiresPermissions("sys:receivables:export")
+	public void exportOne(HttpServletRequest request,HttpServletResponse response,@RequestParam Map<String, Object> params) {
+		params.put("response", response);
+		expReceivablesService.exportOne(params);
+	}
+	
+	
 }
