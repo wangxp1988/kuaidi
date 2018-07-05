@@ -104,9 +104,17 @@
 					SELECT
 						p.money
 					FROM
-						exp_price p,exp_customer c where p.price_name =c.price_name  AND c.`code` = o.customer_code 
+						exp_price p,exp_customer c 
+					<where>
+					1=1  
+					 <if test="null!=sql_filter_two and ''!=sql_filter_two">
+						AND ${sql_filter_two}
+					 </if>
+					AND p.price_name =c.price_name  
+					AND c.`code` = o.customer_code 
 					AND p.weight = o.weight
-					AND p.province_name = o.destination_province LIMIT 0,1
+					AND p.province_name = o.destination_province
+					</where> LIMIT 0,1
 				) AS money,
 				o.create_date,
 				o.customer_name,
@@ -116,8 +124,8 @@
 			FROM
 				exp_orders o 
 				  <where>
-					 <if test="null!=filter and ''!=filter">
-						  ${filter}
+					 <if test="null!=sql_filter_one and ''!=sql_filter_one">
+						  ${sql_filter_one}
 					 </if>
 					 <if test="null!=dates and ''!=dates">
 						 And  DATE_FORMAT(o.create_date,'%Y-%m-%d')=#{dates}

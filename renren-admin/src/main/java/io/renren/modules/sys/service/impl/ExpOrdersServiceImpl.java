@@ -63,10 +63,15 @@ public class ExpOrdersServiceImpl extends ServiceImpl<ExpOrdersDao, ExpOrdersEnt
 	}
 
 	@Override
-	@DataFilter(subDept = true, user = false,tableAlias="o")
+	@DataFilter(subDept = true, user = false)
 	public List<ExpOrdersEntity> selectMoneyList(Map<String, Object> params) {
+		
+		if(null!=params.get("sql_filter")) {
+			params.put("sql_filter_one", params.get("sql_filter").toString().replace("dept_id", "o.dept_id"));
+			params.put("sql_filter_two", params.get("sql_filter").toString().replace("dept_id", "p.dept_id"));
+		}
 		if(null!=params.get("dates")&&!"".equals(params.get("dates").toString())) {
-			return expOrdersDao.selectMoneyList(params.get("dates").toString(),(String)params.get(Constant.SQL_FILTER));
+			return expOrdersDao.selectMoneyList(params);
 	   }
 	   return null;
 	}

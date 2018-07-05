@@ -4,6 +4,7 @@ import io.renren.modules.sys.entity.ExpOrdersEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -24,7 +25,7 @@ public interface ExpOrdersDao extends BaseMapper<ExpOrdersEntity> {
 
 	void saveOrdersBatch(List<ExpOrdersEntity> list);
 
-	List<ExpOrdersEntity> selectMoneyList(@Param("dates")String dates, @Param("filter")String filter);
+	List<ExpOrdersEntity> selectMoneyList(Map<String, Object> params);
 
 	List<ExpOrdersEntity> selectOutOrder(@Param("dates")String dates, @Param("filter")String filter);
 

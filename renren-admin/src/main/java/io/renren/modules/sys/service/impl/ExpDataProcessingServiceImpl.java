@@ -245,6 +245,7 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
 		        this.batchSave(voucherList);//批量保存凭证
 		        return R.ok().put("num", 6).put("msg", "收入凭证处理完成");
         	} catch (Exception e) {
+        		e.printStackTrace();
         		 return R.error().put("num",6).put("msg", "收入凭证处理失败");
 			}
         }
