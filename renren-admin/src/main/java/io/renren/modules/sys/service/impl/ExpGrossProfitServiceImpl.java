@@ -54,8 +54,8 @@ public class ExpGrossProfitServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 		 if(null!=params.get("start_dates")) {
 			 startDates=params.get("start_dates").toString();
 		 }
-		 if(null!=params.get("start_dates")) {
-			 startDates=params.get("start_dates").toString();
+		 if(null!=params.get("end_dates")) {
+			 endDates=params.get("end_dates").toString();
 		 }
 		 if(null!=params.get("zero")) {
 			 zero=params.get("zero").toString();

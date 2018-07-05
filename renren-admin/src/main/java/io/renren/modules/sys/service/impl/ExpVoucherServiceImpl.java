@@ -48,11 +48,8 @@ public class ExpVoucherServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVoucher
 		List<Object> list = expVoucherDao.selectObjs(new EntityWrapper<ExpVoucherEntity>()
 				.setSqlSelect("DATE_FORMAT(create_date,'%Y-%m-%d')")
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.groupBy("DATE_FORMAT(create_date,'%Y-%m-%d')")
 				);
-		 Set<Object> set=new HashSet<Object>();
-		 set.addAll(list);
-		 list.clear();
-		 list.addAll(set);
 		return list;
 	}
 

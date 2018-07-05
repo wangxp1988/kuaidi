@@ -37,6 +37,11 @@ public class ExpGrossProfitController {
 		PageUtils page = grossProfitService.queryPage(params);
 		return R.ok().put("page", page);
 	}
+	/**
+	 * 毛利批量导出
+	 * @param params
+	 * @param response
+	 */
 	@RequestMapping("expotslist")
 	@RequiresPermissions("sys:grossprofit:list")
 	public void expotslist(@RequestParam Map<String, Object> params,HttpServletResponse response) {
@@ -44,7 +49,11 @@ public class ExpGrossProfitController {
 		grossProfitService.expotslist(params);
 		
 	}
-	
+	/**
+	 * 毛利汇总
+	 * @param params
+	 * @return
+	 */
 	@RequestMapping("sum")
 	@RequiresPermissions("sys:grossprofit:list")
 	public R listsum(@RequestParam Map<String, Object> params) {

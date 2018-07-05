@@ -88,17 +88,17 @@ public class ExpOrderRookieServiceImpl extends ServiceImpl<ExpOrderRookieDao, Ex
 		return list;
 	}
 
+	//SELECT DATE_FORMAT(create_date,'%Y-%m-%d') FROM exp_order_rookie WHERE ( (dept_id in(23))) GROUP BY DATE_FORMAT(create_date,'%Y-%m-%d') ORDER BY create_date ASC LIMIT 7,18446744073709551615;
 	@Override
 	@DataFilter(subDept = true, user = false)
 	public List<Object> getDateList(Map<String, Object> params) {
 		List<Object> list = expOrderRookieDao.selectObjs(new EntityWrapper<ExpOrderRookieEntity>()
 				.setSqlSelect("DATE_FORMAT(create_date,'%Y-%m-%d')")
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.groupBy("DATE_FORMAT(create_date,'%Y-%m-%d')")
+				.orderBy("create_date", true)
+				.last("LIMIT 7,18446744073709551615")
 				);
-		 Set<Object> set=new HashSet<Object>();
-		 set.addAll(list);
-		 list.clear();
-		 list.addAll(set);
 		return list;
 	}
 	

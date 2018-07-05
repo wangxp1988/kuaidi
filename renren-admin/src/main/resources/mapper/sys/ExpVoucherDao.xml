@@ -192,8 +192,8 @@
 					le.waybill_number
 			) AS len ON len.waybill_number = v.waybill_number
 			<where>
-			 <if test="null!=filter and ''!=filter">
-				${filter}
+			 <if test="null!=sql_filter and ''!=sql_filter">
+				${sql_filter}
 		     </if>
 			AND v.two_level_coding = '112201'
 			 <if test="null!=startDates and ''!=startDates">
@@ -318,6 +318,7 @@
 			     <if test="null!=province and ''!=province">
 			        ,v.destination_dot
 			     </if> 
+			     order by grossProfit desc
         </select>
         <select id="SelectGrossProfitSumOrderByCity" resultType="map">
 		   SELECT 
