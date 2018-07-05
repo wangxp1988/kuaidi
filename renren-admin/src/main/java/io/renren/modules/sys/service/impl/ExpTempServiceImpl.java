@@ -77,7 +77,7 @@ public class ExpTempServiceImpl extends ServiceImpl<ExpTempDao, ExpTempEntity> i
 	@Override
 	@DataFilter(subDept = true, user = false,tableAlias="a")
 	public List<ExpTempEntity> selectFromBalanceAccount(Map<String, Object> params) {
-			return expTempDao.selectFromBalanceAccount((String)params.get(Constant.SQL_FILTER),(List<Object>)params.get("list"));
+			return expTempDao.selectFromBalanceAccount(params.get(Constant.SQL_FILTER).toString().replaceAll("a.dept_id", "c.dept_id"),(String)params.get(Constant.SQL_FILTER),(List<Object>)params.get("list"));
 	}
 	@Override
 	@DataFilter(subDept = true, user = false)

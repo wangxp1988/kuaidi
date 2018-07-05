@@ -49,6 +49,9 @@
 		   <if test="null!=filter and ''!=filter">
 		${filter}
 		  </if>
+		   <if test="null!=filterOne and ''!=filterOne">
+		    AND ${filterOne}
+		  </if>
 		  and a.waybill_number in
 		   <foreach collection="list" index="index" item="item" separator="," open="(" close=")">  
 	        #{item}  

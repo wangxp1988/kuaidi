@@ -33,6 +33,6 @@ public interface ExpOrdersDao extends BaseMapper<ExpOrdersEntity> {
 
 	List<ExpOrdersEntity> selectGeneralIn(@Param("dates")String dates, @Param("filter")String filter);
 
-	List<ExpOrdersEntity> selectScanAndTemp(@Param("dates")String dates,@Param("filter")String filter,@Param("baseWeight")BigDecimal baseWeight);
+	List<ExpOrdersEntity> selectScanAndTemp(Map<String, Object> params);
 	
 }

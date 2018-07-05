@@ -21,6 +21,6 @@ public interface ExpTempDao extends BaseMapper<ExpTempEntity> {
 
 	void saveList(List<ExpTempEntity> list);
 
-	List<ExpTempEntity> selectFromBalanceAccount(@Param("filter")String filter,@Param("list")List<Object> list);
+	List<ExpTempEntity> selectFromBalanceAccount(@Param("filterOne")String filterOne,@Param("filter")String filter,@Param("list")List<Object> list);
 	
 }

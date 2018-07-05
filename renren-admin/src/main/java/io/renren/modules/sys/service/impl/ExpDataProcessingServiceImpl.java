@@ -281,11 +281,11 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
         		ExpVoucherEntity voucherBorrow=new ExpVoucherEntity();
         		voucherBorrow.setVoucherRemark(item.getWaybillNumber()+"-"+item.getColumnName()+"-"+item.getMoney()+"元");//凭证摘要
 	        	voucherBorrow.setTwoLevelCoding(Constant.BILL_IN_OUT_SECOND_CODE_BORROW);
-	        	voucherBorrow.setTwoLevelName(Constant.BILL_IN_OUT_SECOND_NAME_BORROW);
+	        	voucherBorrow.setTwoLevelName(Constant.BILL_IN_OUT_SECOND_NAME_BORROW+"--"+item.getColumnName());
 	        	voucherBorrow.setWaybillNumber(item.getWaybillNumber());
 	        	voucherBorrow.setDebtorMoney(item.getMoney());
 	        	voucherBorrow.setCreateDate(item.getCreateDate());//时间
-	        	voucherBorrow.setVoucherCode(sdf.format(item.getCreateDate()));
+	        	voucherBorrow.setVoucherCode(sdf.format(item.getCreateDate())+2);
 	        	voucherBorrow.setDeptId(deptId);
 	        	voucherList.add(voucherBorrow);
         		ExpVoucherEntity voucherLoan=new ExpVoucherEntity();

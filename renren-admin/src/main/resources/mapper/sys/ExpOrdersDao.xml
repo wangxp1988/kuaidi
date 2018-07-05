@@ -64,9 +64,13 @@
 			exp_daily_scan s
 		INNER JOIN exp_temp t ON t.waybill_number = s.waybill_number
 		 <where>
-		   <if test="null!=filter and ''!=filter">
-		${filter}
+		   <if test="null!=sql_filter and ''!=sql_filter">
+		    ${sql_filter}
 		  </if>
+		   <if test="null!=sql_filter_one and ''!=sql_filter_one">
+		   AND ${sql_filter_one}
+		  </if>
+		  
 		  <if test="null!=dates and ''!=dates">
 		   And  DATE_FORMAT(s.create_date,'%Y-%m-%d')=#{dates}
 		  </if>

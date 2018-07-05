@@ -60,7 +60,7 @@ public class Constant {
 	public  static final String BOSS_IN_OUT_SECOND_NAME_LOAN="其他应付款-老板";
 	//面单
 	public  static final String BILL_IN_OUT_SECOND_CODE_BORROW="600203";
-	public  static final String BILL_IN_OUT_SECOND_NAME_BORROW="主营业务成本--物料款电子面单";
+	public  static final String BILL_IN_OUT_SECOND_NAME_BORROW="主营业务成本";
 	public  static final String BILL_IN_OUT_SECOND_CODE_LOAN="112301";
 	public  static final String BILL_IN_OUT_SECOND_NAME_LOAN="预付账款安能";
 	

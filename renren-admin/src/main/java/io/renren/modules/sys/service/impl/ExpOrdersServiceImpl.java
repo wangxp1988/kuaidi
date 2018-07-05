@@ -107,7 +107,9 @@ public class ExpOrdersServiceImpl extends ServiceImpl<ExpOrdersDao, ExpOrdersEnt
 	@DataFilter(subDept = true, user = false,tableAlias="s")
 	public List<ExpOrdersEntity> selectScanAndTemp(Map<String, Object> params) {
 		if(null!=params.get("dates")&&!"".equals(params.get("dates").toString())) {
-			return expOrdersDao.selectScanAndTemp(params.get("dates").toString(),(String)params.get(Constant.SQL_FILTER),new BigDecimal(params.get("baseWeight").toString()));
+			params.put("sql_filter_one", params.get(Constant.SQL_FILTER).toString().replaceAll("s.dept_id", "t.dept_id"));
+			//return expOrdersDao.selectScanAndTemp(params.get("dates").toString(),(String)params.get(Constant.SQL_FILTER),new BigDecimal(params.get("baseWeight").toString()));
+			 return expOrdersDao.selectScanAndTemp(params);
 	     }
 		return null;
 	}
