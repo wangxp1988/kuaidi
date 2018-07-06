@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.renren.modules.sys.entity.ExpDailyScanEntity;
 import io.renren.modules.sys.service.ExpDailyScanService;
+import io.renren.modules.sys.service.ExpPriceService;
 import io.renren.modules.sys.shiro.ShiroUtils;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -58,6 +59,8 @@ public class ExpDailyScanController {
 	private  String diskDirPath;
     @Autowired
     private ExpDailyScanService expDailyScanService;
+    @Autowired
+    private ExpPriceService expPriceService;
 
     /**
      * 列表
@@ -161,6 +164,8 @@ public class ExpDailyScanController {
     
     
     public  List getAllByExcel(String file) throws Exception{
+    	
+    	//BigDecimal bigWeight= expPriceService.selectBigWeight();
     	List list=new ArrayList(); 
         String fileType=file.substring(file.lastIndexOf(".")+1); 
         try { 

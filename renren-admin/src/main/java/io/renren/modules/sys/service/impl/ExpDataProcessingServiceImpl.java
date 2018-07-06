@@ -384,7 +384,8 @@ public class ExpDataProcessingServiceImpl implements ExpDataProcessingService {
    	        				ExpVoucherEntity voucherBorrow=new ExpVoucherEntity();
    	   	 		        	voucherBorrow.setVoucherRemark(item.getWaybillNumber()+"-"+item.getDestinationProvince()+"-"+item.getCustomerName()+"-"+item.getWeight()+"公斤");//凭证摘要
    	   	 		        	voucherBorrow.setTwoLevelCoding(Constant.IN_IN_OUT_SECOND_CODE_BORROW);
-   	   	 		        	voucherBorrow.setTwoLevelName(Constant.IN_IN_OUT_SECOND_NAME_BORROW+"-"+item.getDes());
+//   	   	 		        	voucherBorrow.setTwoLevelName(Constant.IN_IN_OUT_SECOND_NAME_BORROW+"-"+item.getDes());
+   	   	 		        	voucherBorrow.setTwoLevelName(Constant.IN_IN_OUT_SECOND_NAME_BORROW);
    	   	 		        	voucherBorrow.setCustomerName(item.getCustomerName());
    	   	 		        	voucherBorrow.setWaybillNumber(item.getWaybillNumber());
    	   	 		        	voucherBorrow.setDestinationDot(item.getDestinationProvince());

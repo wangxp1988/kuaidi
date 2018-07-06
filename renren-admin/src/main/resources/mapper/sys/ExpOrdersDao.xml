@@ -117,7 +117,7 @@
 					AND p.price_name =c.price_name  
 					AND c.`code` = o.customer_code 
 					AND p.weight = o.weight
-					AND p.province_name = o.destination_province
+					AND p.province_name LIKE o.destination_province||'%'
 					</where> LIMIT 0,1
 				) AS money,
 				o.create_date,
