@@ -633,6 +633,9 @@
 								<if test="null!=type and ''!=type">
 								and c.type = #{type}
 								</if>
+								<if test="null!=expcustomer_code and ''!=expcustomer_code">
+								and c.code = #{expcustomer_code}
+								</if>
 								</where>
 							)
 							
@@ -672,6 +675,9 @@
 								   c.dept_id= v.dept_id
 									<if test="null!=type and ''!=type">
 										AND c.type = #{type}
+									</if>
+									<if test="null!=expcustomer_code and ''!=expcustomer_code">
+									and c.code = #{expcustomer_code}
 									</if>
 								</where>
 							)

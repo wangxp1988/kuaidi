@@ -136,9 +136,11 @@ function query(){
 	 var start_dates = $("#start_dates").val();
 	 var end_dates = $("#end_dates").val();
 	 var type =$("#type").val();
+	 var type =$("#type").val();
+	 var expcustomer_code =$("#expcustomer_code").val();
 	 var page = $("#jqGrid").jqGrid('getGridParam','page');
 	    $("#jqGrid").jqGrid('setGridParam',{  
-	    postData:{start_dates:start_dates,end_dates:end_dates,type:type},
+	    postData:{start_dates:start_dates,end_dates:end_dates,type:type,expcustomer_code:expcustomer_code},
 	    page:page
 	     }).trigger("reloadGrid");
 }

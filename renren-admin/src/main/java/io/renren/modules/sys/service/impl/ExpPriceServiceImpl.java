@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -78,5 +79,17 @@ public class ExpPriceServiceImpl extends ServiceImpl<ExpPriceDao, ExpPriceEntity
 				 );
 		
 	}
+
+	@Override
+	 @DataFilter(subDept = true, user = false)
+	public BigDecimal selectBigWeight(Map<String, Object> params) {
+		return (BigDecimal) this.selectObj(new EntityWrapper<ExpPriceEntity>()
+	    		 .addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+	    		 .groupBy("weight")
+	    		 .orderBy("weight", false)
+	    		 .last("LIMIT 0,1")
+	    		);
+	}
+
 
 }

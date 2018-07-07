@@ -84,6 +84,7 @@ function querybillPayment(){
 	var start_dates = $("#start_dates").val();
 	var end_dates = $("#end_dates").val();
 	var type =$("#type").val();
+	var expcustomer_code =$("#expcustomer_code").val();
 	
 	if(null==start_dates||start_dates==""){
 		alert("请选择开始日期");
@@ -104,7 +105,7 @@ function querybillPayment(){
 	$.ajax({
         type: "POST",
         url:  baseURL + url,
-        data:{start_dates:start_dates,end_dates:end_dates,type:type},
+        data:{start_dates:start_dates,end_dates:end_dates,type:type,expcustomer_code:expcustomer_code},
         success: function(r){
         if(r.code === 0){
         	alert(r.msg);

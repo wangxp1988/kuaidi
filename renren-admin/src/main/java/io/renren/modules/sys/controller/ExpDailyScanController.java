@@ -127,6 +127,8 @@ public class ExpDailyScanController {
     		return R.error("文件已经导入，不能重复导入");
     	}else if(list.get(0).equals(Constant.FILE_ERROR)) {
     		return R.error("文件错误");
+    	}else if(list.get(0).equals(Constant.WEIGHT_ERROR)) {
+    		return R.error("存在重量大于价格表重量的数据，请完善对应价格表后重新上传");
     	}
        	if (null != list) {
        		long startTime=System.currentTimeMillis(); 
@@ -164,25 +166,25 @@ public class ExpDailyScanController {
     
     
     public  List getAllByExcel(String file) throws Exception{
-    	
-    	//BigDecimal bigWeight= expPriceService.selectBigWeight();
+    	Map<String,Object> params=new HashMap<>();
+    	BigDecimal bigWeight= expPriceService.selectBigWeight(params);
     	List list=new ArrayList(); 
         String fileType=file.substring(file.lastIndexOf(".")+1); 
         try { 
           if("xls".equalsIgnoreCase(fileType)){ 
-            list= getAllByExcel2003(file); 
+            list= getAllByExcel2003(file,bigWeight); 
           }else{ 
-            list= getAllByExcel2007(file); 
+            list= getAllByExcel2007(file,bigWeight); 
           } 
         } catch(OfficeXmlFileException e){//通过手动修改文件名 引起的异常 比如 3.xlsx 重命名 3.xls 其实际文件类型为xlsx 
-          list=getAllByExcel2007(file); 
+          list=getAllByExcel2007(file,bigWeight); 
         } catch(POIXMLException e){//通过手动修改文件名 引起的异常 比如 3.xls 重命名 3.xlsx 其实际文件类型为xls 
-          list=getAllByExcel2003(file); 
+          list=getAllByExcel2003(file,bigWeight); 
         } 
         return list; 
     }
     
-    public  List getAllByExcel2007(String file) throws Exception {
+    public  List getAllByExcel2007(String file,BigDecimal bigWeight) throws Exception {
     	Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
     	List list = new ArrayList();
 		Map<String, Object> params=new HashMap<String, Object>();
@@ -225,6 +227,12 @@ public class ExpDailyScanController {
    					String sender = getValue(row,j++);
    					// 网点称重
    					BigDecimal weight = new BigDecimal(getValue(row,j++));
+   					int a = weight.compareTo(bigWeight);
+   					if(a>0) {
+   						list=null;
+   						list.add(Constant.WEIGHT_ERROR);
+   						return list;
+   					}
    					//  重量来源
    					String weightSourse = getValue(row,j++);
    					// 数据来源
@@ -243,7 +251,7 @@ public class ExpDailyScanController {
 		    return list; 
     }
        
-       public  List getAllByExcel2003(String file) {
+       public  List getAllByExcel2003(String file,BigDecimal bigWeight) {
     	Long deptId = ShiroUtils.getUserEntity().getDeptId();//获取登录用的部门ID
    		List list = new ArrayList();
    		Map<String, Object> params=new HashMap<String, Object>();
@@ -283,6 +291,12 @@ public class ExpDailyScanController {
    					String sender = rs.getCell(j++, i).getContents();
    					// 网点称重
    					BigDecimal weight = new BigDecimal(rs.getCell(j++, i).getContents());
+   					int a = weight.compareTo(bigWeight);
+   					if(a>0) {
+   						list=null;
+   						list.add(Constant.WEIGHT_ERROR);
+   						return list;
+   					}
    					//  重量来源
    					String weightSourse = rs.getCell(j++, i).getContents();
    					// 数据来源

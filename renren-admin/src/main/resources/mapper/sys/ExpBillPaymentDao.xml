@@ -40,10 +40,13 @@
 	<if test="null!=sql_filter and ''!=sql_filter">
              AND  ${sql_filter}
      </if>
+	<if test="null!=sql_filter_one and ''!=sql_filter_one">
+             AND  ${sql_filter_one}
+     </if>
 	AND v.two_level_coding = '112201'
 	AND DATE_FORMAT(v.create_date, '%Y-%m-%d')  &gt;=#{start_dates}
 	AND DATE_FORMAT(v.create_date, '%Y-%m-%d') &lt;=#{end_dates}
-	AND customer_code IN (
+	AND v.customer_code IN (
 		SELECT
 			`code`
 		FROM

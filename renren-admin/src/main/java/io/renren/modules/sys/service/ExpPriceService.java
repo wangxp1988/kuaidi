@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import io.renren.common.utils.PageUtils;
 import io.renren.modules.sys.entity.ExpPriceEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -25,5 +26,8 @@ public interface ExpPriceService extends IService<ExpPriceEntity> {
 	List<ExpPriceEntity> selectAllDept(Map<String, Object> params);
 
 	void deleteAll(Map<String, Object> params);
+
+	BigDecimal selectBigWeight(Map<String, Object> params);
+
 }
 

@@ -31,6 +31,8 @@ public class Constant {
 	public static final String EXIST="exist";
 	/** 文件格式不正确 */
 	public static final String FILE_ERROR="fileError";
+	/** 价格表超重 */
+	public static final String WEIGHT_ERROR="weightError";
 	//borrow借 |贷loan|
 	/**收入凭证**/
 	public  static final String IN_SECOND_CODE_BORROW="112201";
