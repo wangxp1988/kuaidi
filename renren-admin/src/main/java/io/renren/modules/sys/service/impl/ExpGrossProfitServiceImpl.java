@@ -47,6 +47,7 @@ public class ExpGrossProfitServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 		 if(null!=params.get(Constant.SQL_FILTER)) {
 			   fillter=params.get(Constant.SQL_FILTER).toString();
 		 }
+		 String filter_one=params.get("sql_filter").toString().replace("v.dept_id", "c.dept_id");
 		 BigDecimal baseBil= expBaseService.selectBaseBill(params);
 		 String startDates="";
 		String endDates="";
@@ -61,12 +62,12 @@ public class ExpGrossProfitServiceImpl extends ServiceImpl<ExpVoucherDao, ExpVou
 			 zero=params.get("zero").toString();
 		 }
 		  
-		 int count=this.expVoucherDao.selectCountMy(baseBil,startDates,endDates,(String)params.get(Constant.SQL_FILTER),zero);
+		 int count=this.expVoucherDao.selectCountMy(baseBil,startDates,endDates,fillter,zero);
 		 Query query=new Query<ExpVoucherEntity>(params);
 		 List<ExpVoucherEntity> list=new ArrayList<ExpVoucherEntity>();
 		 ExpVoucherEntity en=this.expVoucherDao.selectPageMySum(baseBil,startDates,endDates,fillter,zero);
 		 list.add(en);
-		 List<ExpVoucherEntity> lists=this.expVoucherDao.selectPageMy(baseBil,(query.getCurrPage()-1)*query.getLimit(),query.getLimit(),startDates,endDates,fillter,zero);
+		 List<ExpVoucherEntity> lists=this.expVoucherDao.selectPageMy(baseBil,(query.getCurrPage()-1)*query.getLimit(),query.getLimit(),startDates,endDates,fillter,filter_one,zero);
 		  list.addAll(lists);
 		  return  new PageUtils(list, count, query.getLimit(), query.getCurrPage());
 	}

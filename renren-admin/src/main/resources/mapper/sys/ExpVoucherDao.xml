@@ -142,6 +142,9 @@
 			 <if test="null!=filter and ''!=filter">
 				${filter}
 		     </if>
+			 <if test="null!=filter_one and ''!=filter_one">
+				AND ${filter_one}
+		     </if>
 			AND v.two_level_coding = '112201'
 			 <if test="null!=startDates and ''!=startDates">
 			AND DATE_FORMAT(v.create_date, '%Y-%m-%d')&gt;=#{startDates}

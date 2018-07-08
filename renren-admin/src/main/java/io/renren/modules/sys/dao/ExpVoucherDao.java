@@ -38,7 +38,7 @@ public interface ExpVoucherDao extends BaseMapper<ExpVoucherEntity> {
 	 * @param filter
 	 * @return
 	 */
-	List<ExpVoucherEntity> selectPageMy(@Param("baseBil")BigDecimal baseBil,@Param("currPage")int currPage,@Param("limit")int limit,@Param("startDates")String startDates,@Param("endDates")String endDates,@Param("filter")String filter,@Param("zero")String zero);
+	List<ExpVoucherEntity> selectPageMy(@Param("baseBil")BigDecimal baseBil,@Param("currPage")int currPage,@Param("limit")int limit,@Param("startDates")String startDates,@Param("endDates")String endDates,@Param("filter")String filter,@Param("filter_one")String filter_one,@Param("zero")String zero);
 	
 	//Map<String, Object> SelectGrossProfitSum(@Param("baseBil")BigDecimal baseBil,@Param("filter")String filter,@Param("customer")String customer,@Param("weight")int weight,@Param("province")String province );
 	/**
