@@ -124,7 +124,7 @@ public class ExpGeneralInOutController {
       	if(list.get(0).equals(Constant.EXIST)) {
     		return R.error("文件已经导入，不能重复导入");
     	}else if(list.get(0).equals(Constant.FILE_ERROR)) {
-    		return R.error("文件或者文件版本错误，支持Excel 97-2003");
+    		return R.error("文件损坏或者格式错误");
     	}
       	if (null != list) {
       		long startTime=System.currentTimeMillis(); 

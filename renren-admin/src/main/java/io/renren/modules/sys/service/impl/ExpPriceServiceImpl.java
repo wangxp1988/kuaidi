@@ -83,7 +83,8 @@ public class ExpPriceServiceImpl extends ServiceImpl<ExpPriceDao, ExpPriceEntity
 	@Override
 	 @DataFilter(subDept = true, user = false)
 	public BigDecimal selectBigWeight(Map<String, Object> params) {
-		return (BigDecimal) this.selectObj(new EntityWrapper<ExpPriceEntity>()
+		return  (BigDecimal) this.selectObj(new EntityWrapper<ExpPriceEntity>()
+				 .setSqlSelect("weight")
 	    		 .addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
 	    		 .groupBy("weight")
 	    		 .orderBy("weight", false)
