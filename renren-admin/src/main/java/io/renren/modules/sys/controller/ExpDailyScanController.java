@@ -229,7 +229,7 @@ public class ExpDailyScanController {
    					BigDecimal weight = new BigDecimal(getValue(row,j++));
    					int a = weight.compareTo(bigWeight);
    					if(a>0) {
-   						list=null;
+   						list=new ArrayList();
    						list.add(Constant.WEIGHT_ERROR);
    						return list;
    					}
@@ -293,7 +293,7 @@ public class ExpDailyScanController {
    					BigDecimal weight = new BigDecimal(rs.getCell(j++, i).getContents());
    					int a = weight.compareTo(bigWeight);
    					if(a>0) {
-   						list=null;
+   						list=new ArrayList();
    						list.add(Constant.WEIGHT_ERROR);
    						return list;
    					}
