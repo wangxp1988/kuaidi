@@ -21,5 +21,7 @@ public interface ExpGeneralInOutService extends IService<ExpGeneralInOutEntity> 
 	void saveList(List<ExpGeneralInOutEntity> tempList);
 
 	int selectByTime(Map<String, Object> params);
+
+	void deleteByDate(Map<String, Object> params);
 }
 

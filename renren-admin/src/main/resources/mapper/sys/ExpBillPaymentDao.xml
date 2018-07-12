@@ -84,7 +84,7 @@
              AND  ${sql_filter}
          </if>
          <if test="(null!=start_dates and ''!=start_dates) and (null!=end_dates and ''!=end_dates)">
-             AND  (#{start_dates}&lt;=v.start_date&lt;=#{end_dates} OR #{start_dates}&lt;=v.end_date&lt;=#{end_dates})
+             AND  (v.start_date BETWEEN  #{start_dates} AND #{end_dates} OR  v.end_date BETWEEN  #{start_dates} AND #{end_dates})
          </if>
         </where>
       

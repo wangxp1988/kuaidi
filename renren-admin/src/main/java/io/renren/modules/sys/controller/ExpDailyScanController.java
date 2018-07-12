@@ -227,6 +227,8 @@ public class ExpDailyScanController {
    					String sender = getValue(row,j++);
    					// 网点称重
    					BigDecimal weight = new BigDecimal(getValue(row,j++));
+   					
+   					//获取该网点的最大重量，如果有，就查看价格字段是否为空
    					int a = weight.compareTo(bigWeight);
    					if(a>0) {
    						list=new ArrayList();

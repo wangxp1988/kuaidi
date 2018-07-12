@@ -16,7 +16,12 @@
 	        </ul>
 	    </div>
 	    
-	    
+	    <div class="grid-btn">
+            <div class="form-group col-sm-2">
+            <input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="dates" placeholder="选择日期后删除">
+             </div>
+             <a class="btn btn-primary" onclick="delAll()"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
 	   <table style="width:100%;">
 	    <tr>
 	    <td>
@@ -74,6 +79,26 @@
     </div>
     
     <script type="text/javascript">
+    
+    function delAll(){
+    	var dates=$("#dates").val();
+   	    var url="sys/alldata/delByDate";
+    	   $.ajax({  
+               type: 'POST',  
+               url: baseURL + url,  
+               data: {dates:dates},
+               success : function(data){  
+               	layer.close(index);
+               	if(data.code==0){
+               		alert("数据删除成功");
+               	}else{
+               		alert(data.msg)
+               	}
+                  }     
+       });
+    }
+    
+    
     function imports(type){
     	var fd=new FormData();
     	fd.append("file",$("#"+type).get(0).files[0]);

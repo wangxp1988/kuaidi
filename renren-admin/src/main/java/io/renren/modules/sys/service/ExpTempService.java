@@ -25,5 +25,7 @@ public interface ExpTempService extends IService<ExpTempEntity> {
 	List<ExpTempEntity> selectFromBalanceAccount(Map<String, Object> params);
 
 	int selectCounts(Map<String, Object> params);
+
+	void deleteByDate(Map<String, Object> params);
 }
 

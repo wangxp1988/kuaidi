@@ -24,5 +24,7 @@ public interface ExpBalanceAccountService extends IService<ExpBalanceAccountEnti
 	int selectByTime(Map<String, Object> params);
 
 	List<Object> getCustomerName(Map<String, Object> params);
+
+	void deleteByDate(Map<String, Object> params);
 }
 

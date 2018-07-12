@@ -26,5 +26,7 @@ public interface ExpMoneyInOutService extends IService<ExpMoneyInOutEntity> {
 	List<ExpMoneyInOutEntity> selectLikeNOut(Map<String, Object> params);
 
 	List<ExpMoneyInOutEntity> selectInNotIsN(Map<String, Object> params);
+
+	void deleteByDate(Map<String, Object> params);
 }
 

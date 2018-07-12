@@ -15,6 +15,7 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
 import io.renren.modules.sys.dao.ExpGeneralInOutDao;
+import io.renren.modules.sys.entity.ExpDailyScanEntity;
 import io.renren.modules.sys.entity.ExpGeneralInOutEntity;
 import io.renren.modules.sys.service.ExpGeneralInOutService;
 
@@ -49,6 +50,16 @@ public class ExpGeneralInOutServiceImpl extends ServiceImpl<ExpGeneralInOutDao, 
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
 				);
 		return count;
+	}
+
+	@Override
+	 @DataFilter(subDept = true, user = false)
+	public void deleteByDate(Map<String, Object> params) {
+		this.delete(new EntityWrapper<ExpGeneralInOutEntity>()
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.eq("DATE_FORMAT(create_time, '%Y-%m-%d')",params.get("dates"))
+				 );
+		
 	}
 
 }

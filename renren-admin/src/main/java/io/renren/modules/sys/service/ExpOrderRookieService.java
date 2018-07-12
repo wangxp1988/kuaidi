@@ -28,5 +28,6 @@ public interface ExpOrderRookieService extends IService<ExpOrderRookieEntity> {
 	List<Object> selectCustomerCode(Map<String, Object> params);
 	List<Object> getDateList(Map<String, Object> params);
 	Object getCreateDate(Map<String, Object> params);
+	void deleteByDate(Map<String, Object> params);
 }
 

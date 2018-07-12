@@ -16,6 +16,7 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
 import io.renren.modules.sys.dao.ExpDailyScanDao;
+import io.renren.modules.sys.entity.ExpBalanceAccountEntity;
 import io.renren.modules.sys.entity.ExpDailyScanEntity;
 import io.renren.modules.sys.service.ExpDailyScanService;
 
@@ -72,6 +73,16 @@ public class ExpDailyScanServiceImpl extends ServiceImpl<ExpDailyScanDao, ExpDai
 				.in("waybill_number", (List<Object>)params.get("list"))
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
 				);
+	}
+
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public void deleteByDate(Map<String, Object> params) {
+		this.delete(new EntityWrapper<ExpDailyScanEntity>()
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.eq("DATE_FORMAT(create_date, '%Y-%m-%d')",params.get("dates"))
+				 );
+		
 	}
 
 }

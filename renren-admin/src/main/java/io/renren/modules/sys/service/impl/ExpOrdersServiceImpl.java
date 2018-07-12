@@ -17,6 +17,7 @@ import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 
 import io.renren.modules.sys.dao.ExpOrdersDao;
+import io.renren.modules.sys.entity.ExpOrderRookieEntity;
 import io.renren.modules.sys.entity.ExpOrdersEntity;
 import io.renren.modules.sys.service.ExpOrdersService;
 
@@ -113,6 +114,15 @@ public class ExpOrdersServiceImpl extends ServiceImpl<ExpOrdersDao, ExpOrdersEnt
 	     }
 		return null;
 	}
+
+@Override
+@DataFilter(subDept = true, user = false,tableAlias="s")
+public void deleteByDate(Map<String, Object> params) {
+		this.delete(new EntityWrapper<ExpOrdersEntity>()
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String) params.get(Constant.SQL_FILTER))
+				.eq("DATE_FORMAT(create_date, '%Y-%m-%d')", params.get("dates")));
+	
+}
 
 
 }

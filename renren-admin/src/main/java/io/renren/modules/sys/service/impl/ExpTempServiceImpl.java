@@ -16,6 +16,7 @@ import io.renren.common.annotation.DataFilter;
 import io.renren.common.utils.Constant;
 import io.renren.modules.sys.dao.ExpTempDao;
 import io.renren.modules.sys.entity.ExpBalanceAccountEntity;
+import io.renren.modules.sys.entity.ExpOrdersEntity;
 import io.renren.modules.sys.entity.ExpTempEntity;
 import io.renren.modules.sys.service.ExpTempService;
 
@@ -86,6 +87,14 @@ public class ExpTempServiceImpl extends ServiceImpl<ExpTempDao, ExpTempEntity> i
 				.eq("DATE_FORMAT(create_date,'%Y-%m-%d')", params.get("dates"))
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
 				);
+	}
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public void deleteByDate(Map<String, Object> params) {
+		this.delete(new EntityWrapper<ExpTempEntity>()
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String) params.get(Constant.SQL_FILTER))
+				.eq("DATE_FORMAT(create_date, '%Y-%m-%d')", params.get("dates")));
+		
 	}
 
 }

@@ -25,5 +25,7 @@ public interface ExpDailyScanService extends IService<ExpDailyScanEntity> {
 	List<Object> selectWaybill(Map<String, Object> params);
 
 	List<Object> getCustomerName(Map<String, Object> params);
+
+	void deleteByDate(Map<String, Object> params);
 }
 

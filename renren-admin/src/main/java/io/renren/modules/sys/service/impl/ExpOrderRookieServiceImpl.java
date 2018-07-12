@@ -118,4 +118,14 @@ public class ExpOrderRookieServiceImpl extends ServiceImpl<ExpOrderRookieDao, Ex
 				.last("LIMIT 0,1")
 				);
 	}
+
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public void deleteByDate(Map<String, Object> params) {
+		this.delete(new EntityWrapper<ExpOrderRookieEntity>()
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.eq("DATE_FORMAT(create_date, '%Y-%m-%d')",params.get("dates"))
+				 );
+		
+	}
 }

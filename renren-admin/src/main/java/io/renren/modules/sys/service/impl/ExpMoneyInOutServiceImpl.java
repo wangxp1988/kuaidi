@@ -88,4 +88,14 @@ public class ExpMoneyInOutServiceImpl extends ServiceImpl<ExpMoneyInOutDao, ExpM
 				);
 	}
 
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public void deleteByDate(Map<String, Object> params) {
+		this.delete(new EntityWrapper<ExpMoneyInOutEntity>()
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.eq("DATE_FORMAT(create_date, '%Y-%m-%d')",params.get("dates"))
+				 );
+		
+	}
+
 }

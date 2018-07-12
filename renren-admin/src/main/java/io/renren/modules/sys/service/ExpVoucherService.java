@@ -22,5 +22,7 @@ public interface ExpVoucherService extends IService<ExpVoucherEntity> {
 	List<Object> getDateList(Map<String, Object> params);
 
 	List<ExpVoucherEntity> selectAllDept(Map<String, Object> params);
+
+	void deleteByDate(Map<String, Object> params);
 }
 

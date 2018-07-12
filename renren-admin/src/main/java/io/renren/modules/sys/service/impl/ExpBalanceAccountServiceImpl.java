@@ -69,4 +69,13 @@ public class ExpBalanceAccountServiceImpl extends ServiceImpl<ExpBalanceAccountD
 		return  null;
 	}
 
+	@Override
+	@DataFilter(subDept = true, user = false)
+	public void deleteByDate(Map<String, Object> params) {
+		this.delete(new EntityWrapper<ExpBalanceAccountEntity>()
+				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String)params.get(Constant.SQL_FILTER))
+				.eq("DATE_FORMAT(send_time, '%Y-%m-%d')",params.get("dates"))
+				 );
+	}
+
 }
