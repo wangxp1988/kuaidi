@@ -3,6 +3,7 @@
 <head>
 <title>数据导入</title>
 <#include "/header.html">
+<script src="${request.contextPath}/statics/js/plugins/My97DatePicker/WdatePicker.js"></script>
 </head>
 <body>
 
@@ -20,7 +21,7 @@
             <div class="form-group col-sm-2">
             <input type="text" class="form-control" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="dates" placeholder="选择日期后删除">
              </div>
-             <a class="btn btn-primary" onclick="delAll()"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+             <a class="btn btn-primary" onclick="delAll()"><i class="fa fa-trash-o"></i>&nbsp;选择日期删除数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
         </div>
 	   <table style="width:100%;">
 	    <tr>
@@ -81,7 +82,15 @@
     <script type="text/javascript">
     
     function delAll(){
+    	
     	var dates=$("#dates").val();
+    	if(dates==""||dates==null){
+    		alert("必须选择删除时间");
+    		return;
+    	}
+    	 var index = layer.load(1, {
+      	   	  shade: [0.8,'#fff'] //0.1透明度的白色背景
+      	   	});
    	    var url="sys/alldata/delByDate";
     	   $.ajax({  
                type: 'POST',  
