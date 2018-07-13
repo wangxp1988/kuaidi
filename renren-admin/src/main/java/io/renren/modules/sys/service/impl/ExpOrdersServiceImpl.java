@@ -116,7 +116,7 @@ public class ExpOrdersServiceImpl extends ServiceImpl<ExpOrdersDao, ExpOrdersEnt
 	}
 
 @Override
-@DataFilter(subDept = true, user = false,tableAlias="s")
+@DataFilter(subDept = true, user = false)
 public void deleteByDate(Map<String, Object> params) {
 		this.delete(new EntityWrapper<ExpOrdersEntity>()
 				.addFilterIfNeed(params.get(Constant.SQL_FILTER) != null, (String) params.get(Constant.SQL_FILTER))
